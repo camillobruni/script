@@ -5,6 +5,7 @@ require 'net/http'
 require 'uri'
 require 'nokogiri'
 
+
 def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
     time = sbb_get_time(time)
     date = sbb_get_date(date)
@@ -33,6 +34,7 @@ def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
     sbb_parse_html_results(res) 
 end
 
+
 def sbb_parse_html_results(html)
     doc = Nokogiri::HTML(html)
     entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
@@ -53,6 +55,7 @@ def sbb_parse_html_results(html)
     }
     puts table.to_s
 end
+
 
 class TextTable
     def initialize
@@ -94,6 +97,8 @@ class TextTable
     end
 end
 
+
+
 def sbb_get_time(time)
     return Time.now.strftime("%H%M") if time.nil? or time == 'now'
     if time.start_with? '+' or time.start_with? '-'
@@ -118,6 +123,7 @@ def sbb_get_time(time)
     return time
 end
 
+
 def sbb_get_date(date)
     return Time.now.strftime("%d.%m.%Y") if date.nil? or date == 'now'
     if date.start_with? '+'
@@ -136,6 +142,7 @@ def sbb_get_date(date)
     end
     return date
 end
+
 
 if __FILE__ == $0
     if $*.size == 1
