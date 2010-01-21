@@ -35,8 +35,11 @@ end
 def sbb_parse_html_results(html)
     doc = Nokogiri::HTML(html)
     els = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
-    els.each { |el|
-        puts el.text.gsub(/[\n\n]+(\302\240)?/, "\t")
+
+    els.each_slice(2) { |el|
+        puts el[0].text.gsub(/[\n\n]+(\302\240)?/, "    ").strip
+        puts el[1].text.gsub(/[\n\n]+(\302\240)?/, "    ").strip
+        puts
     }
 end
 
