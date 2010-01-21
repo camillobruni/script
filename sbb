@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+require 'net/http'
+require 'uri'
+require 'nokogiri'
 
 def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
     time = sbb_get_time(time)
     date = sbb_get_date(date)
     departure = isDepartureTime ? '1' : '0'
-    puts exec("open 'http://fahrplan.sbb.ch/bin/query.exe/dn?" +
+    url = URI.parse("http://fahrplan.sbb.ch/bin/query.exe/dn?" +
         "queryPageDisplayed=yes&R" +
         "EQ0JourneyStopsS0G=#{from}&R" +
         "EQ0JourneyStopsS0ID=&" +
@@ -22,7 +26,18 @@ def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
         "REQ0HafasSearchForw=#{departure}&" +
         "REQ0HafasSkipLongChanges=1&" +
         "REQ0HafasMaxChangeTime=200&" +
-        "start=%BB%A0Verbindung+suchen#focus'")
+        "start=%BB%A0Verbindung+suchen#focus")
+    res = Net::HTTP.get(url)
+
+    sbb_parse_html_results(res) 
+end
+
+def sbb_parse_html_results(html)
+    doc = Nokogiri::HTML(html)
+    els = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
+    els.each { |el|
+        puts el.text.gsub(/[\n\n]+(\302\240)?/, "\t")
+    }
 end
 
 def sbb_get_time(time)
