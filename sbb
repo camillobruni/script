@@ -27,20 +27,71 @@ def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
         "REQ0HafasSkipLongChanges=1&" +
         "REQ0HafasMaxChangeTime=200&" +
         "start=%BB%A0Verbindung+suchen#focus")
-    res = Net::HTTP.get(url)
+    proxy = URI.parse(ENV['http_proxy'])
+    res = Net::HTTP::Proxy(proxy.host, proxy.port).get(url)
 
     sbb_parse_html_results(res) 
 end
 
 def sbb_parse_html_results(html)
     doc = Nokogiri::HTML(html)
-    els = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
-
-    els.each_slice(2) { |el|
-        puts el[0].text.gsub(/[\n\n]+(\302\240)?/, "    ").strip
-        puts el[1].text.gsub(/[\n\n]+(\302\240)?/, "    ").strip
-        puts
+    entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
+    
+    table = TextTable.new
+    table.add_row(['Station', '', 'Time', '', 'Dur.', 'Chng.', 'Type'])
+    entries.each_slice(2) { |el|
+        first_row = el[0].text.sub("\302\240", '').split(/[\n\n]+/)
+        first_row[0].gsub!(/^[0-9]/, '')
+        first_row.delete_at 1
+        table.add_row(first_row)
+        
+        second_row = el[1].text.sub("\302\240", '').split(/[\n\n]+(\302\240)?/)
+        second_row.delete_at 1
+        second_row.delete_at 1
+        table.add_row(second_row)
+        table.add_row()
     }
+    puts table.to_s
+end
+
+class TextTable
+    def initialize
+        @rows = []
+        @row_widths = []
+    end
+
+    def add_row(row=[])
+        row = row.map{|f| f.strip()}
+        @rows.push(row)
+        self.update_row_widths(row)
+    end
+
+    def update_row_widths(row)
+        # ugly hacks NEEDED here to get utf8 correctly
+        return if row.nil?
+        (0..row.size-1).each { |i|
+            row[i] = '' if row[i].nil?
+            if @row_widths[i].nil?
+                @row_widths[i] = row[i].scan(/./u).size
+            else
+                @row_widths[i] = [@row_widths[i], row[i].scan(/./u).size].max
+            end
+            @row_widths[i] = 0 if @row_widths.nil? 
+        }
+    end
+
+    def to_s(separator=' ')
+        s = ''
+        @rows.each { |row|
+            (0..row.size-1).each { |i|
+                row[i] = '' if row[i].nil?
+                s += row[i].strip.ljust(@row_widths[i])
+                s += separator
+            }
+            s += "\n"
+        }
+        return s
+    end
 end
 
 def sbb_get_time(time)
