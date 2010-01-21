@@ -1,0 +1,89 @@
+#!/usr/bin/env ruby
+
+
+def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
+    time = sbb_get_time(time)
+    date = sbb_get_date(date)
+    departure = isDepartureTime ? '1' : '0'
+    puts exec("open 'http://fahrplan.sbb.ch/bin/query.exe/dn?" +
+        "queryPageDisplayed=yes&R" +
+        "EQ0JourneyStopsS0G=#{from}&R" +
+        "EQ0JourneyStopsS0ID=&" +
+        "REQ0JourneyStopsS0A=7&" +
+        "REQ0JourneyStopsZ0G=#{to}&" +
+        "REQ0JourneyStopsZ0ID=&" +
+        "REQ0JourneyStopsZ0A=7&" +
+        "REQ0JourneyStops1.0G=&" +
+        "REQ0JourneyStops1.0A=1&" +
+        "REQ0HafasOptimize1=1%3A1&" +
+        "existOptimizePrice=0&" +
+        "REQ0JourneyDate=#{date}&" +
+        "REQ0JourneyTime=#{time}&" +
+        "REQ0HafasSearchForw=#{departure}&" +
+        "REQ0HafasSkipLongChanges=1&" +
+        "REQ0HafasMaxChangeTime=200&" +
+        "start=%BB%A0Verbindung+suchen#focus'")
+end
+
+def sbb_get_time(time)
+    return Time.now.strftime("%H%M") if time.nil? or time == 'now'
+    if time.start_with? '+' or time.start_with? '-'
+        direction = time.start_with?('-') ? -1 : 1
+        delta = time[1..-1]
+        sec, min, hour = Time.now.to_a
+        if delta.end_with? 'm'
+            min += direction * delta[0..-1].to_i
+            if min >= 60
+                hour += (min / 60).floor
+            elsif min < 0
+                hour += (min / 60).ceil
+            end
+            min = (min + 60) % 60
+        elsif delta.end_with? 'd'
+            hour = (hour + direction * delta.to_i + 24) % 24  
+        else
+            hour = (hour + direction * delta.to_i + 24) % 24  
+        end
+        return hour.to_s + min.to_s
+    end
+    return time
+end
+
+def sbb_get_date(date)
+    return Time.now.strftime("%d.%m.%Y") if date.nil? or date == 'now'
+    if date.start_with? '+'
+        sec, min, hour, day, month, year = Time.now.to_a
+        delta = date[1..-1]
+        if delta.end_with? 'y'
+             year += delta[0..-1].to_i  
+        elsif delta.end_with? 'm'
+             month += delta[0..-1].to_i
+        elsif delta.end_with? 'd'
+            day += delta[0..-1].to_i
+        else
+            day += delta.to_i 
+        end
+        return Time.mktime(year, month, day).strftime("%d.%m.%Y")
+    end
+    return date
+end
+
+if __FILE__ == $0
+    if $*.size == 1
+        if $*[0] == "--hack"
+            exec("sudo vim #{__FILE__}")
+        end
+    end
+    from = ARGV.shift
+    to = ARGV.shift
+    time = ARGV.shift
+    if ['a', 'arr', 'an'].member? time
+        isDepartureTime = false
+        time = ARGV.shift
+    elsif ['d', 'dep', 'ab'].member? time
+        isDepartureTime = true
+        time = ARGV.shift
+    end
+    date = ARGV.shift
+    open_sbb(from, to, time, isDepartureTime, date)
+end 
