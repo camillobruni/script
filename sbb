@@ -1,60 +1,34 @@
 #!/usr/bin/env ruby
 
+$KCODE = 'UTF-8'
+
 require 'rubygems'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
 
+# ----------------------------------------------------------------------------
+# Emulating javascript's escape behaviour
 
-def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
-    time = sbb_get_time(time)
-    date = sbb_get_date(date)
-    departure = isDepartureTime ? '1' : '0'
-    url = URI.parse("http://fahrplan.sbb.ch/bin/query.exe/dn?" +
-        "queryPageDisplayed=yes&R" +
-        "EQ0JourneyStopsS0G=#{from}&R" +
-        "EQ0JourneyStopsS0ID=&" +
-        "REQ0JourneyStopsS0A=7&" +
-        "REQ0JourneyStopsZ0G=#{to}&" +
-        "REQ0JourneyStopsZ0ID=&" +
-        "REQ0JourneyStopsZ0A=7&" +
-        "REQ0JourneyStops1.0G=&" +
-        "REQ0JourneyStops1.0A=1&" +
-        "REQ0HafasOptimize1=1%3A1&" +
-        "existOptimizePrice=0&" +
-        "REQ0JourneyDate=#{date}&" +
-        "REQ0JourneyTime=#{time}&" +
-        "REQ0HafasSearchForw=#{departure}&" +
-        "REQ0HafasSkipLongChanges=1&" +
-        "REQ0HafasMaxChangeTime=200&" +
-        "start=%BB%A0Verbindung+suchen#focus")
-    proxy = URI.parse(ENV['http_proxy'])
-    res = Net::HTTP::Proxy(proxy.host, proxy.port).get(url)
+EncodeMap = "ä-Ä-ö-Ö-ü-Ü-è-à-é-â-ê- ".split("-").zip(
+      "%E4-%C4-%F6-%D6-%FC-%DC-%E8-%E0-%E9-%E2-%EA-%20".split('-'))
 
-    sbb_parse_html_results(res) 
+
+class String
+    def urlencode()
+        self.split(//).map{|f|
+            a = EncodeMap.assoc(f)
+            if not a.nil?
+                a[1]
+            else
+                f
+            end
+        }.to_s
+    end
 end
 
 
-def sbb_parse_html_results(html)
-    doc = Nokogiri::HTML(html)
-    entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
-    
-    table = TextTable.new
-    table.add_row(['Station', '', 'Time', '', 'Dur.', 'Chng.', 'Type'])
-    entries.each_slice(2) { |el|
-        first_row = el[0].text.sub("\302\240", '').split(/[\n\n]+/)
-        first_row[0].gsub!(/^[0-9]/, '')
-        first_row.delete_at 1
-        table.add_row(first_row)
-        
-        second_row = el[1].text.sub("\302\240", '').split(/[\n\n]+(\302\240)?/)
-        second_row.delete_at 1
-        second_row.delete_at 1
-        table.add_row(second_row)
-        table.add_row()
-    }
-    puts table.to_s
-end
+# ----------------------------------------------------------------------------
 
 
 class TextTable
@@ -97,6 +71,61 @@ class TextTable
     end
 end
 
+
+# ----------------------------------------------------------------------------
+
+def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
+    time = sbb_get_time(time)
+    date = sbb_get_date(date)
+    departure = isDepartureTime ? '1' : '0'
+    url = URI.parse("http://fahrplan.sbb.ch/bin/query.exe/dn?" +
+        "queryPageDisplayed=yes&R" +
+        "EQ0JourneyStopsS0G=#{from.urlencode}&R" +
+        "EQ0JourneyStopsS0ID=&" +
+        "REQ0JourneyStopsS0A=7&" +
+        "REQ0JourneyStopsZ0G=#{to.urlencode}&" +
+        "REQ0JourneyStopsZ0ID=&" +
+        "REQ0JourneyStopsZ0A=7&" +
+        "REQ0JourneyStops1.0G=&" +
+        "REQ0JourneyStops1.0A=1&" +
+        "REQ0HafasOptimize1=1%3A1&" +
+        "existOptimizePrice=0&" +
+        "REQ0JourneyDate=#{date.urlencode}&" +
+        "REQ0JourneyTime=#{time.urlencode}&" +
+        "REQ0HafasSearchForw=#{departure.urlencode}&" +
+        "REQ0HafasSkipLongChanges=1&" +
+        "REQ0HafasMaxChangeTime=200&" +
+        "start=%BB%A0Verbindung+suchen#focus")
+    if ENV['http_proxy']
+        proxy = URI.parse(ENV['http_proxy'])
+        res = Net::HTTP::Proxy(proxy.host, proxy.port).get(url)
+    else
+        res = Net::HTTP.get(url)
+    end
+    sbb_parse_html_results(res) 
+end
+
+
+def sbb_parse_html_results(html)
+    doc = Nokogiri::HTML(html)
+    entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
+    
+    table = TextTable.new
+    table.add_row(['Station', '', 'Time', '', 'Dur.', 'Chng.', 'Type'])
+    entries.each_slice(2) { |el|
+        first_row = el[0].text.sub("\302\240", '').split(/[\n\n]+/)
+        first_row[0].gsub!(/^[0-9]/, '')
+        first_row.delete_at 1
+        table.add_row(first_row)
+        
+        second_row = el[1].text.sub("\302\240", '').split(/[\n\n]+(\302\240)?/)
+        second_row.delete_at 1
+        second_row.delete_at 1
+        table.add_row(second_row)
+        table.add_row()
+    }
+    puts table.to_s
+end
 
 
 def sbb_get_time(time)
@@ -143,6 +172,8 @@ def sbb_get_date(date)
     return date
 end
 
+
+# ----------------------------------------------------------------------------
 
 if __FILE__ == $0
     if $*.size == 1
