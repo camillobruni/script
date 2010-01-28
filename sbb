@@ -179,7 +179,31 @@ if __FILE__ == $0
         if $*[0] == "--hack"
             exec("sudo vim #{__FILE__}")
         end
+    elsif $*.size == 0
+        puts <<DOC
+This is a simple script to query the timetable of http://sbb.ch/
+
+EXAMPLE:
+    sbb bern zürich
+    sbb bern zürich +2h +2d
+    sbb bern zürich a 12:00 30.01.2010
+
+USAGE:
+    sbb FROM TO
+    sbb FROM TO TIME
+    sbb FROM TO TIME DATE
+    
+    FROM: Departure place
+    TO:   Destination place
+    TIME: [a|d](00:00 | (+|-)00[m|h])
+          a: Arrival time
+          d: Departure Time
+    DATE: 00.00.0000 | (+|-)00[m|d]
+
+DOC
+        exit
     end
+
     from = ARGV.shift
     to = ARGV.shift
     time = ARGV.shift

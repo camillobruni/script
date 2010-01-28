@@ -15,7 +15,7 @@ def translate(text)
     json = Net::HTTP.get_response(URI.parse url).body
     # check for wrong response
     if json =~ /responseStatus"\s*:\s*200/
-        print json.match('translatedText"\s*:\s*"(.*?)"\},')[1]
+        puts json.match('translatedText"\s*:\s*"(.*?)"\},')[1]
     else
         $stderr.puts $*
         $stderr.puts json.match(/responseDetails"\s*:\s*"(.*?)", /)[1]
@@ -26,6 +26,22 @@ end
 if $0 == __FILE__
     if $*.length > 0
         translate $*.join(' ')
+    elsif $*.length == 0
+        puts <<DOC
+
+This script queries google translations.
+
+EXAMPLES:
+    translate de en Guten tag.
+
+USAGE:
+    translate FROM TO SENTENCE
+
+    FROM:     Language code for the source language
+    TO:       Language code for the destination language
+    SENTENCE: String to translate
+
+DOC
     else
         ARGF.each{ |line|
             translate(line)
