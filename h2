@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+
+file = "/Users/cami/Documents/HowTo.txt"
+
+topics = {}
+current_element = []
+
+if __FILE__ == $0
+    if $*.size == 1
+        if $*[0] == "--edit"
+            exec("vim #{file}")
+        elsif $*[0] == "--hack"
+            exec("vim #{__FILE__}")
+        end
+    end
+    
+    File.readlines(file).each { |line|
+        if line =~/^\-\ .*/
+            current_element = []
+            topics[line] = current_element 
+        else
+            current_element.push line
+        end
+    }
+
+    topics.each_pair { |k,v|
+        matches = true
+        $*.each {|search|
+            if not k.downcase.match search.downcase and
+               not v.join.downcase.match search.downcase
+                 matches = false
+                 break
+            end
+        }
+        if matches
+            puts k
+            puts v
+        end
+    }
+end 

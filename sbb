@@ -44,14 +44,13 @@ class TextTable
     end
 
     def update_row_widths(row)
-        # ugly hacks NEEDED here to get utf8 correctly
         return if row.nil?
         (0..row.size-1).each { |i|
             row[i] = '' if row[i].nil?
             if @row_widths[i].nil?
-                @row_widths[i] = row[i].scan(/./u).size
+                @row_widths[i] = row[i].to_a.size
             else
-                @row_widths[i] = [@row_widths[i], row[i].scan(/./u).size].max
+                @row_widths[i] = [@row_widths[i], row[i].to_a.size].max
             end
             @row_widths[i] = 0 if @row_widths.nil? 
         }
