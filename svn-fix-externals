@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'fileutils'
+require 'tmpdir' 
+
+
+def externals(dir=nil)
+    if dir.nil?
+        dir = Dir.pwd
+    end
+    externals = []
+    `svn propget svn:externals -R #{dir}`.each{ |line|
+        line = line.chomp.split(/\s+/)
+        if line.size == 4
+            externals.push(SVNExternal.new(line[0]+'/'+line[2], line[3]))
+        end
+    }
+    return externals
+end
+
+
+def fix_externals(externals)
+    externals.each { |ext|
+        ext.fix() 
+    }
+end
+
+
+class SVNExternal
+    
+    attr_reader :options, :external
+
+    def initialize(path, external)
+        @path     = path
+        @external = external
+        @temp     = ""
+    end
+
+    def fix()
+        self.export_external        
+        self.del_external
+        self.swap_tmp_export
+        self.add_to_svn
+        self.drop_svn_external_prop
+    end
+
+    protected
+    def export_external()
+        @temp = Dir.mktmpdir
+        # tmpdir must not exist for svn export
+        FileUtils.rm_rf @temp
+        puts "Exporting #{@path} --> #{@external}"
+        `svn export #{@external} #{@temp}`
+    end
+
+    def del_external()
+        FileUtils.rm_rf @path
+    end
+
+    def swap_tmp_export()
+        FileUtils.mv @temp, @path
+    end
+
+    def add_to_svn()
+        puts "svn add #{@path}"
+        `svn add #{@path}`
+    end
+
+    def drop_svn_external_prop()
+        `svn propdel svn:externals #{@path}/../`
+    end
+    
+end
+
+
+# ----------------------------------------------------------------------------
+
+Dir.chdir ARGV[0]
+
+externals = externals()
+while externals.size > 0
+    fix_externals(externals)
+    externals = externals()
+end
