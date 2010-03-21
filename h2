@@ -1,21 +1,61 @@
 #!/usr/bin/env ruby
 
+def source()
+    if ENV['H2_SOURCE']
+        return ENV['H2_SOURCE']
+    else
+        return "~/.h2"
+    end
+end
 
-file = "/Users/cami/Documents/HowTo.txt"
+def editor()
+    if ENV['H2_EDITOR']
+        return ENV['H2_EDITOR']
+    elsif ENV['EDITOR']
+        return ENV['EDITOR']
+    else
+        return 'vim'
+    end
+end
 
+# ============================================================================
 topics = {}
 current_element = []
+
+def colorize(text, color_code)
+  "\033#{color_code}#{text}\033[0m"
+end
+
+def red(text)
+    colorize(text, "[31m")
+end
+
+def green(text)
+    colorize(text, "[32m")
+end
+
+# ============================================================================
 
 if __FILE__ == $0
     if $*.size == 1
         if $*[0] == "--edit"
-            exec("vim #{file}")
+            exec("#{editor()} #{source()}")
         elsif $*[0] == "--hack"
-            exec("vim #{__FILE__}")
+            sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
+            exec("#{editor()} #{sourceFile}")
         end
+    elsif $*.size == 0
+        puts <<EOF
+h2 usage: h2 [command|searchstring]
+    command: --edit 
+             --hack 
+    
+Examples:   h2 bash
+EOF
+        exit 0
     end
     
-    File.readlines(file).each { |line|
+    File.readlines(source()).each { |line|
         if line =~/^\-\ .*/
             current_element = []
             topics[line] = current_element 
@@ -23,7 +63,8 @@ if __FILE__ == $0
             current_element.push line
         end
     }
-
+    # find the matching groups
+    output = ''
     topics.each_pair { |k,v|
         matches = true
         $*.each {|search|
@@ -34,8 +75,21 @@ if __FILE__ == $0
             end
         }
         if matches
-            puts k
-            puts v
+            output += green(k.strip) + "\n"
+            output += v.to_s.strip + "\n\n"
         end
     }
+    output = output.split("\n")
+    # colorize the matches
+    $*.each { |search|
+        output.length.times { |i|
+            # if its the green header line, add a green continue color
+            if output[i].start_with? "\033[31m" or output[i][1]==91
+                output[i].gsub!(search, "\033[31m" + '\0' + "\033[32m")
+            else
+                output[i].gsub!(search, "\033[31m" + '\0' + "\033[0m")
+            end
+        }
+    }
+    puts output
 end 
