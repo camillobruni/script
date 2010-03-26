@@ -157,6 +157,16 @@ end
 # TODO - Add your Modules, Classes, etc
 
 if __FILE__ == $0
+    # preamble to change to the current scripts dir
+    def dir
+        begin 
+            return File.readlink $0
+        rescue
+            return $0
+        end
+    end
+    DIR = Dir.chdir File.dirname dir
+    
     # Create and run the application
     app = App.new(ARGV, STDIN)
     app.run

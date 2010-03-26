@@ -1,0 +1,322 @@
+- How do I get the debug version of the FlashPlayer:
+	http://www.adobe.com/support/flashplayer/downloads.html
+	
+- How do I refresh the DNS cache after chaining hosts in /etc/hosts:
+	man hosts
+	flush the cache db by typing 
+	lookupd -flushcache 
+		or on 10.5+
+	dscacheutil -flushcache
+	
+- How do I check for incoming Bills in cxg:
+	http://bills.cxg.ch/cms/modules/Bill/esr.php
+	
+- How to do proper Button Mode in Flash
+	buttonMode = true
+
+- How to do proper globals in Python?
+	just put everything in a class and it will magically work
+	
+- How to rename pictures by their date?
+	exiv2 -r'%Y%-%m%-%d_%H%MS_:basename:' rename *
+	
+- How to insert a character in verbatim in VIM (insert tab)
+	CTRL-V <Tab>
+	
+- How to get all bash arguments? [bash args]
+	$@
+	
+- How to determine the operating system in C macros? [os c macro]
+	http://predef.sourceforge.net/preos.html#sec19
+	Mac OS X: 	_APPLE__ & __MACH__
+	Linux:		__linux
+	Win: 		_WIN32 | _WIN64
+	
+- How to unset a bash variable?
+	unset VARNAME
+	env --unset=VARNAME
+	
+- How to crop an image centered?
+	convert input.jpg -gravity center -crop 25x25+0+0 output.jpg
+	see: http://www.imagemagick.org/script/command-line-processing.php#geometry
+	
+- How to read user input in bash? [bash gets]
+	read [options] NAME1
+	
+- How to look for a source string in smalltalk? [st source string search]
+	SystemNavigation default browseMethodsWithSourceString: 'sourceString'
+
+- How to do proper try catch in Smalltalk? [try catch error st Smalltalk]
+    [self error: 'bla' ] 
+        on: Error 
+        do: [:signal| self handleError]
+
+- How to revert local changes in a git repos? [ git revert ]
+    git reset
+    git reset --hard HEAD
+    git clean -f
+
+- How to play custom animated MovieClip importes from Flash in Flex? 
+    [flex flash import export swc animation]
+    make sure to explicitely add every custom subclassed element to the stage
+    e.g. in a hidden or of timeline layer. Otherwise the sublcassing gets
+    stolen by the flex compiler!
+
+- How to update an easy_install package? [python easy_install update]
+    easy_isntall --update Trac
+
+- What different kinds of bash variables are there? 
+    [bash variable argument param]
+    0, ...  Param 0: name of the current shell script
+    *       All params starting with $1, 
+    @       All params starting with $1, 
+    #       The number of parameters, not including parameter 0    
+
+- How to test in bash? [bash testing if else condition]
+    test $1 $op $2
+    
+    if [[ $1 $op $2 ]]; then
+    fi
+
+- What are the possible conditions for testing in bash? 
+    [bash testing condition if else]
+    -d   dir?
+    -e   exists?
+    -ef  $1 hard links to $2?
+    -f   regular file?
+    -h   symbolic link?
+    -ot  $1 older than $2?
+    -p   named pipe?
+    -r   readable? (by myself)
+    -s   not empty?
+    -S   socket?
+    -w   writable by me?
+    -N   modified since last read?
+    -nt  $1 newer than $2?
+    -z   $2 has 0 length
+    -n   $2 has not zero length
+    -n "${VAR}" to check if a var is unset
+
+- How to forward the stderror to a file? [bash stderr stdout forward]
+    0 stdin         1 stdout        2 stderr
+    >       redirect to a file
+    >>      redirect to a file by appending
+    2>      redirect only stderr to a file
+    &>      redirect both
+    2>&1    redirect stderr to stdout
+
+- How to measure the time a block in squeak? 
+    [st smalltalk block profile benchmark performance] 
+    MessageTally spyOn: [ ]
+
+- How to create latex pdf directly with an os x app?
+    [latex osx app]
+    LaTeXiT
+
+- How to deal with GCC warning invalid storage class?
+    most probably an unmatched parenthesis?
+
+- How to set the default theme in smalltalk? [st theme]
+    UIThemeStandardSqueak beCurrent
+    
+- How to do try catch in python? [py try catch exception]
+  How do I show the full stacktrace of an exception in python?
+    try:
+        foo()
+    except Exception as e:
+        import pdb
+        pdb.post_mortem()
+        pass
+
+- How to get a absolute path with bash?
+    `cd $1; pwd` 
+
+- How to create a self signed certificate for apache2?
+    # generate server key
+    openssl genrsa -des3 -out server.key 4096
+    # create certificate signing request
+    openssl req -new -key server.key -out server.csr
+    # sign the certificate signing request
+    openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+
+- How to properly enable an ssl with a self signed certificate in apache2
+    SSLEngine On
+    SSLCertificateFile /etc/apache2/ssl/server.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/server.key
+
+- How to enable an apache module? [mod enable apache2]
+    a2enmod ssl
+
+- How to remove recursively a certain file with bash? [lock cleanup]
+    find . -name ".svn" | xargs rm -rf 
+    
+- How to use xargs? [bash]
+    # {} is the default placeholder
+    find . -name "*.bak" -print0 | xargs -0 -I mv {}
+
+- How to puts in ruby without newline? [ruby puts out]
+    print "asd"
+
+- How to use Ruby HereDoc? 
+    text = <<IDENTIFIER IDENTIFIER
+
+- How to acces Command line Arguments in ruby? [args ruby]
+    ARGV.each
+    
+- How to move a protocol from one Class to another in Smalltalk? [st copy]
+    BridgeTest copyCategory: 'test-method' from: PinocchioCDumperTest 
+
+- How to add an artifact to a maven repository? [mvn jar]
+    mvn install:install-file -Dfile=pswing-1.0.jar -DgroupId=pswing \
+        -DartifactId=pswing -Dversion=1.0 -Dpackaging=jar -DcreateChecksum \
+        -DlocalRepositoryPath=/srv/ese.unibe.ch/web/maven2/
+
+- How to use gdb?
+    gdb ./myapp
+    > run
+    > backtrace | bt
+    > info locals | args
+    > print my_var
+    > up
+    > quit
+
+- How to get all method selectors from a protocol in smalltalk? [st category]
+    Class organization listAtCategoryNamed: #'category-name'
+
+- How to fix an svn working copy if the server was reset? [svn wc reset crash]
+    # checkout the current version from the broken repository
+    svn co REPOS_URL TMP;
+    cd TMP;
+    # then diff/patch the checked out version against the current local wc
+    diff --exclude='*.svn' -urNp . CURRENT_WC | patch -p1
+    # add and commit the new files
+    svn add **; svn ci;
+
+- How to fix a cxg flash app when its no loading? [swf]
+    check for all Meta calls.
+    Stacktraces won't work in normal mode!
+
+- How to set the bash prompt style? [bash shell sh color colour $PS1 ]
+    http://www.ibm.com/developerworks/linux/library/l-tip-prompt/
+
+- How to get the current stacktrace in python? [ipdb]
+    import stacktrace as st
+    import sys
+    st.print_tb(sys.last_traceback)
+
+- How to rethrow an exception/error in python?
+    try:
+        danger...
+    except Exception as e:
+        recover.phew...
+        raise # raises the last caught exception! DON'T raise e!!
+
+- How to define e function in a bash script:
+    myfun() {
+        echo $1 'first arg'
+    }
+
+- How to write a safe bash script?
+    # use the following option to abort after one subscript failur  
+    set -e
+
+- How to add a new user in MySQL?
+    CREATE USER 'monty'@'localhost' IDENTIFIED BY 'pass';
+    GRANT ALL PRIVILEGES ON *.* TO 'monty'@'localhost';
+    FLUSH PRIVILEGES;
+
+- How to create a public ssh key?
+    ssh-keygen -t dsa
+    chmod 600 .ssh/authorized_keys
+    
+- How to send an html redirect header in php?
+    header('Location: http://www.example.com/');
+
+- How to start a new thread in pharo / smalltalk? [st]
+    [(Delay forSeconds: 5) wait. Beeper beep] fork
+
+    process := [(Delay forSeconds: 5) wait. Beeper beep] newProcess.
+    # random stuff here
+    process resume.
+ 
+- How to batch convert between different image formats? [jpg png imagemagick]
+    mogrify -format jpg *.png
+   
+- How to use super in python?
+    class C(B):
+        def method(self, arg):
+            super(C, self).method(arg)
+
+- How to execute a bash command from within python? [shell]
+    import os
+    os.popen("ls").readlines()
+
+- How do I get the current script location? [bash dir]
+    DIR=`readlink "$0"` || DIR="$0";
+    DIR=`dirname "$DIR"`;
+    cd "$DIR"
+    DIR=`pwd`
+
+- How do I get an image at an exact position in latex?
+    \usepackage{float} % for the [H] 
+    \begin{figure}[H]
+        \includegraphics[height=9cm]{exercise2}
+    \end{figure}    
+
+- How to get coloured/color output in bash teriminal?
+    echo -e "\033[1mS\033[0m"
+
+- How do I format a horrible xml file?
+    xmllint --format $FILE
+
+- How do I save a file in vim without having the needed permissions?
+    :w !sudo tee %
+   
+- How do I share a shell view with other users? [bash]
+    # log your shell to a public readable file
+    script -t0 /tmp/myShellDump
+    # the clients just need to read it from now
+    tail -f /tmp/myShellDump
+
+- How do I resize an image without loosing information?
+    Use the liquid rescale plugin for gimp
+    http://liquidrescale.wikidot.com/en:examples
+
+- How do I do str.contains("foo") in python?
+    "foo" in str
+
+- How do I run the last command as root?
+    sudo !!
+
+- How do I server a directory/folder on localhost?
+    python -m SimpleHTTPServer
+
+- How do I run the previous shell command but replace string “foo” with “bar”?
+    ^foo^bar^       # replacing the first word
+    !!:gs/foo/bar   # replace all occurrences
+
+- How do I change to the previous working directory?
+    cd -
+
+- How do I quickly backup or copy a file? 
+    cp filename{,.bak}
+
+- How do I find the last command that begins with “whatever,” but avoid running it?
+    !whatever:p
+
+- How do I edit the command you typed in your favorite editor?
+    $command <CTRL-x CTRL-e>
+
+- How do I tweet from the shell?
+    curl -u $user:$pass -d status='Tweeting from the shell' http://twitter.com/statuses/update.xml
+
+- How do I execute a command at midnight?
+    echo $cmd | at midnight
+
+- How do I catch an error in ruby? [error handling]
+    begin
+        bla
+    rescue ErrorTypeA, ErrorTypeB => error
+        print "Error was " + error.to_s
+    end
+

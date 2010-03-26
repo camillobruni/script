@@ -36,23 +36,35 @@ end
 
 # ============================================================================
 
-if __FILE__ == $0
-    if $*.size == 1
-        if $*[0] == "--edit"
-            exec("#{editor()} #{source()}")
-        elsif $*[0] == "--hack"
-            sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
-            exec("#{editor()} #{sourceFile}")
-        end
-    elsif $*.size == 0
-        puts <<EOF
+def check_action
+    if $*[0] == "--edit"
+        exec("#{editor()} #{source()}")
+    elsif $*[0] == "--hack"
+        sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
+        exec("#{editor()} #{sourceFile}")
+    end
+end
+
+
+def print_help
+    puts <<EOF
 h2 usage: h2 [command|searchstring]
     command: --edit 
              --hack 
     
 Examples:   h2 bash
 EOF
-        exit 0
+    exit 0
+end
+
+# ============================================================================
+
+if __FILE__ == $0
+
+    if $*.size == 1
+        check_action()
+    elsif $*.size == 0
+        print_help()
     end
     
     File.readlines(source()).each { |line|
