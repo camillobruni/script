@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+#require "RMagick"
+
+# activate monitor
+`disper -e -t left`
+
+#DIR="#{ENV['HOME']}/.wallpaper"
+#WALLS=Dir.open(DIR).to_a.reject {|f| /^\./.match(f)}
+#OUTFILE = "#{DIR}/.wallpaper.jpg"
+
+INFO = `disper -l`
+LINES = INFO.to_a
+SCREENS = LINES.count / 2
+
+#
+#def getimage
+#    return "#{DIR}/#{WALLS[rand(WALLS.size)]}"
+#end
+#
+def resolution(id)
+    line = LINES[id * 2 + 1]
+    line =~ /.* ([0-9]+)x([0-9]+)/
+    return $1.to_i, $2.to_i
+end
+
+
+def toolbarscreen(id)
+    `gconftool-2 -t int --set /apps/panel/toplevels/top_panel_screen0/monitor #{id}`
+end
+#
+
+if (SCREENS > 1)
+    r1 = resolution(0)
+    r2 = resolution(1)
+    toolbarscreen(r1[0] < r2[0] ? 1:0)
+#    images = Magick::ImageList.new(getimage, getimage)
+#    images[0].crop_resized!(*r1)
+#    images[1].crop_resized!(*r2)
+#    images.append(false).write(OUTFILE)
+#else
+#    puts resolution(0)[0] < resolution(0)[0]
+#    `cp #{getimage} #{OUTFILE}`
+end
+#
+#`gconftool-2 -t str --set /desktop/gnome/background/picture_filename #{OUTFILE}`
