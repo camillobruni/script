@@ -217,7 +217,7 @@
     }
 
 - How to write a safe bash script?
-    # use the following option to abort after one subscript failur  
+    # use the following option to abort after one subscript failure 
     set -e
 
 - How to add a new user in MySQL?
@@ -226,8 +226,12 @@
     FLUSH PRIVILEGES;
 
 - How to create a public ssh key?
+    chmod go-w ~/
+    mkdir .ssh
+    chmod 700 ~/.ssh
     ssh-keygen -t dsa
     chmod 600 .ssh/authorized_keys
+    chmod go-rwx ~/.ssh/*
     
 - How to send an html redirect header in php?
     header('Location: http://www.example.com/');
@@ -319,4 +323,21 @@
     rescue ErrorTypeA, ErrorTypeB => error
         print "Error was " + error.to_s
     end
+
+- How to send an email via telnet? 
+    telnet mail.somedomain.com 25
+    HELO mail.someotherdomain.com
+    MAIL FROM:<Jim@someotherdomain.com>
+    RCPT TO:<Joe@somedomain.com>
+    DATA
+    Subject:Test Message
+    This is a test message.
+    .
+    QUIT
+
+- How to delete a file form history in git?
+    # from the topdir
+    git filter-branch -f --index-filter 'git update-index --remove filename' HEAD
+    git push --force --verbose --dry-run
+    git push --force
 
