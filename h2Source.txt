@@ -198,7 +198,17 @@
 
 - How to set the bash prompt style? [bash shell sh color colour $PS1 ]
     http://www.ibm.com/developerworks/linux/library/l-tip-prompt/
-
+    [0, 1, 4, 5, 7].each { |attr|
+        puts '----------------------------------------------------------------'
+        puts "ESC[#{attr};Foreground;Background"
+        30.upto(37) { |fg|
+            40.upto(47){ |bg|
+                print "\033[#{attr};#{fg};#{bg}m #{fg};#{bg}  "
+            }
+            puts "\033[0m"
+        }
+    }
+    
 - How to get the current stacktrace in python? [ipdb]
     import stacktrace as st
     import sys
@@ -260,6 +270,17 @@
     DIR=`dirname "$DIR"`;
     cd "$DIR"
     DIR=`pwd`
+
+- How do I get the current scripts location? [ruby dir]
+    def dir
+        begin
+            return File.readlink $0
+        rescue
+            return $0
+        end
+    end
+    DIR = Dir.chdir File.dirname dir
+
 
 - How do I get an image at an exact position in latex?
     \usepackage{float} % for the [H] 
@@ -341,3 +362,13 @@
     git push --force --verbose --dry-run
     git push --force
 
+- How do I set the escapecharacter, exclamation mark lstlisting?
+    \begin{lstlisting}[escapechar=!]
+
+- What is the OSX version of ldd?
+    otool -L fooBar
+
+- How do I tell vim to update its .vimrc file?
+    :so ~/.vimrc
+    # or while editing .vimrc
+    :so %
