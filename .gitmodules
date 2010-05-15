@@ -1,0 +1,3 @@
+[submodule "rtex"]
+	path = rtex
+	url = git@github.com:dh83/rtex.git
