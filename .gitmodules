@@ -1,3 +1,6 @@
 [submodule "rtex"]
 	path = rtex
 	url = git@github.com:dh83/rtex.git
+[submodule "git-svn-externals"]
+	path = git-svn-externals
+	url = http://github.com/markvl/git-svn-clone-externals.git

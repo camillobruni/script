@@ -1,8 +1,14 @@
 #!/usr/bin/env ruby
 
+# Merges svn:externals directly into the repository. e.g. does a checkout on
+# each external 
+# 
+
+# ----------------------------------------------------------------------------
 require 'rubygems'
 require 'fileutils'
 require 'tmpdir' 
+# ----------------------------------------------------------------------------
 
 
 def externals(dir=nil)
@@ -27,6 +33,7 @@ def fix_externals(externals)
 end
 
 
+# ----------------------------------------------------------------------------
 class SVNExternal
     
     attr_reader :options, :external
