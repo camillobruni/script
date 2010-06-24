@@ -2,7 +2,11 @@
 
 # Merges svn:externals directly into the repository. e.g. does a checkout on
 # each external 
-# 
+# foreach svn:externals as external do:
+#   external.checkout()
+#   svn add external
+#   svn removeExternal external
+#end
 
 # ----------------------------------------------------------------------------
 require 'rubygems'
@@ -83,7 +87,11 @@ end
 
 # ----------------------------------------------------------------------------
 
-Dir.chdir ARGV[0]
+DIR=`readlink "$0"` || DIR="$0";
+DIR=`dirname "$DIR"`;
+cd "$DIR"
+DIR=`pwd`
+
 
 externals = externals()
 while externals.size > 0

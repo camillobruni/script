@@ -1,14 +1,14 @@
-- How do I get the debug version of the FlashPlayer:
+- How to get the debug version of the FlashPlayer:
 	http://www.adobe.com/support/flashplayer/downloads.html
 	
-- How do I refresh the DNS cache after chaining hosts in /etc/hosts:
+- How to refresh the DNS cache after chaining hosts in /etc/hosts:
 	man hosts
 	flush the cache db by typing 
 	lookupd -flushcache 
 		or on 10.5+
 	dscacheutil -flushcache
 	
-- How do I check for incoming Bills in cxg:
+- How to check for incoming Bills in cxg:
 	http://bills.cxg.ch/cms/modules/Bill/esr.php
 	
 - How to do proper Button Mode in Flash
@@ -120,7 +120,7 @@
     UIThemeStandardSqueak beCurrent
     
 - How to do try catch in python? [py try catch exception]
-  How do I show the full stacktrace of an exception in python?
+  How to show the full stacktrace of an exception in python?
     try:
         foo()
     except Exception as e:
@@ -265,13 +265,13 @@
     import os
     os.popen("ls").readlines()
 
-- How do I get the current script location? [bash dir]
+- How to get the current script location? [bash dir]
     DIR=`readlink "$0"` || DIR="$0";
     DIR=`dirname "$DIR"`;
     cd "$DIR"
     DIR=`pwd`
 
-- How do I get the current scripts location? [ruby dir]
+- How to get the current scripts location? [ruby dir]
     def dir
         begin
             return File.readlink $0
@@ -282,7 +282,7 @@
     DIR = Dir.chdir File.dirname dir
 
 
-- How do I get an image at an exact position in latex?
+- How to get an image at an exact position in latex?
     \usepackage{float} % for the [H] 
     \begin{figure}[H]
         \includegraphics[height=9cm]{exercise2}
@@ -291,54 +291,54 @@
 - How to get coloured/color output in bash teriminal?
     echo -e "\033[1mS\033[0m"
 
-- How do I format a horrible xml file?
+- How to format a horrible xml file?
     xmllint --format $FILE
 
-- How do I save a file in vim without having the needed permissions?
+- How to save a file in vim without having the needed permissions?
     :w !sudo tee %
    
-- How do I share a shell view with other users? [bash]
+- How to share a shell view with other users? [bash]
     # log your shell to a public readable file
     script -t0 /tmp/myShellDump
     # the clients just need to read it from now
     tail -f /tmp/myShellDump
 
-- How do I resize an image without loosing information?
+- How to resize an image without loosing information?
     Use the liquid rescale plugin for gimp
     http://liquidrescale.wikidot.com/en:examples
 
-- How do I do str.contains("foo") in python?
+- How to do str.contains("foo") in python?
     "foo" in str
 
-- How do I run the last command as root?
+- How to run the last command as root?
     sudo !!
 
-- How do I server a directory/folder on localhost?
+- How to server a directory/folder on localhost?
     python -m SimpleHTTPServer
 
-- How do I run the previous shell command but replace string “foo” with “bar”?
+- How to run the previous shell command but replace string “foo” with “bar”?
     ^foo^bar^       # replacing the first word
     !!:gs/foo/bar   # replace all occurrences
 
-- How do I change to the previous working directory?
+- How to change to the previous working directory?
     cd -
 
-- How do I quickly backup or copy a file? 
+- How to quickly backup or copy a file? 
     cp filename{,.bak}
 
-- How do I find the last command that begins with “whatever,” but avoid running it?
+- How to find the last command that begins with “whatever,” but avoid running it?
     !whatever:p
 
-- How do I edit the command you typed in your favorite editor?
+- How to edit the command you typed in your favorite editor?
     $command <CTRL-x CTRL-e>
 
-- How do I tweet from the shell?
+- How to tweet from the shell?
     curl -u $user:$pass -d status='Tweeting from the shell' http://twitter.com/statuses/update.xml
 
-- How do I execute a command at midnight?
+- How to execute a command at midnight?
     echo $cmd | at midnight
 
-- How do I catch an error in ruby? [error handling]
+- How to catch an error in ruby? [error handling]
     begin
         bla
     rescue ErrorTypeA, ErrorTypeB => error
@@ -362,13 +362,52 @@
     git push --force --verbose --dry-run
     git push --force
 
-- How do I set the escapecharacter, exclamation mark lstlisting?
+- How to set the escapecharacter, exclamation mark lstlisting?
     \begin{lstlisting}[escapechar=!]
 
 - What is the OSX version of ldd?
     otool -L fooBar
 
-- How do I tell vim to update its .vimrc file?
+- How to tell vim to update its .vimrc file?
     :so ~/.vimrc
     # or while editing .vimrc
     :so %
+
+- How to tar files properly?
+    # to create a tar 
+    tar -cvzf file.tar.gz inputfile1 inputfile2
+    tar -cvf - inputfile1 inputfile2 | gzip > file.tar.gz
+
+- How to prune .svn dirs from a find result?
+    find $DIR -path '*/.svn' -prune -o -type f -print
+
+- How do I connect from another maching to a mac shared WEP protected wireless network?
+    # use the airportkey tool form http://seriot.ch/software_cli.php to generate
+    # the properly expandede key
+ 
+- Why do I need UTF-8?
+    http://www.joelonsoftware.com/articles/Unicode.html
+
+- How do I enable proper UTF-8 support in C? 
+    #include <wchar.h>
+    #include <locale.h>
+    
+    int main() {
+        setlocale(LC_ALL, "");
+        wchar_t* string = L"aString"
+    }
+
+- How to enable backsync with pdf sync?
+    mvim --remote +":151;foldo\!;zz" "paper.tex" 
+
+- How do I commit from an unnamed branch in git?
+    git checkout -b temp # create a named version from that branch
+    git checkout master
+    git merge master temp
+
+- How do I debug properly in ruby?
+    rdebug ./foo.rb                      # similiar to gdb
+    require 'ruby-debug'                 # inline
+    Debugger.start(:post_mortem => true) # launches the debugger on errors
+    debugger                             # break point in the sources
+

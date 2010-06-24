@@ -1,6 +1,7 @@
 # cd with history ===========================================================
 # acd_func 1.0.5, 10-nov-2004
 # petar marinov, http:/geocities.com/h2428, this is public domain
+# http://linuxgazette.net/109/misc/marinov/acd_func.html
 
 cd_func ()
 {
