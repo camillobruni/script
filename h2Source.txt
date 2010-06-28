@@ -411,3 +411,6 @@
     Debugger.start(:post_mortem => true) # launches the debugger on errors
     debugger                             # break point in the sources
 
+- How do I reload the .vimrc file form within vim?
+    :source ~/.vimrc
+

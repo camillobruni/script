@@ -75,7 +75,7 @@ if __FILE__ == $0
             current_element.push line
         end
     }
-    # find the matching groups
+    # find the matching groups -----------------------------------------------
     output = ''
     topics.each_pair { |k,v|
         matches = true
@@ -87,12 +87,14 @@ if __FILE__ == $0
             end
         }
         if matches
+            # the header in green
             output += green(k.strip) + "\n"
-            output += v.to_s.strip + "\n\n"
+            # strip the first indentation of each body line
+            output += v.collect{|l| l.gsub(/^(\t|    )/, '')}.to_s 
         end
     }
+    # colorize the matches ---------------------------------------------------
     output = output.split("\n")
-    # colorize the matches
     $*.each { |search|
         output.length.times { |i|
             # if its the green header line, add a green continue color
