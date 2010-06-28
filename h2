@@ -99,9 +99,9 @@ if __FILE__ == $0
         output.length.times { |i|
             # if its the green header line, add a green continue color
             if output[i].start_with? "\033[31m" or output[i][1]==91
-                output[i].gsub!(search, "\033[31m" + '\0' + "\033[32m")
+                output[i].gsub!(search, "\033[30m" + '\0' + "\033[32m")
             else
-                output[i].gsub!(search, "\033[31m" + '\0' + "\033[0m")
+                output[i].gsub!(search, "\033[30m" + '\0' + "\033[0m")
             end
         }
     }

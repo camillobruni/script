@@ -414,3 +414,6 @@
 - How do I reload the .vimrc file form within vim?
     :source ~/.vimrc
 
+- Where do I get the Cog VM?
+    http://ftp.squeak.org/Cog/
+
