@@ -1,6 +1,3 @@
-[submodule "trex"]
-	path = trex
-	url = git@github.com:dh83/trex.git
 [submodule "git-svn-externals"]
 	path = git-svn-externals
 	url = http://github.com/markvl/git-svn-clone-externals.git
