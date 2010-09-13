@@ -2,10 +2,16 @@
 
 def source()
     if ENV['H2_SOURCE']
-        return ENV['H2_SOURCE']
+        path = ENV['H2_SOURCE']
     else
-        return "~/.h2"
+        path = File.expand_path("~/.h2")
     end
+    
+    if not File.exist? path
+        puts red("Could not find source file '#{path}'")
+        exit 1
+    end
+    return path
 end
 
 def editor()

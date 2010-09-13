@@ -11,7 +11,7 @@
 - How to check for incoming Bills in cxg:
 	http://bills.cxg.ch/cms/modules/Bill/esr.php
 	
-- How to do proper Button Mode in Flash
+- How to do proper Button Mode in Flash/Flex/as3
 	buttonMode = true
 
 - How to do proper globals in Python?
@@ -192,7 +192,7 @@
     # add and commit the new files
     svn add **; svn ci;
 
-- How to fix a cxg flash app when its no loading? [swf]
+- How to fix a cxg flash/flex/as3 app when its no loading? [swf]
     check for all Meta calls.
     Stacktraces won't work in normal mode!
 
@@ -295,7 +295,7 @@
     xmllint --format $FILE
 
 - How to save a file in vim without having the needed permissions?
-    :w !sudo tee %
+    :w !sudo tee % > /dev/null
    
 - How to share a shell view with other users? [bash]
     # log your shell to a public readable file
@@ -416,4 +416,88 @@
 
 - Where do I get the Cog VM?
     http://ftp.squeak.org/Cog/
+    http://www.squeakvm.org/svn/squeak/branches/Cog/
 
+- How to replace a string in all files recursively?
+    find ./ -type f -exec sed -i 's/${STRING_A}/${STRING_B}/' {} \;
+
+- How to use varargs in flash/actionscript/as3/flex?
+    function sum(... nums):Number 
+
+- How do I find out which architecture a binary file has?
+    lipo -info ${binary}
+
+- How to I make sure the regexp in flex/flash/as3 work multiple times?
+    # don't forget to reset the crap after using it
+    # unlike decent implementations this engine returns only one match a time
+    this.regexp.lastIndex = 0
+
+- How do I unblock a fail2ban blocked ip address?
+    iptables -D fail2ban-sh -s ${IP} -j DROP
+
+- How do I reconnect with ssh if I get the following error? [sshd]
+    ssh_exchange_identification:Connection closed by remote host
+    # remove your ip from
+    /etc/hosts.deny
+
+- How to configure the remote for a git repository?
+    [branch "${LOCAL_BRANCH_NAME}"]
+        remote = ${REMOTE_NAME}
+        merge = refs/heads/${REMOTE_BRANCH_NAME}
+
+- How do I do a "svn resolve --accept theirs-full" in git?
+    #during a merge
+    git checkout --ours ${FILES}
+    git checkout --theirs ${FILES}
+
+- How do I setup a server with gitosis?
+    # see http://escapegoat.org/2009/5/20/git-gitweb-gitosis-and-git-daemon-in-harmony-on-debian
+    sudo apt-get install git-core gitweb git-daemon-run gitosis
+    sudo adduser --system \
+        --shell /bin/sh \
+        --gecos 'git version control' \
+        --group --disabled-password \
+        --home /home/git git
+    sudo -H -u git gitosis-init < /tmp/id_rsa.pub
+    sudo chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update
+    git clone git@${SERVER}:gitosis-admin.git
+
+- How do I start the git-daemon in use with gitosis repositories?
+    sudo git-daemon --base-path=/home/git/repositories/ --export-all
+    git clone git://${SERVER}/${REPOS}.git
+
+- How do I display all php warnings?
+    error_reporting(E_ALL);
+
+- How to convert an expression into a string in a C macro?
+    #define FOO bar
+    #define QUOTEME_(x) #x
+    #define QUOTEME(x) QUOTEME_(x)
+    printf("FOO=%s\n", QUOTEME(FOO)); // => printf("FOO=%s\n", "bar");
+
+- How to create a condensed list in latex?
+    \usepackage{mdwlist}            % single spaced lists, much nicer
+    \begin{enumerate*}              % itemize* is supported as well
+        \setlength{\parskip}{-5pt}  % space after the item title
+        \setlength{\itemsep}{10pt}  % space before the item title
+
+    \end{enumerate*}
+
+- How to put as much text as possible on one LaTeX page?
+    \usepackage{savetrees} % condense up to the ugliness
+
+- How to extract all sources of a .exe file?
+    cabextract -l Warez.exe                     # list the contents
+    cabextract -d /extract-dest Crackz.exe      # extract into separate dir
+
+- How to convert a .dfont file into a .ttf on OSX?
+    # use dfontsplitter
+    http://peter.upfold.org.uk/projects/dfontsplitter
+
+- How to set the TOC depth in LaTeX?
+    \setcounter{tocdepth}{n} % default is 2
+    % the package tocvsec2 allows different tocdepths per section
+    \settocdepth{section} % to show sections in the Table of Contents
+
+- How to set the TOC numbering depth in LaTeX?
+    \setcounter{secnumdepth}{3}
