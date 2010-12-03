@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby 
+
+
+def convert2WebPic(inPath, outPath=nil, force=false)
+    if outPath.nil?
+        ext = File.extname(inPath)
+        outPath = "#{File.dirname(inPath)}/#{File.basename(inPath, ext)}-web#{ext}"
+        if File.exist?(outPath) and !force
+            puts "Could not auto create #{outPath} use -f to enforce"
+            return
+        end
+    end
+    `convert "#{inPath}" -quality 80% -resize 2000x2000 "#{outPath}"`
+end
+
+if __FILE__ == $0
+    force = false
+    if ARGV[0] == '-f'
+        force = true
+        ARGV.shift
+    end
+    ARGV.each{|f| convert2WebPic(f, nil, force)}
+end
+
+
