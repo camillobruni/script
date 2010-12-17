@@ -58,9 +58,11 @@
 
 - How to play custom animated MovieClip importes from Flash in Flex? 
     [flex flash import export swc animation]
-    make sure to explicitely add every custom subclassed element to the stage
-    e.g. in a hidden or of timeline layer. Otherwise the sublcassing gets
-    stolen by the flex compiler!
+    - make sure to explicitely add every custom subclassed element to the 
+        stage e.g. in a hidden or of timeline layer. Otherwise the 
+        sublcassing gets stolen by the flex compiler!
+    - make sure that the MovieClip name and the Class name are distinct
+        otherwise the Class is not importable
 
 - How to update an easy_install package? [python easy_install update]
     easy_isntall --update Trac
@@ -517,4 +519,30 @@
     SELECT left_tbl.*
         FROM left_tbl LEFT JOIN right_tbl ON left_tbl.id = right_tbl.id
         WHERE right_tbl.id IS NULL;
-    
+   
+- How do I create a SOCKS proxy with ssh?
+    ssh -D $LOCAL_PORT -N $REMOTE_SERVER
+
+- How do I get a SOCKS proxy with tools like svn/curl/wget?
+
+    1. Install tsocks (the macports version is somehow broken)
+        https://github.com/pc/tsocks
+    2. Follow the instructions in INSTALL.osx
+    3. Create and Adapt the configuration file in /etc/tsocks.conf
+    4. Test configuration:
+        # get your ip without proxy
+        curl http://www.whatismyip.com/automation/n09230945.asp
+        # get your ip with proxy
+        tsocks curl http://www.whatismyip.com/automation/n09230945.asp
+
+- How to enforce a newline in LaTeX in a an enumeration/list?
+    \item[bla]\hfill
+
+- How can I make gdb work with threads?
+    # /etc/gdb/gdbinit 
+    # System-wide GDB initialization file.
+    handle SIGPWR pass nostop noprint
+    handle SIGXCPU pass nostop noprint
+
+- How do I optimize fancy low-level bit algorithms (counting bit sets)?
+    http://www-graphics.stanford.edu/~seander/bithacks.html
