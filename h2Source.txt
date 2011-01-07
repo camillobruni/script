@@ -546,3 +546,6 @@
 
 - How do I optimize fancy low-level bit algorithms (counting bit sets)?
     http://www-graphics.stanford.edu/~seander/bithacks.html
+
+- Where do I find a list of open SOCK proxies from around the world?
+    http://www.samair.ru/
