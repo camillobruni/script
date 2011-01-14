@@ -1,3 +1,6 @@
 [submodule "git-svn-externals"]
 	path = git-svn-externals
 	url = http://github.com/markvl/git-svn-clone-externals.git
+[submodule "osx-path-browser"]
+	path = osx-path-browser
+	url = http://github.com/dh83/path.git

@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+
+r = `/usr/bin/osascript <<-EOF
+    tell application "System Events"
+        activate
+        choose color
+    end tell
+EOF`
+
+r = r.split ', '
+r.map! {|x| x.to_i >> 8}
+puts '#%02X%02X%02X' % r
