@@ -548,4 +548,7 @@
     http://www-graphics.stanford.edu/~seander/bithacks.html
 
 - Where do I find a list of open SOCK proxies from around the world?
-    http://www.samair.ru/
+    http://www.samair.ru/ 
+
+- How do I figure out a certain LaTeX symbol by drawing it on a website?
+    http://detexify.kirelabs.org/

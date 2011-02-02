@@ -9,5 +9,7 @@ r = `/usr/bin/osascript <<-EOF
 EOF`
 
 r = r.split ', '
+exit if r.empty?
+
 r.map! {|x| x.to_i >> 8}
 puts '#%02X%02X%02X' % r
