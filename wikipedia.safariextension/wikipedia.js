@@ -1,9 +1,19 @@
 function update() {
-    $('#toc').css('position','fixed')
-        .css('top','0')
-        .css('right','0')
-        .toggle(function(){$('#toc ul').show()},
-                function(){$('#toc ul').hide()});
+    /* pinpoint the navigation panel */
+    $('#mw-panel')
+        .css('position','fixed')
+        .css('top','0px')
+        .css('left','0px')
+        .css('height','100%')
+        .css('overflow','auto')
+    
+    /* pinpoint the contents */
+    $('#toc')
+        .css('position','fixed')
+        .css('top','10px')
+        .css('right','10px')
+        .css('z-index', '2')
+        .click(function(){$('#toc ul').show()});
     $('#toc ul').hide();
     
     /* center the infobox */

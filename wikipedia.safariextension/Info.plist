@@ -16,8 +16,6 @@
 	<string>1</string>
 	<key>Chrome</key>
 	<dict>
-		<key>Database Quota</key>
-		<real>1048576</real>
 		<key>Global Page</key>
 		<string>global.html</string>
 	</dict>
@@ -34,7 +32,7 @@
 		</dict>
 		<key>Whitelist</key>
 		<array>
-			<string>http://*/wiki/*</string>
+			<string>http://*.wikipedia.org/wiki/*</string>
 		</array>
 	</dict>
 	<key>Description</key>
