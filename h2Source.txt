@@ -552,3 +552,30 @@
 
 - How do I figure out a certain LaTeX symbol by drawing it on a website?
     http://detexify.kirelabs.org/
+
+- How do I write to a file in ruby?
+    File.open($PATH, 'w') {|f| 
+        f.write(doc)
+    }
+
+- How do I resume a halted/interrupted scp transfer?
+    rsync --partial --progress --rsh=ssh -r $FROM $TO
+
+- How do I join several / two pdfs?
+    # Join in1.pdf and in2.pdf into a new PDF, out1.pdf
+    pdftk in1.pdf in2.pdf cat output out1.pdf
+	# or (using handles):
+	pdftk A=in1.pdf B=in2.pdf cat A B output out1.pdf
+	# or (using wildcards):
+	pdftk *.pdf cat output combined.pdf
+
+- How do I figure out what time it is in another timezone on the other side of the world?
+    http://everytimezone.com/
+
+- How do I get decent placeholder images preferably from kittens?
+    color: http://placekitten.com/${WIDTH}/${HEIGHT}
+    gray:  http://placekitten.com/g/${WIDTH}/${HEIGHT}
+        
+- How to delete duplicate lines with respect to columns $3 and $4 with bash?
+    cat yourfile | awk '!seen[$3,$4]++'
+
