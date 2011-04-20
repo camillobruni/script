@@ -579,3 +579,26 @@
 - How to delete duplicate lines with respect to columns $3 and $4 with bash?
     cat yourfile | awk '!seen[$3,$4]++'
 
+- How to create a forward wind trajectory of a certain place in the world? [volcano ash plume]
+    use the tools of the ARL (air resources laboratory) to create a plot
+    http://ready.arl.noaa.gov/hysplit-bin/trajtype.pl
+
+- How do I learn about CLOS? [Common Lisp]
+    http://www.gigamonkeys.com/book/
+
+- How to create a reverse ssh tunnel?
+    # on the local machine create a revers tunnel to ${SERVER}
+    ssh ${REMOTE_USER}@${SERVER} -nNTR 0:localhost:${LOCAL_PORT}
+    # then you can connect on the ${SERVER} to the port returned by the previous command
+    ssh ${LOCAL_USER}@localhost -p ${PORT}
+
+- How to convert audio files to aac / mp3 other formats?
+    #AAC example
+    # -aq 100  sets the audio quality, in this case variable bit rate (VBR)
+    # -ab      sets the audio bit rate
+    # -threads sets the number of threads to be used for encoding, 0 = infinity
+    ffmpeg -i ${IN_FILE} -aq 100 -ab 128k -threads 0 ${OUT_FILE}.${FORMAT}
+
+- How to use for-loop in bash?
+    for i in *; do echo "$i"; done
+
