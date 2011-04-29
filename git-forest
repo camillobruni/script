@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!-- git web interface, (C) 2005-2006, Kay Sievers <kay.sievers@vrfy.org>, Christian Gierke -->
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta name="generator" content="gitweb/1.6.4.1 git/1.7.3.4"/>
+<meta name="robots" content="index, nofollow"/>
+<title>dev.medozas.de Git - hxtools/summary</title>
+<link rel="stylesheet" type="text/css" href="gitweb.css"/>
+<link rel="alternate" title="hxtools - log - RSS feed" href="/gitweb.cgi?p=hxtools;a=rss" type="application/rss+xml" />
+<link rel="alternate" title="hxtools - log - RSS feed (no merges)" href="/gitweb.cgi?p=hxtools;a=rss;opt=--no-merges" type="application/rss+xml" />
+<link rel="alternate" title="hxtools - log - Atom feed" href="/gitweb.cgi?p=hxtools;a=atom;opt=--no-merges" type="application/atom+xml" />
+<link rel="alternate" title="hxtools - log - Atom feed (no merges)" href="/gitweb.cgi?p=hxtools;a=atom;opt=--no-merges" type="application/atom+xml" />
+<link rel="shortcut icon" href="git-favicon.png" type="image/png" />
+</head>
+<body>
+<div class="page_header">
+<a title="git homepage" href="http://git-scm.com/"><img src="git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/gitweb.cgi">projects</a> / <a href="/gitweb.cgi?p=hxtools;a=summary">hxtools</a> / summary
+</div>
+<form method="get" action="/gitweb.cgi" enctype="application/x-www-form-urlencoded">
+<div class="search">
+<input name="p" type="hidden" value="hxtools" />
+<input name="a" type="hidden" value="search" />
+<input name="h" type="hidden" value="HEAD" />
+<select name="st" >
+<option selected="selected" value="commit">commit</option>
+<option value="grep">grep</option>
+<option value="author">author</option>
+<option value="committer">committer</option>
+<option value="pickaxe">pickaxe</option>
+</select><sup><a href="/gitweb.cgi?p=hxtools;a=search_help">?</a></sup> search:
+<input type="text" name="s"  />
+<span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+</form>
+<div class="page_nav">
+summary | <a href="/gitweb.cgi?p=hxtools;a=shortlog">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log">log</a> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=28eb25520624211d44cc069b0e7b95003ea794f1">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=28eb25520624211d44cc069b0e7b95003ea794f1">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree">tree</a><br/>
+<br/>
+</div>
+<div class="title">&nbsp;</div>
+<table class="projects_list">
+<tr id="metadata_desc"><td>description</td><td>Various day-to-day tools</td></tr>
+<tr id="metadata_owner"><td>owner</td><td>Jan Engelhardt</td></tr>
+<tr id="metadata_lchange"><td>last change</td><td>Tue, 8 Mar 2011 19:10:40 +0000</td></tr>
+<tr class="metadata_url"><td>URL</td><td>git://dev.medozas.de/hxtools</td></tr>
+</table>
+<div class="title">readme</div>
+<div class="readme">
+<p><a
+href="http://jengelh.medozas.de/projects/hxtools/">http://jengelh.medozas.de/projects/hxtools/</a></p>
+
+</div>
+<div class="header">
+<a class="title" href="/gitweb.cgi?p=hxtools;a=shortlog">shortlog</a>
+</div>
+<table class="shortlog">
+<tr class="dark">
+<td title="7 weeks ago"><i>2011-03-08</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=28eb25520624211d44cc069b0e7b95003ea794f1">hxtools 20110308 <span class="refs"> <span class="head" title="heads/master"><a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/master">master</a></span> <span class="tag indirect" title="tags/rel-20110308"><a href="/gitweb.cgi?p=hxtools;a=tag;h=refs/tags/rel-20110308">rel-20110308</a></span></span></a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=28eb25520624211d44cc069b0e7b95003ea794f1">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=28eb25520624211d44cc069b0e7b95003ea794f1">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=28eb25520624211d44cc069b0e7b95003ea794f1;hb=28eb25520624211d44cc069b0e7b95003ea794f1">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=28eb25520624211d44cc069b0e7b95003ea794f1;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="7 weeks ago"><i>2011-03-07</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=543294af80ad477390cdaa23028aa977ae45328d">build: remove traces of flv2avi</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=543294af80ad477390cdaa23028aa977ae45328d">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=543294af80ad477390cdaa23028aa977ae45328d">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=543294af80ad477390cdaa23028aa977ae45328d;hb=543294af80ad477390cdaa23028aa977ae45328d">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=543294af80ad477390cdaa23028aa977ae45328d;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-25</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=8ed2edcc9d55d4b1193c9cdafca8813833d03e2a">utmp_register: use POSIX utmpx API</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=8ed2edcc9d55d4b1193c9cdafca8813833d03e2a">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=8ed2edcc9d55d4b1193c9cdafca8813833d03e2a">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=8ed2edcc9d55d4b1193c9cdafca8813833d03e2a;hb=8ed2edcc9d55d4b1193c9cdafca8813833d03e2a">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=8ed2edcc9d55d4b1193c9cdafca8813833d03e2a;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-25</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=87a56e823a07ecd43d4bbf14a637dc24c1ad243a">hxprofile: retain LC_MESSAGES 2</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=87a56e823a07ecd43d4bbf14a637dc24c1ad243a">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=87a56e823a07ecd43d4bbf14a637dc24c1ad243a">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=87a56e823a07ecd43d4bbf14a637dc24c1ad243a;hb=87a56e823a07ecd43d4bbf14a637dc24c1ad243a">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=87a56e823a07ecd43d4bbf14a637dc24c1ad243a;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-24</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=c8c08e7a7e19a56872a959d0de227929285bd974">hxprofile: retain LC_MESSAGES across sudo/bash --login</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=c8c08e7a7e19a56872a959d0de227929285bd974">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=c8c08e7a7e19a56872a959d0de227929285bd974">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=c8c08e7a7e19a56872a959d0de227929285bd974;hb=c8c08e7a7e19a56872a959d0de227929285bd974">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=c8c08e7a7e19a56872a959d0de227929285bd974;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-24</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=a34feffe692ccbde96bd00dd3262396c8f797fe3">hxlogin: use bash syntax</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=a34feffe692ccbde96bd00dd3262396c8f797fe3">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=a34feffe692ccbde96bd00dd3262396c8f797fe3">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=a34feffe692ccbde96bd00dd3262396c8f797fe3;hb=a34feffe692ccbde96bd00dd3262396c8f797fe3">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=a34feffe692ccbde96bd00dd3262396c8f797fe3;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-24</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=59a1cb62dfa1858fa5099e2a1b7612e451294b85">hxlogin: remove obsolete path cleanup</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=59a1cb62dfa1858fa5099e2a1b7612e451294b85">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=59a1cb62dfa1858fa5099e2a1b7612e451294b85">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=59a1cb62dfa1858fa5099e2a1b7612e451294b85;hb=59a1cb62dfa1858fa5099e2a1b7612e451294b85">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=59a1cb62dfa1858fa5099e2a1b7612e451294b85;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-24</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=ba9281b9c5b34e1a9c8c1221c643a2c4813e819f">hxloginpref: fix permissions</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=ba9281b9c5b34e1a9c8c1221c643a2c4813e819f">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=ba9281b9c5b34e1a9c8c1221c643a2c4813e819f">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=ba9281b9c5b34e1a9c8c1221c643a2c4813e819f;hb=ba9281b9c5b34e1a9c8c1221c643a2c4813e819f">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=ba9281b9c5b34e1a9c8c1221c643a2c4813e819f;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-24</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=b88e61530b72048856f8b0e483ffe5debb4ab077">flv2avi: remove obsolete helper (doc)</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=b88e61530b72048856f8b0e483ffe5debb4ab077">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=b88e61530b72048856f8b0e483ffe5debb4ab077">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=b88e61530b72048856f8b0e483ffe5debb4ab077;hb=b88e61530b72048856f8b0e483ffe5debb4ab077">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=b88e61530b72048856f8b0e483ffe5debb4ab077;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-21</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=7cc41e7de57c767f1d88e00ee82e6c0f9d1f63b7">flv2avi: remove obsolete helper</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=7cc41e7de57c767f1d88e00ee82e6c0f9d1f63b7">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=7cc41e7de57c767f1d88e00ee82e6c0f9d1f63b7">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=7cc41e7de57c767f1d88e00ee82e6c0f9d1f63b7;hb=7cc41e7de57c767f1d88e00ee82e6c0f9d1f63b7">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=7cc41e7de57c767f1d88e00ee82e6c0f9d1f63b7;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-14</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=77437eac1f6d56d42dc39756179108cf55c4763a">hxtools 20110214 <span class="refs"> <span class="tag indirect" title="tags/rel-20110214"><a href="/gitweb.cgi?p=hxtools;a=tag;h=refs/tags/rel-20110214">rel-20110214</a></span></span></a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=77437eac1f6d56d42dc39756179108cf55c4763a">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=77437eac1f6d56d42dc39756179108cf55c4763a">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=77437eac1f6d56d42dc39756179108cf55c4763a;hb=77437eac1f6d56d42dc39756179108cf55c4763a">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=77437eac1f6d56d42dc39756179108cf55c4763a;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-14</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" title="profile: cleanup sysconfdir and leave profile script in datadir" href="/gitweb.cgi?p=hxtools;a=commit;h=3c530522804a7483cf458aec3b212a5395e5ed88">profile: cleanup sysconfdir and leave profile script... </a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=3c530522804a7483cf458aec3b212a5395e5ed88">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=3c530522804a7483cf458aec3b212a5395e5ed88">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=3c530522804a7483cf458aec3b212a5395e5ed88;hb=3c530522804a7483cf458aec3b212a5395e5ed88">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=3c530522804a7483cf458aec3b212a5395e5ed88;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-14</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=2d192d361a624907c59ec6f64863218c03d7fa6c">omixer: keep symlinks when installing</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=2d192d361a624907c59ec6f64863218c03d7fa6c">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=2d192d361a624907c59ec6f64863218c03d7fa6c">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=2d192d361a624907c59ec6f64863218c03d7fa6c;hb=2d192d361a624907c59ec6f64863218c03d7fa6c">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=2d192d361a624907c59ec6f64863218c03d7fa6c;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-14</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=3be38af74f39f2ae81676e31b35adf4575fd7b34">gpsh: sort files by default</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=3be38af74f39f2ae81676e31b35adf4575fd7b34">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=3be38af74f39f2ae81676e31b35adf4575fd7b34">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=3be38af74f39f2ae81676e31b35adf4575fd7b34;hb=3be38af74f39f2ae81676e31b35adf4575fd7b34">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=3be38af74f39f2ae81676e31b35adf4575fd7b34;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="dark">
+<td title="2 months ago"><i>2011-02-08</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=0fed5648cc03a6cc386ae7b75ced81ba09ea77f8">doc: update hxtools.7 with available tools</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=0fed5648cc03a6cc386ae7b75ced81ba09ea77f8">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=0fed5648cc03a6cc386ae7b75ced81ba09ea77f8">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=0fed5648cc03a6cc386ae7b75ced81ba09ea77f8;hb=0fed5648cc03a6cc386ae7b75ced81ba09ea77f8">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=0fed5648cc03a6cc386ae7b75ced81ba09ea77f8;sf=tgz">snapshot</a></td>
+</tr>
+<tr class="light">
+<td title="2 months ago"><i>2011-02-06</i></td>
+<td class="author">Jan Engelhardt</td><td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=commit;h=201638ef18e4a793e4cf8e2e8190900d43e62d7d">psthreads: give kps a better name</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=commit;h=201638ef18e4a793e4cf8e2e8190900d43e62d7d">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=commitdiff;h=201638ef18e4a793e4cf8e2e8190900d43e62d7d">commitdiff</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=201638ef18e4a793e4cf8e2e8190900d43e62d7d;hb=201638ef18e4a793e4cf8e2e8190900d43e62d7d">tree</a> | <a title="in format: tar.gz" href="/gitweb.cgi?p=hxtools;a=snapshot;h=201638ef18e4a793e4cf8e2e8190900d43e62d7d;sf=tgz">snapshot</a></td>
+</tr>
+<tr>
+<td colspan="4"><a href="/gitweb.cgi?p=hxtools;a=shortlog">...</a></td>
+</tr>
+</table>
+<div class="header">
+<a class="title" href="/gitweb.cgi?p=hxtools;a=tags">tags</a>
+</div>
+<table class="tags">
+<tr class="dark">
+<td><i>7 weeks ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=28eb25520624211d44cc069b0e7b95003ea794f1">rel-20110308</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=8bb7b2ac5f00281a6b449ba45c8e80231074b776">hxtools 20110308</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=8bb7b2ac5f00281a6b449ba45c8e80231074b776">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=28eb25520624211d44cc069b0e7b95003ea794f1">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20110308">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20110308">log</a></td>
+</tr><tr class="light">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=77437eac1f6d56d42dc39756179108cf55c4763a">rel-20110214</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=22d75156d699fc72b5a4fde2b1904ab9e18cb6ef">hxtools 20110214</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=22d75156d699fc72b5a4fde2b1904ab9e18cb6ef">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=77437eac1f6d56d42dc39756179108cf55c4763a">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20110214">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20110214">log</a></td>
+</tr><tr class="dark">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=7b7bc76da78503274925a629e196b17efe532f3b">rel-20101227</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=905cc21543ad08fcf60a09b644579440aeedab70">hxtools 20101227</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=905cc21543ad08fcf60a09b644579440aeedab70">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=7b7bc76da78503274925a629e196b17efe532f3b">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20101227">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20101227">log</a></td>
+</tr><tr class="light">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=b6bf7682ca38d91b3ee47692d7c6944e50ea06ac">rel-20101201</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=d4afc8d8d36740c7585fc48fa6c42ef711227a11">hxtools 20101201</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=d4afc8d8d36740c7585fc48fa6c42ef711227a11">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=b6bf7682ca38d91b3ee47692d7c6944e50ea06ac">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20101201">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20101201">log</a></td>
+</tr><tr class="dark">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=37f91f5d9fc8dbcd717c81646021e9343f1e976d">rel-20101005</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=4bb4c43415131fab62de9835d21b0c6d8f44b9c0">hxtools 20101005</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=4bb4c43415131fab62de9835d21b0c6d8f44b9c0">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=37f91f5d9fc8dbcd717c81646021e9343f1e976d">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20101005">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20101005">log</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=4ee57b290880758bc157a6d5617c5ab35e75600b">rel-20100630</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=38bd15d2e030828fbef8ee67fc5d315f168dadb6">hxtools 20100630</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=38bd15d2e030828fbef8ee67fc5d315f168dadb6">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=4ee57b290880758bc157a6d5617c5ab35e75600b">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20100630">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20100630">log</a></td>
+</tr><tr class="dark">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=6cdfd15dcb2fabd87369883acc609bcd5cd55c51">rel-20100625</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=e98d857381749963743361d3a6dc6ec2d2d11ee3">hxtools 20100625</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=e98d857381749963743361d3a6dc6ec2d2d11ee3">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=6cdfd15dcb2fabd87369883acc609bcd5cd55c51">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20100625">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20100625">log</a></td>
+</tr><tr class="light">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=9c8b7f77a3364a47599fc934b52bb8246e778fa7">rel-20100611</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=88eefc9a3d1bc40c2826c6705af2ecda651b47e5">hxtools 20100611</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=88eefc9a3d1bc40c2826c6705af2ecda651b47e5">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=9c8b7f77a3364a47599fc934b52bb8246e778fa7">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20100611">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20100611">log</a></td>
+</tr><tr class="dark">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=15ce7b6ddb814fb13218330b88ae7bb9968ab76f">rel-20100606</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=46f8958141b911a02a599b070248cc9798ca8e2d">hxtools 20100606</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=46f8958141b911a02a599b070248cc9798ca8e2d">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=15ce7b6ddb814fb13218330b88ae7bb9968ab76f">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20100606">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20100606">log</a></td>
+</tr><tr class="light">
+<td><i>11 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=2311765518f63d06ece6cae0f1e7cb2820ca7941">rel-20100520</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=7fccd282d0bd36104c7e1602fdf9efe4535de74a">hxtools 20100520</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=7fccd282d0bd36104c7e1602fdf9efe4535de74a">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=2311765518f63d06ece6cae0f1e7cb2820ca7941">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20100520">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20100520">log</a></td>
+</tr><tr class="dark">
+<td><i>12 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=02d91ba2c34d37b4436d3528a59ca27cb88d2320">rel-20100129</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=0d09849119cdef6c90e4594dcde5cccefa2dffc8">hxtools 20100129</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=0d09849119cdef6c90e4594dcde5cccefa2dffc8">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=02d91ba2c34d37b4436d3528a59ca27cb88d2320">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20100129">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20100129">log</a></td>
+</tr><tr class="light">
+<td><i>17 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=dfdb27b75a6147a72dde885a510f15fda938d1d1">rel-20091123</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=4ae71fae3d0485e109b9b38eb846547b6ff11c9f">hxtools 20091123</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=4ae71fae3d0485e109b9b38eb846547b6ff11c9f">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=dfdb27b75a6147a72dde885a510f15fda938d1d1">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20091123">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20091123">log</a></td>
+</tr><tr class="dark">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=763710c772856f962af9b32416cea4b637730d09">rel-20091011</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=81acc539711b22876ca8a22f13069f3742052acc">hxtools 20091011</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=81acc539711b22876ca8a22f13069f3742052acc">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=763710c772856f962af9b32416cea4b637730d09">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20091011">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20091011">log</a></td>
+</tr><tr class="light">
+<td><i>19 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=55477c13fc1dfffdf4de1eb1772c9d86056b0fef">rel-20090913</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=a83d26416b4f0e0bbc674ad5ac17aeece453e9fd">hxtools 20090913</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=a83d26416b4f0e0bbc674ad5ac17aeece453e9fd">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=55477c13fc1dfffdf4de1eb1772c9d86056b0fef">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20090913">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20090913">log</a></td>
+</tr><tr class="dark">
+<td><i>20 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=e5bc93b849a382ebfd66723184b856ae6a2a94be">rel-20090809</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=6a9c02e1d99984e1ebd17e062930fe273d38a0f4">hxtools 20090809</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=6a9c02e1d99984e1ebd17e062930fe273d38a0f4">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=e5bc93b849a382ebfd66723184b856ae6a2a94be">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20090809">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20090809">log</a></td>
+</tr><tr class="light">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=commit;h=bc54a0c4419a344e223415a1330efcfc40636d24">rel-20090611</a></td>
+<td><a class="list subject" href="/gitweb.cgi?p=hxtools;a=tag;h=dbb271d4f1a8764fc1984132bc5597b3f29846f9">hxtools 20090611</a></td>
+<td class="selflink"><a href="/gitweb.cgi?p=hxtools;a=tag;h=dbb271d4f1a8764fc1984132bc5597b3f29846f9">tag</a></td>
+<td class="link"> | <a href="/gitweb.cgi?p=hxtools;a=commit;h=bc54a0c4419a344e223415a1330efcfc40636d24">commit</a> | <a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/tags/rel-20090611">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/tags/rel-20090611">log</a></td>
+</tr><tr>
+<td colspan="5"><a href="/gitweb.cgi?p=hxtools;a=tags">...</a></td>
+</tr>
+</table>
+<div class="header">
+<a class="title" href="/gitweb.cgi?p=hxtools;a=heads">heads</a>
+</div>
+<table class="heads">
+<tr class="dark">
+<td><i>7 weeks ago</i></td>
+<td class="current_head"><a class="list name" href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/master">master</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/master">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/heads/master">log</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=refs/heads/master;hb=master">tree</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/xfs">xfs</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/xfs">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/heads/xfs">log</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=refs/heads/xfs;hb=xfs">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/gxmalloc">gxmalloc</a></td>
+<td class="link"><a href="/gitweb.cgi?p=hxtools;a=shortlog;h=refs/heads/gxmalloc">shortlog</a> | <a href="/gitweb.cgi?p=hxtools;a=log;h=refs/heads/gxmalloc">log</a> | <a href="/gitweb.cgi?p=hxtools;a=tree;h=refs/heads/gxmalloc;hb=gxmalloc">tree</a></td>
+</tr></table>
+<div class="page_footer">
+<div class="page_footer_text">Various day-to-day tools</div>
+<a class="rss_logo" title="log RSS feed" href="/gitweb.cgi?p=hxtools;a=rss">RSS</a>
+<a class="rss_logo" title="log Atom feed" href="/gitweb.cgi?p=hxtools;a=atom">Atom</a>
+</div>
+</body>
+</html>

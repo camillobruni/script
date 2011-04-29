@@ -602,3 +602,10 @@
 - How to use for-loop in bash?
     for i in *; do echo "$i"; done
 
+- How do I chang a wrong include path of a binary on OSX?
+    #check the path names of the binary
+    otool -L ${MY_SO}
+    # check the name of the library
+    otool -DX ${INCLUDED_LIBRARY}
+    # update the SO file
+    sudo install_name_tool -change ${OLDNAME} ${NEWNAME} ${MY_SO}
