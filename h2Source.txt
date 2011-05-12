@@ -609,3 +609,9 @@
     otool -DX ${INCLUDED_LIBRARY}
     # update the SO file
     sudo install_name_tool -change ${OLDNAME} ${NEWNAME} ${MY_SO}
+
+- How to download a complete website using wget?
+    wget --mirror --convert-links --html-extension $URL
+    
+- Where do I find the Flash debugger Player? [actionscript]
+    http://www.adobe.com/support/flashplayer/downloads.html
