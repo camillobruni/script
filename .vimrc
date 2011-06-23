@@ -46,6 +46,7 @@ set history=1000
 set tw=0
 set nowrapscan
 set nowrap
+set linebreak " wrap on word boundaries, not right in the middle of a word
 "line wrapping cursor
 set whichwrap=<,>,h,l,[,]
 
@@ -54,22 +55,34 @@ set sidescroll=3
 " center the cursors on scrolling sidewards
 set sidescrolloff=3
 set backupdir=/tmp   
-set directory=/tmp  " Don't clutter my dirs up with swp and tmp files
-set scrolloff=3     " keep 3 lines visible at top and bottom 
+set directory=/tmp " Don't clutter my dirs up with swp and tmp files
+set scrolloff=3 " keep 3 lines visible at top and bottom 
 
-let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$']
+syntax on
+filetype on
+filetype plugin on
+" filetype indent off
+" filetype plugin indent off
 
-" enable rsense ruby completion ----------------------------------------------
+let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$', '\.aux$', '\.out$', '\..*\.orig$', '\.synctex.gz$', '\.toc$', '\.blg$', '\.bbl', '\.lof', '\.lot']
+
+" enable rsense ruby completion
 let g:rsenseUseOmniFunc = 1
 let g:rsenseHome = "/opt/rsense-0.3"
 
-" enable gcc sense completion ------------------------------------------------
+" enable gcc sense completion
 let g:gccsenseUseOmniFunc = 1
 
-" Highlight the status line --------------------------------------------------
+" Highlight the status line
 highlight StatusLine ctermfg=blue ctermbg=yellow
 
-" ctags ----------------------------------------------------------------------
+" Format xml files
+au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null" 
+
+" syntax coloring for pinocchio
+au BufNewFile,BufRead *.p setlocal filetype=scheme
+
+" ctags
 set tags+=$HOME/.vim/tags/python.ctags
 
 " define `Ispell' language and personal dictionary, used in several places
@@ -77,31 +90,20 @@ set tags+=$HOME/.vim/tags/python.ctags
 set spell
 let IspellLang = 'british'
 let PersonalDict = '~/.ispell_' . IspellLang
+let g:languagetool_jar='/opt/share/LanguageTool-1.3.1/LanguageTool.jar'
 
 " correct my common typos without me even noticing them:
 abbreviate teh the
 abbreviate notificaiton notification
 
 " mark character exceeding the 80 limit as errors
-match Error /\%>80v/
+" match Error /\%>80v/
 
 " FileTypes ==================================================================
-syntax on
-filetype on
-filetype plugin on
-" filetype indent off
-" filetype plugin indent off
-
-" autowrap for .txt and .tex files -------------------------------------------
-autocmd FileType tex setlocal textwidth=78 wrap linebreak spell
-autocmd BufRead,BufNewFile *.txt setlocal textwidth=78 wrap linebreak spell
-autocmd BufRead,BufNewFile *.md setlocal textwidth=78 wrap linebreak spell
-
-" Format xml files -----------------------------------------------------------
-au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null" 
-
-" syntax coloring for pinocchio ----------------------------------------------
-au BufNewFile,BufRead *.p setlocal filetype=scheme
+" autowrap for .txt and .tex files
+autocmd FileType tex setlocal wrap spell
+autocmd BufRead,BufNewFile *.txt setlocal wrap spell
+autocmd BufRead,BufNewFile *.md setlocal wrap spell
 
 " latex suite settings =======================================================
 let g:Tex_DefaultTargetFormat = 'pdf'
@@ -110,7 +112,7 @@ let g:Tex_CompileRule_dvi         = 'latex --interaction=nonstopmode $*'
 let g:Tex_CompileRule_ps          = 'dvips -Pwww -o $*.ps $*.dvi'
 let g:Tex_CompileRule_pspdf       = 'ps2pdf $*.ps'
 let g:Tex_CompileRule_dvipdf      = 'dvipdfm $*.dvi'
-let g:Tex_CompileRule_pdf         = 'pdflatex -synctex=1 -interaction=nonstopmode $*'
+let g:Tex_CompileRule_pdf         = 'trex $* || pdflatex -synctex=1 -interaction=nonstopmode $*'
  
 let g:Tex_ViewRule_dvi            = 'texniscope'
 let g:Tex_ViewRule_ps             = 'Preview'
@@ -120,7 +122,26 @@ let g:Tex_FormatDependency_ps     = 'dvi,ps'
 let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
 let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
 
-" key mappings ===============================================================
+
+" arrow mapping ===============================================================
+" arrows shouldn't jump over wrapped lines
+nnoremap <Down> gj
+nnoremap <Up> gk
+nnoremap <buffer> <silent> <Home> g<Home>
+nnoremap <buffer> <silent> <End>  g<End>
+
+vnoremap <Down> gj
+vnoremap <Up> gk
+vnoremap <buffer> <silent> <Home> g<Home>
+vnoremap <buffer> <silent> <End>  g<End>
+
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+inoremap <buffer> <silent> <Home> <C-o>g<Home>
+inoremap <buffer> <silent> <End> <C-o>g<End>
+
+
+"" key mappings ===============================================================
 
 command Q q " Bind :Q to :q
 
@@ -140,6 +161,9 @@ imap <D-.> <ESC>:
 "" Code folding
 set foldmethod=syntax
 set nofoldenable
+let g:Tex_FoldedSections=""
+let g:Tex_FoldedEnvironments=""
+let g:Tex_FoldedMisc=""
 map  <C-LEFT>  <ESC>zc
 imap <C-LEFT>  <ESC>zci
 map  <C-RIGHT> <ESC>zo
@@ -157,4 +181,5 @@ map  <C-k> <ESC>D
 " directly jump into visual block mode from insert mode
 imap <C-v> <ESC><C-v>
 
+"AlignCtrl l:
 vmap <C-A> :Align=<CR> 

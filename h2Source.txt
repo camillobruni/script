@@ -615,3 +615,9 @@
     
 - Where do I find the Flash debugger Player? [actionscript]
     http://www.adobe.com/support/flashplayer/downloads.html
+
+- How to lock the screen under OSX 10.6 using a keyboard shortcut?
+    Ctrl - Shift - Eject
+
+- How to put the mac to sleep under OSX 10.6 using a keyboard shortcut?
+    Command - Option - Eject
