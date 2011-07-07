@@ -96,7 +96,8 @@ if __FILE__ == $0
             # the header in green
             output += green(k.strip) + "\n"
             # strip the first indentation of each body line
-            output += v.collect{|l| l.gsub(/^(\t|    )/, '')}.to_s 
+            output += v.collect{|l| l.gsub(/^(\t|    )/, '')}.join.strip
+            output += "\n\n"
         end
     }
     # colorize the matches ---------------------------------------------------
@@ -111,5 +112,5 @@ if __FILE__ == $0
             end
         }
     }
-    puts output
+    puts output.join("\n").strip
 end 
