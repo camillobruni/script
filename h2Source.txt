@@ -621,3 +621,9 @@
 
 - How to put the mac to sleep under OSX 10.6 using a keyboard shortcut?
     Command - Option - Eject
+
+- How to create a RAMdisk?
+# OSX >=10.5
+diskutil erasevolume HFS+ "ramdisk" `hdiutil attach -nomount ram://1165430`
+# linuxes
+sudo mount -osize=100m tmpfs /mnt/tmpfs -t tmpfs
