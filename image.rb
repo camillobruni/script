@@ -10,8 +10,10 @@ end
 name     = $*[0]
 version  = '1.4'
 imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
+tmp      = `mktemp -d -t pharo`.chomp
 
 # ===========================================================================
+
 
 `mkdir #{name} &> /dev/null`
 if not $?.success? 
@@ -23,12 +25,12 @@ end
 
 puts "fetching the latest image"
 
-`wget #{imageUrl} --output-document=pharo.zip`
+`wget #{imageUrl} --output-document=#{tmp}/pharo.zip`
 
 
-`unzip pharo.zip`
-`mv Pharo-#{version}/* #{name}/`
-`rm -rf Pharo-#{version}/`
+`unzip #{tmp}/pharo.zip -d #{tmp}`
+`mv #{tmp}/Pharo-#{version}/* #{name}/`
+`rm -rf #{tmp}`
 
 # ===========================================================================
 
