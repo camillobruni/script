@@ -63,6 +63,8 @@ World restoreDisplay.
 
 UITheme defaultSettings fastDragging: true. 
 
+Smalltalk snapshot: true andQuit: true.
+
 IDENTIFIER
 }
 
