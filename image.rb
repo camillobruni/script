@@ -53,8 +53,6 @@ GraphicFontSettings resetAllFontToDefault.
 
 StandardFonts codeFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
 
-Smalltalk snapshot: true andQuit: true.
-
 PolymorphSystemSettings desktopColor: Color gray.
 
 LogoImageMorph default: nil.
