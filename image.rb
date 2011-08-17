@@ -27,7 +27,7 @@ puts "fetching the latest image"
 
 
 `unzip pharo.zip`
-`mv Pharo-#{version}/* foo/`
+`mv Pharo-#{version}/* #{name}/`
 `rm -rf Pharo-#{version}/`
 
 # ===========================================================================
