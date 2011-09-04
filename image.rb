@@ -1,9 +1,35 @@
 #!/usr/bin/env ruby
 
+def help
+    $stderr.puts "    usage /.image projectName"
+    $stderr.puts "          --hack     edit the sources of this script"
+    $stderr.puts "          -h/--help  show this help text"
+end
+
+
+
 if $*.size != 1
-    $stderr << "    usage /.image projectName"
+    help
     exit 1
 end
+
+
+def editor()
+    if ENV['EDITOR']
+        return ENV['EDITOR']
+    else
+        return 'vim'
+    end
+end
+
+if $*[0] == "--help" || $*[0] == "-h"
+    help()
+    exit 0
+elsif $*[0] == "--hack"
+    sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
+    exec("#{editor()} #{sourceFile}")
+end
+
 
 # ===========================================================================
 
@@ -61,9 +87,18 @@ World restoreDisplay.
 
 UITheme defaultSettings fastDragging: true. 
 
+Gofer new
+    squeaksource: 'Nautilus';
+    package: 'ConfigurationOfNautilus';
+    load.
+
+(Smalltalk at: #ConfigurationOfNautilus) perform: #loadDefault.
+
 Smalltalk snapshot: true andQuit: true.
 
 IDENTIFIER
 }
 
 `pharo $PWD/#{name}/#{name}.image $PWD/#{name}/setup.st`
+
+`open $PWD/#{name}/#{name}.image &`
