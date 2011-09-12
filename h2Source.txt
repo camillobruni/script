@@ -637,7 +637,6 @@
 - How to enforce a column break in a multicolumn latex document?
     \vfill\eject
 
-
 - What are the predefined variables in ruby?
 
     $!         The exception information message set by 'raise'.
@@ -680,3 +679,6 @@
     $-p        True if option -p is set. Read-only variable.
     $-v        The alias to $VERBOSE.
     $-w        True if option -w is set.
+
+- How do I change the username on the command-line in linux?
+    usermod -l $NEW $OLD
