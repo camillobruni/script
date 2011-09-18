@@ -682,3 +682,22 @@
 
 - How do I change the username on the command-line in linux?
     usermod -l $NEW $OLD
+
+- How do I scroll in screen?
+    C-a [.
+
+- How do I check the current folder size
+    du -sh .
+
+- How do I check if a programm exists in bash?
+    hash open 2>&-       && open       "$VERSION.image" && exit 0
+    hash gnome-open 2>&- && gnome-open "$VERSION.image" && exit 0
+
+- How to create an XCode/Eclipse project with cmake?
+    # @see cmake --help
+    cmake -G Xcode
+    cmake -G KDevelop3
+    cmake -G "Eclipse CDT4 - Unix Makefiles"
+    cmake -G "Visual Studio 10"
+    cmake -G "Borland Makefiles"
+    

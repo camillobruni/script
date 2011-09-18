@@ -6,13 +6,10 @@ def help
     $stderr.puts "          -h/--help  show this help text"
 end
 
-
-
 if $*.size != 1
     help
     exit 1
 end
-
 
 def editor()
     if ENV['EDITOR']
@@ -30,12 +27,13 @@ elsif $*[0] == "--hack"
     exec("#{editor()} #{sourceFile}")
 end
 
-
 # ===========================================================================
 
 name     = $*[0]
 version  = '1.4'
 imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
+artifact = "Nautilus1.4"
+imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
 tmp      = `mktemp -d -t pharo`.chomp
 
 # ===========================================================================
@@ -51,17 +49,17 @@ end
 
 puts "fetching the latest image"
 
-`wget #{imageUrl} --output-document=#{tmp}/pharo.zip`
+`wget #{imageUrl} --output-document=#{tmp}/artifact.zip`
 
 
-`unzip #{tmp}/pharo.zip -d #{tmp}`
-`mv #{tmp}/Pharo-#{version}/* #{name}/`
+`unzip #{tmp}/artifact.zip -d #{tmp}`
+`mv #{tmp}/#{artifact}/* #{name}/`
 `rm -rf #{tmp}`
 
 # ===========================================================================
 
-`mv #{name}/Pharo-#{version}.image #{name}/#{name}.image`
-`mv #{name}/Pharo-#{version}.changes #{name}/#{name}.changes`
+`mv #{name}/#{artifact}.image #{name}/#{name}.image`
+`mv #{name}/#{artifact}.changes #{name}/#{name}.changes`
 
 # ===========================================================================
 
@@ -86,11 +84,6 @@ World backgroundMorph: nil.
 World restoreDisplay.
 
 UITheme defaultSettings fastDragging: true. 
-
-Gofer new
-    squeaksource: 'Nautilus';
-    package: 'ConfigurationOfNautilus';
-    load.
 
 (Smalltalk at: #ConfigurationOfNautilus) perform: #loadDefault.
 
