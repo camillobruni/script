@@ -49,7 +49,7 @@ end
 
 puts "fetching the latest image"
 
-`wget #{imageUrl} --output-document=#{tmp}/artifact.zip`
+`wget --no-check-certificate #{imageUrl} --output-document=#{tmp}/artifact.zip`
 
 
 `unzip #{tmp}/artifact.zip -d #{tmp}`
@@ -70,6 +70,7 @@ Author fullName: 'CamilloBruni'.
 
 Debugger alwaysOpenFullDebugger: true.
 
+FreeTypeSystemSettings loadFt2Library: true.
 FreeTypeFontProvider current updateFromSystem.
 
 StandardFonts defaultFont: (LogicalFont familyName: 'Lucida Grande' pointSize: 10) forceNotBold.
@@ -84,8 +85,6 @@ World backgroundMorph: nil.
 World restoreDisplay.
 
 UITheme defaultSettings fastDragging: true. 
-
-(Smalltalk at: #ConfigurationOfNautilus) perform: #loadDefault.
 
 Smalltalk snapshot: true andQuit: true.
 
