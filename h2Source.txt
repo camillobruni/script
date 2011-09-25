@@ -701,3 +701,18 @@
     cmake -G "Visual Studio 10"
     cmake -G "Borland Makefiles"
     
+- How to restart cupsd on OSX? [printing]
+    #linux
+    /etc/init.d/cups restart
+    
+    #osx
+    sudo launchctl unload /System/Library/LaunchDaemons/org.cups.cupsd.plist
+    sudo launchctl load /System/Library/LaunchDaemons/org.cups.cupsd.plist
+
+- What is the local url to confogure cupsd?
+    http://http://localhost:631/
+
+- How to batch convert conference presentations?
+    for i in *.AVI; do 
+        ffmpeg -i $i -threads 0 -acodec libfaac -ab 32k -ac 1 -ar 22050 -crf 27 -r 16 "${i%.*}.mp4"; 
+    done

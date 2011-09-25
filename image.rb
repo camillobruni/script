@@ -49,7 +49,7 @@ end
 
 puts "fetching the latest image"
 
-`wget --no-check-certificate #{imageUrl} --output-document=#{tmp}/artifact.zip`
+`wget #{imageUrl} --output-document=#{tmp}/artifact.zip`
 
 
 `unzip #{tmp}/artifact.zip -d #{tmp}`
