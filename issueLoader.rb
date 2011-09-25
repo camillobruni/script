@@ -94,10 +94,6 @@ tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
 issue := tracker issue: #{issueNumber}.
 issue loadAndTest.
 
-Beeper primitiveBeep.
-Beeper primitiveBeep.
-Beeper primitiveBeep.
-
 Smalltalk snapshot: false andQuit: true.
 
 IDENTIFIER
@@ -108,3 +104,4 @@ puts "Open the image and check the issue number #{issueNumber}"
 puts "Remove the folder #{destination}"
 `rm -R "#{destination}"`
 `date`
+`open "http://code.google.com/p/pharo/issues/detail?id=#{issueNumber}"`
