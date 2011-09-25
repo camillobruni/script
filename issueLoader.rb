@@ -94,6 +94,10 @@ tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
 issue := tracker issue: #{issueNumber}.
 issue loadAndTest.
 
+Beeper primitiveBeep.
+Beeper primitiveBeep.
+Beeper primitiveBeep.
+
 Smalltalk snapshot: false andQuit: true.
 
 IDENTIFIER
