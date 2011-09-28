@@ -14,6 +14,10 @@ if $*.size > 1
     exit 1
 end
 
+
+vmPath = "/Users/benjamin/Images/StackVM.app/Contents/MacOS/StackVM"
+
+
 def editor()
     if ENV['EDITOR']
         return ENV['EDITOR']
@@ -36,25 +40,31 @@ end
 # ===========================================================================
 
 version  = '1.4'
-tmp      = `mktemp d t pharo`.chomp
+tmp      = `mktemp -d -t pharo`.chomp
 
 if $*[0] == "pharo"
     imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo#{version}.zip"
-    artifact = "Pharo#{version}"
+    artifact = "Pharo-#{version}"
     subdir = "Pharo#{version}"
     path = "/Users/benjamin/Images/Pharo 1.4"
+	extraInstructions = ""
 elsif ($*[0] == "nautilus" or $*[0] == nil)
     artifact = "Nautilus#{version}"
     path = "/Users/benjamin/Images/Nautilus"
     subdir = artifact
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
+	extraInstructions = "
+SystemBrowser default: Nautilus.
+package := RPackageOrganizer default packageNamed: 'Nautilus'. 
+Nautilus groupsManager addADynamicGroupSilentlyNamed: 'Nautilus' block: [ package orderedClasses ]
+"
 end
 
 # ===========================================================================
 
 puts "fetching the latest image"
 
-`cd "#{path}" && wget nocheckcertificate "#{imageUrl}" outputdocument=artifact.zip`
+`cd "#{path}" && wget --no-check-certificate "#{imageUrl}" --output-document=artifact.zip`
 list = Dir["#{path}/#{artifact}*"]
 
 if list == []
@@ -76,24 +86,25 @@ dir = artifact+arity
 destination = "#{path}/#{dir}"
 origin = "#{destination}/#{subdir}"
 
-`unzip x "#{path}"/artifact.zip d "#{path}/#{dir}"`
+`unzip -x "#{path}"/artifact.zip -d "#{path}/#{dir}"`
 
 Dir.glob(File.join(origin, '*')).each do |file|
     FileUtils.mv file, File.join(destination, File.basename(file))
 end
 
-`rm R "#{origin}"`
+`rm -R "#{origin}"`
 `rm "#{path}"/artifact.zip`
-`rm rf "#{tmp}"`
+`rm -rf "#{tmp}"`
 
 # ===========================================================================
 
 File.open("#{destination}/setup.st", 'w') {|f| 
     f.puts <<IDENTIFIER
 
+| package |
 Author fullName: 'BenjaminVanRyseghem'.
 
-"Debugger alwaysOpenFullDebugger: true."
+Debugger alwaysOpenFullDebugger: true.
 
 FreeTypeSystemSettings loadFt2Library: true.
 FreeTypeFontProvider current updateFromSystem.
@@ -105,11 +116,7 @@ GraphicFontSettings resetAllFontToDefault.
 
 StandardFonts codeFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
 
-"PolymorphSystemSettings desktopColor: Color gray."
-
-"LogoImageMorph default: nil.
-World backgroundMorph: nil.
-World restoreDisplay."
+#{extraInstructions}
 
 UITheme defaultSettings fastDragging: true. 
 
@@ -118,6 +125,6 @@ Smalltalk snapshot: true andQuit: true.
 IDENTIFIER
 }
 
-`pharo headless "#{destination}/#{subdir}.image" "#{destination}/setup.st"`
+`#{vmPath} -headless "#{destination}/#{subdir}.image" "#{destination}/setup.st"`
 `rm "#{destination}/setup.st"`
 `open "#{destination}/#{subdir}.image" &`
