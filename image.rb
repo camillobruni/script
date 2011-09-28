@@ -29,7 +29,7 @@ end
 
 # ===========================================================================
 
-name     = $*[0]
+name     = $*[0].gsub(" ", "_")
 version  = '1.4'
 imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
 artifact = "Nautilus1.4"
@@ -39,7 +39,7 @@ tmp      = `mktemp -d -t pharo`.chomp
 # ===========================================================================
 
 
-`mkdir #{name} &> /dev/null`
+`mkdir "#{name}" &> /dev/null`
 if not $?.success? 
     $stderr.puts "    project #{name} exists already"
     exit 1
@@ -49,17 +49,18 @@ end
 
 puts "fetching the latest image"
 
-`wget #{imageUrl} --output-document=#{tmp}/artifact.zip`
+`wget --no-check-certificate #{imageUrl} --output-document=#{tmp}/artifact.zip`
 
 
 `unzip #{tmp}/artifact.zip -d #{tmp}`
-`mv #{tmp}/#{artifact}/* #{name}/`
+`mv #{tmp}/#{artifact}/* "#{name}/"`
 `rm -rf #{tmp}`
 
 # ===========================================================================
 
-`mv #{name}/#{artifact}.image #{name}/#{name}.image`
-`mv #{name}/#{artifact}.changes #{name}/#{name}.changes`
+`mv "#{name}/#{artifact}.image" "#{name}/#{name}.image"`
+`mv "#{name}/#{artifact}.changes" "#{name}/#{name}.changes"`
+`ln -s "#{Dir.pwd}/package-cache" "#{name}/package-cache"` if File.exists? 'package-cache'
 
 # ===========================================================================
 
@@ -86,11 +87,25 @@ World restoreDisplay.
 
 UITheme defaultSettings fastDragging: true. 
 
+"open up a default workspace"
+ws := Workspace new.
+(ws openLabel: '1st Workspace') 
+    makeUnclosable;
+    extent: 5050@300;
+    setToAdhereToEdge: #bottomLeft.
+
+"open up default mc working copy browser"
+MCWorkingCopyBrowser new window
+    makeUnclosable;
+    openInWorldExtent: 700@300;
+    setToAdhereToEdge: #topLeft.
+
 Smalltalk snapshot: true andQuit: true.
 
 IDENTIFIER
 }
 
-`pharo $PWD/#{name}/#{name}.image $PWD/#{name}/setup.st`
 
-`open $PWD/#{name}/#{name}.image &`
+`pharo "#{Dir.pwd}/#{name}/#{name}.image" "#{Dir.pwd}/#{name}/setup.st"`
+
+`open "#{Dir.pwd}/#{name}/#{name}.image" &`

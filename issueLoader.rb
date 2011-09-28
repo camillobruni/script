@@ -77,6 +77,8 @@ guard()
 
 # ===========================================================================
 
+exit 1 if !system("ping -c 1 ss3.gemstone.com")
+
 File.open("issueLoading.st", 'w') {|f| 
     f.puts <<IDENTIFIER
 | tracker issue |
@@ -118,7 +120,7 @@ pid = 0
 begin
     #kill the build process after 15 minutes
     puts "Open the image and check the issue number #{issueNumber}"
-    timeout(80) {
+    timeout(15 * 60) {
         pid = Process.spawn("pharo '#{Dir.pwd}/Monkey#{issueNumber}.image' '#{Dir.pwd}/issueLoading.st'")
         puts pid
         Process.wait
