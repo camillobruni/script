@@ -143,3 +143,5 @@ end
 
 puts "Remove the folder #{destination}"
 `rm -R "#{destination}"`
+`date`
+`open "http://code.google.com/p/pharo/issues/detail?id=#{issueNumber}"`
