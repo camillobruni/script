@@ -3,6 +3,17 @@
 require 'fileutils'
 require 'timeout'
 
+# ===========================================================================
+updateImage = true
+issueNumber = $*[0]
+version  = '1.4'
+tmp      = `mktemp -d -t pharo`.chomp
+
+imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
+artifact = "Pharo#{version}"
+name = "Pharo-#{version}"
+destination = "Monkey#{issueNumber}"
+
 # ============================================================================
 
 def help
@@ -24,7 +35,7 @@ if $*[0] == "--help" || $*[0] == "-h"
     exit 0
 elsif $*[0] == "--hack"
     sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
-    exec("#{editor()} #{sourceFile}")
+    exec(editor(), sourceFile)
 end
 
 if $*.size != 1
@@ -36,17 +47,6 @@ end
 def guard()
     exit $?.to_i if !$?.success?
 end
-
-# ===========================================================================
-updateImage = true
-issueNumber = $*[0]
-version  = '1.4'
-tmp      = `mktemp -d -t pharo`.chomp
-
-imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
-artifact = "Pharo#{version}"
-name = "Pharo-#{version}"
-destination = "Monkey#{issueNumber}"
 
 # ============================================================================
 
