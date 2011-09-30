@@ -56,7 +56,8 @@ elsif ($*[0] == "nautilus" or $*[0] == nil)
 	extraInstructions = "
 SystemBrowser default: Nautilus.
 package := RPackageOrganizer default packageNamed: 'Nautilus'. 
-Nautilus groupsManager addADynamicGroupSilentlyNamed: 'Nautilus' block: [ package orderedClasses ]
+Nautilus groupsManager addADynamicGroupSilentlyNamed: 'Nautilus' block: [ package orderedClasses ].
+
 "
 end
 
@@ -64,7 +65,8 @@ end
 
 puts "fetching the latest image"
 
-`cd "#{path}" && wget --no-check-certificate "#{imageUrl}" --output-document=artifact.zip`
+`cd "#{path}" && wget --tries=2 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact.zip" &&  cp "#{path}/artifact.zip" "#{path}/backup.zip"  || cp "#{path}/backup.zip" "#{path}/artifact.zip"`
+
 list = Dir["#{path}/#{artifact}*"]
 
 if list == []
@@ -125,6 +127,8 @@ Smalltalk snapshot: true andQuit: true.
 IDENTIFIER
 }
 
-`#{vmPath} -headless "#{destination}/#{subdir}.image" "#{destination}/setup.st"`
+puts '#open "#{destination}/#{subdir}.image" "#{destination}/setup.st"'
+
+`#{vmPath} "#{destination}/#{subdir}.image" "#{destination}/setup.st"`
 `rm "#{destination}/setup.st"`
 `open "#{destination}/#{subdir}.image" &`
