@@ -1,12 +1,6 @@
 #!/usr/bin/env ruby
 require 'fileutils'
 
-def help
-    $stderr.puts "    usage /.image issueNumber"
-    $stderr.puts "          --hack     edit the sources of this script"
-    $stderr.puts "          -h/--help  show this help text"
-end
-
 
 path = "/Users/benjamin/Images/Integration"
 
@@ -23,7 +17,6 @@ vmPath = "/Users/benjamin/Images/StackVM.app/Contents/MacOS/StackVM"
 
 # ===========================================================================
 
-
 def editor()
     if ENV['EDITOR']
         return ENV['EDITOR']
@@ -32,29 +25,46 @@ def editor()
     end
 end
 
+def help
+    $stderr.puts "    usage /.image issueNumber"
+    $stderr.puts "          --hack     edit the sources of this script"
+    $stderr.puts "          -h/--help  show this help text"
+end
+
 if $*[0] == "--help" || $*[0] == "-h"
     help()
     exit 0
 elsif $*[0] == "--hack"
     sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
-    exec("#{editor()} #{sourceFile}")
+    exec(editor(), sourceFile)
 end
 
-puts "fetching the latest image"
-
+# ===========================================================================
 
 if (File.exists? "#{path}/artifact.zip")
 	puts "Integration already in progress, please wait"
 	exit 1
 end
 
-`cd "#{path}" && wget --tries=2 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact.zip"
+puts "fetching the latest image"
+
+system('wget', 
+    '--tries=2', 
+    '--timeout=3', 
+    '--no-check-certificate',
+    imageUrl,
+    '--output-document=',"#{path}/artifact.zip")
+
 puts "Unzipping the archive"
-`unzip -x "#{path}/artifact.zip" -d "#{destination}"`
-`cd "#{destination}" && mv "#{name}/#{name}.image" "PendingIntegration.image" ; mv "#{name}/#{name}.changes" "PendingIntegration.changes" ; mv "#{name}/PharoV10.sources" PharoV10.sources`
+system('unzip', '-x', "#{path}/artifact.zip", '-d', destination)
+Dir.chdir destination
+
+FileUtils.cp "#{name}/#{name}.image" "PendingIntegration.image"
+FileUtils.cp "#{name}/#{name}.changes" "PendingIntegration.changes"
+FileUtils.cp "#{name}/PharoV10.sources" "PharoV10.sources"
 
 puts "Cleanup"
-`rm -rf "#{tmp}"`
+system('rm', '-rf', "#{tmp}")
 
 # ===========================================================================
 
@@ -95,11 +105,11 @@ puts "Retrieving file"
 `sh getUpdateFiles`
 
 puts "Open the image and start a new integration"
-`"#{vmPath}" "#{destination}/PendingIntegration.image" "#{destination}/integration.st"`
+system(vmPath, "#{destination}/PendingIntegration.image", "#{destination}/integration.st")
 
 puts "Push the updates.list"
-`upFiles "#{destination}/updates.list"`
+system(upFiles, "#{destination}/updates.list")
 
-puts "Remove the folder #{destination}"
-`rm -R "#{destination}"`
-`rm "#{path}/artifact.zip"`
+#puts "Remove the folder #{destination}"
+#`rm -R "#{destination}"`
+#`rm "#{path}/artifact.zip"`
