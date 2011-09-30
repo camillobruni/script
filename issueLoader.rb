@@ -38,7 +38,7 @@ def guard()
 end
 
 # ===========================================================================
-
+updateImage = true
 issueNumber = $*[0]
 version  = '1.4'
 tmp      = `mktemp -d -t pharo`.chomp
@@ -51,14 +51,18 @@ destination = "Monkey#{issueNumber}"
 # ============================================================================
 
 
-puts "fetching the latest image"
-`wget --tries=1 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact#{issueNumber}.zip" \
-    && cp "artifact#{issueNumber}.zip" "/backup.zip"  \
-    || cp "backup.zip" "artifact#{issueNumber}.zip"`
+if updateImage
+    puts "fetching the latest image"
+        `wget --tries=1 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact#{issueNumber}.zip" \
+        && cp "artifact#{issueNumber}.zip" "backup.zip"  \
+        || cp "backup.zip" "artifact#{issueNumber}.zip"`
+else
+    `cp "backup.zip" "artifact#{issueNumber}.zip"`
+end
 guard()
 
 puts "Unzipping the archive"
-`unzip -x "artifact#{issueNumber}.zip" -d "#{destination}"`
+`unzip -x "artifact#{issueNumber}.zip" -d "#{destination}" && rm -rf "#{destination}/__MACOSX"`
 Dir::chdir(destination)
 guard()
 
@@ -80,7 +84,7 @@ guard()
 exit 1 if !system("ping -c 1 ss3.gemstone.com")
 
 File.open("issueLoading.st", 'w') {|f| 
-    f.puts <<IDENTIFIER
+f.puts <<IDENTIFIER
 | tracker issue |
 
 World submorphs do: [:each | each delete ].
@@ -105,7 +109,6 @@ tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
 "===================================="
 issue := tracker issue: #{issueNumber}.
 Smalltalk at: 'MonkeyIssue' put: issue.
-Smalltalk snapshot: true andQuit: false.
 "===================================="
 
 issue loadAndTest.
@@ -118,10 +121,10 @@ IDENTIFIER
 
 pid = 0
 begin
-    #kill the build process after 15 minutes
-    puts "Open the image and check the issue number #{issueNumber}"
-    timeout(15 * 60) {
-        pid = Process.spawn("pharo '#{Dir.pwd}/Monkey#{issueNumber}.image' '#{Dir.pwd}/issueLoading.st'")
+    #kill the build process after 1 hour
+    puts "Opening the image and checking  issue ##{issueNumber}"
+    timeout(60 * 60) {
+        pid = Process.spawn("stackVM '#{Dir.pwd}/Monkey#{issueNumber}.image' '#{Dir.pwd}/issueLoading.st'")
         puts pid
         Process.wait
     }
@@ -132,12 +135,17 @@ rescue Timeout::Error
     puts "Loading #{issueNumber} took longer than 15mins"
     File.open("issueLoading.st", 'w') {|f| 
         f.puts <<IDENTIFIER
-            (Smalltalk at: 'MonkeyIssue') 
-                reviewNeeded: 'Timeout occured while loading and testing the code'.
-            Smalltalk snapshot: false andQuit: true.
+"===================================="
+tracker := GoogleIssueTracker pharo.
+tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
+"===================================="
+
+issue := tracker issue: #{issueNumber}.
+issue reviewNeeded: 'Timeout occured while loading and testing the code'.
+Smalltalk snapshot: false andQuit: true.
 IDENTIFIER
     }
-    `pharo "#{Dir.pwd}/Monkey#{issueNumber}.image" "#{Dir.pwd}/issueLoading.st"`
+    `stackVM "#{Dir.pwd}/Monkey#{issueNumber}.image" "#{Dir.pwd}/issueLoading.st"`
 end
 
 
