@@ -23,8 +23,8 @@ if $*[0] == "--help" || $*[0] == "-h"
     help()
     exit 0
 elsif $*[0] == "--hack"
-    sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
-    exec("#{editor()} #{sourceFile}")
+    sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`.chomp
+    exec(editor(), sourceFile)
 end
 
 # ===========================================================================
@@ -34,11 +34,11 @@ version  = '1.4'
 imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
 artifact = "Nautilus1.4"
 imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
-tmp      = `mktemp -d -t pharo`.chomp
+tmp      = `mktemp -d -t pharoXXXXX`.chomp
 
 # ===========================================================================
 
-
+puts "Creating the proejct dir"
 `mkdir "#{name}" &> /dev/null`
 if not $?.success? 
     $stderr.puts "    project #{name} exists already"
@@ -51,19 +51,20 @@ puts "fetching the latest image"
 
 `wget --no-check-certificate #{imageUrl} --output-document=#{tmp}/artifact.zip`
 
-
+puts "Unzipping the downloaded files"
 `unzip #{tmp}/artifact.zip -d #{tmp}`
 `mv #{tmp}/#{artifact}/* "#{name}/"`
 `rm -rf #{tmp}`
 
 # ===========================================================================
-
+puts "Copy over the files"
 `mv "#{name}/#{artifact}.image" "#{name}/#{name}.image"`
 `mv "#{name}/#{artifact}.changes" "#{name}/#{name}.changes"`
 `ln -s "#{Dir.pwd}/package-cache" "#{name}/package-cache"` if File.exists? 'package-cache'
 
 # ===========================================================================
 
+puts "Creating setup files"
 File.open("#{name}/setup.st", 'w') {|f| 
     f.puts <<IDENTIFIER
 
@@ -105,7 +106,8 @@ Smalltalk snapshot: true andQuit: true.
 IDENTIFIER
 }
 
-
+puts "Install the setup"
 `pharo "#{Dir.pwd}/#{name}/#{name}.image" "#{Dir.pwd}/#{name}/setup.st"`
 
+puts "Open the image"
 `open "#{Dir.pwd}/#{name}/#{name}.image" &`

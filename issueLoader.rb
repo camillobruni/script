@@ -7,7 +7,7 @@ require 'timeout'
 updateImage = true
 issueNumber = $*[0]
 version  = '1.4'
-tmp      = `mktemp -d -t pharo`.chomp
+tmp      = `mktemp -d -t pharoXXXXX`.chomp
 
 imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
 artifact = "Pharo#{version}"
@@ -34,7 +34,7 @@ if $*[0] == "--help" || $*[0] == "-h"
     help()
     exit 0
 elsif $*[0] == "--hack"
-    sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
+    sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`.chomp
     exec(editor(), sourceFile)
 end
 

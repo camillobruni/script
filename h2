@@ -46,8 +46,8 @@ def check_action
     if $*[0] == "--edit"
         exec("#{editor()} #{source()}")
     elsif $*[0] == "--hack"
-        sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
-        exec("#{editor()} #{sourceFile}")
+        sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`.chomp
+        exec(editor(), sourceFile)
     end
 end
 
