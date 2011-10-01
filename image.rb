@@ -4,11 +4,7 @@ def help
     $stderr.puts "    usage /.image projectName"
     $stderr.puts "          --hack     edit the sources of this script"
     $stderr.puts "          -h/--help  show this help text"
-end
-
-if $*.size != 1
-    help
-    exit 1
+    $stderr.puts "          -c/--core  use the core image instead of the nautilus image"
 end
 
 def editor()
@@ -29,19 +25,25 @@ end
 
 # ===========================================================================
 
-name     = $*[0].gsub(" ", "_")
 version  = '1.4'
-imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
-artifact = "Nautilus1.4"
-imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
+
+if $*[0] == '--core' || $*[0] == '-c'
+    $*.shift
+    artifact = "Pharo-1.4"
+    imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
+else
+    artifact = "Nautilus1.4"
+    imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
+end
+name     = $*[0].gsub(" ", "_")
 tmp      = `mktemp -d -t pharoXXXXX`.chomp
 
 # ===========================================================================
 
-puts "Creating the proejct dir"
+puts "Creating the project dir"
 `mkdir "#{name}" &> /dev/null`
 if not $?.success? 
-    $stderr.puts "    project #{name} exists already"
+    $stderr.puts "    project '#{name}' already exists"
     exit 1
 end
 

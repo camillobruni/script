@@ -716,10 +716,18 @@
     for i in *.AVI; do 
         ffmpeg -i $i -threads 0 -acodec libfaac -ab 32k -ac 1 -ar 22050 -crf 27 -r 16 "${i%.*}.mp4"; 
     done
-
+GG
 - How to create a bigger swapspace under linux?
     dd if=/dev/zero of=/swap512 bs=1024 count=524288
     mkswap /swap512
     swapon /swap512
     echo "/swap512 swap swap 0 0" >> /etc/fstab
 
+- How to script to add requiredPackages to a Monticello Package in Pharo? [Smalltalk]
+    p := ', ' split: aPackageVersionStringFromTheWorkingCopyBrowser trimBoth.
+    p := p collect: [:each| each copyUpToLast: $-].
+    g := Gofer new package: 'SLICE-Issue-4725-extend-the-string-protocol'.
+    wc := g references first workingCopy.
+    p do: [ :package| 
+        g2 := Gofer new package: package.
+        wc requirePackage: g2 references first workingCopy package ]
