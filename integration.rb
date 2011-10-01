@@ -13,6 +13,7 @@ path = "/Users/benjamin/Images/Integration"
 # ===========================================================================
 
 version  = '1.4'
+uploadUser = 'mdenker'
 tmp      = `mktemp -d -t pharo`.chomp
 
 imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo-#{version}.zip"
@@ -158,7 +159,7 @@ puts "Push the cs file"
 #`sh upFiles "#{destination}/updates.list"`
 
 puts "Push the updates.list"
-`sh upFiles "#{destination}/updates.list"`
+`scp "#{destination}/updates.list" #{uploadUser}@scm.gforge.inria.fr:/home/groups/pharo/htdocs/updates/pharo1.4/`
 
 puts "Remove the folder #{destination}"
 `rm -R "#{destination}"`
