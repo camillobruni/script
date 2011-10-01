@@ -716,7 +716,7 @@
     for i in *.AVI; do 
         ffmpeg -i $i -threads 0 -acodec libfaac -ab 32k -ac 1 -ar 22050 -crf 27 -r 16 "${i%.*}.mp4"; 
     done
-GG
+
 - How to create a bigger swapspace under linux?
     dd if=/dev/zero of=/swap512 bs=1024 count=524288
     mkswap /swap512
