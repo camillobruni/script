@@ -48,10 +48,13 @@ if (File.exists? "#{path}/artifact.zip")
 	exit 1
 end
 
-`cd "#{path}" && wget --tries=2 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact.zip"
+`cd "#{path}" && wget --tries=2 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact.zip"`
+
 puts "Unzipping the archive"
+
 `unzip -x "#{path}/artifact.zip" -d "#{destination}"`
-`cd "#{destination}" && mv "#{name}/#{name}.image" "PendingIntegration.image" ; mv "#{name}/#{name}.changes" "PendingIntegration.changes" ; mv "#{name}/PharoV10.sources" PharoV10.sources`
+
+`cd "#{destination}" && mv "#{name}/#{name}.image" "Preparation.image" ; mv "#{name}/#{name}.changes" "Preparation.changes" ; mv "#{name}/PharoV10.sources" PharoV10.sources`
 
 puts "Cleanup"
 `rm -rf "#{tmp}"`
@@ -59,7 +62,7 @@ puts "Cleanup"
 # ===========================================================================
 
 
-File.open("#{destination}/integration.st", 'w') {|f| 
+File.open("#{destination}/preparation.st", 'w') {|f| 
     f.puts <<IDENTIFIER
 
 | tracker |
@@ -85,20 +88,77 @@ tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
 
 "===================================="
 
-IntegrationManager integrate: {#{$*.join('. ')}}.
+IntegrationManager prepare: {#{$*.join('. ')}}.
 
+Smalltalk saveAs: 'Loading.image'.
 Smalltalk snapshot: true andQuit: true.
 
 IDENTIFIER
 }
-puts "Retrieving file"
-`sh getUpdateFiles`
 
-puts "Open the image and start a new integration"
-`"#{vmPath}" "#{destination}/PendingIntegration.image" "#{destination}/integration.st"`
+File.open("#{destination}/loadAndGenerate.st", 'w') {|f| 
+    f.puts <<IDENTIFIER
+
+Author fullName: 'Integrator'.
+IntegrationManager loadAndGenerate.
+Smalltalk snapshot: true andQuit: true.
+
+IDENTIFIER
+}
+
+File.open("#{destination}/integration.st", 'w') {|f| 
+    f.puts <<IDENTIFIER
+
+Author fullName: 'Integrator'.
+IntegrationManager integrate.
+Smalltalk snapshot: true andQuit: true.
+
+IDENTIFIER
+}
+
+
+File.open("#{destination}/preload.st", 'w') {|f| 
+    f.puts <<IDENTIFIER
+
+Beeper primitiveBeep.
+
+IDENTIFIER
+}
+
+File.open("#{destination}/postload.st", 'w') {|f| 
+    f.puts <<IDENTIFIER
+	
+Beeper primitiveBeep.
+
+IDENTIFIER
+}
+
+# Done in the image
+#puts "Retrieving file"
+#`sh getUpdateFiles`
+
+puts "Preparation: Collect all data and push them locally in a folder"
+`"#{vmPath}" "#{destination}/Preparation.image" "#{destination}/preparation.st"`
+
+# Copy is done here to preserve the Integration image from changes
+puts "Copy the image"
+`cp "#{destination}/Loading.image" "#{destination}/Integration.image"`
+`cp "#{destination}/Loading.changes" "#{destination}/Integration.changes"`
+ 
+puts "Create the local repository"
+`"#{vmPath}" "#{destination}/Loading.image" "#{destination}/loadAndGenerate.st"`
+
+puts "Integration: load from disk "
+`"#{vmPath}" "#{destination}/Integration.image" "#{destination}/integration.st"`
+
+# here we should ensure that a new st file has been created
+# then we should open 'NewImageForTest.image' with the script 
+
+puts "Push the cs file"
+#`sh upFiles "#{destination}/updates.list"`
 
 puts "Push the updates.list"
-`upFiles "#{destination}/updates.list"`
+`sh upFiles "#{destination}/updates.list"`
 
 puts "Remove the folder #{destination}"
 `rm -R "#{destination}"`
