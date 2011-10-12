@@ -94,7 +94,7 @@ UITheme defaultSettings fastDragging: true.
 ws := Workspace new.
 (ws openLabel: '1st Workspace') 
     makeUnclosable;
-    extent: 5050@300;
+    extent: 500@300;
     setToAdhereToEdge: #bottomLeft.
 
 "open up default mc working copy browser"
@@ -109,7 +109,7 @@ IDENTIFIER
 }
 
 puts "Install the setup"
-`pharo "#{Dir.pwd}/#{name}/#{name}.image" "#{Dir.pwd}/#{name}/setup.st"`
+`stackVM "#{Dir.pwd}/#{name}/#{name}.image" "#{Dir.pwd}/#{name}/setup.st"`
 
 puts "Open the image"
-`open "#{Dir.pwd}/#{name}/#{name}.image" &`
+`open "#{Dir.pwd}/#{name}/#{name}.image"`

@@ -731,3 +731,36 @@
     p do: [ :package| 
         g2 := Gofer new package: package.
         wc requirePackage: g2 references first workingCopy package ]
+
+- How to strip the file extension in bash?
+    ${FILENAME%.*}
+
+- How to split a pdf into single pages? 
+    pdftk File.pdf burst
+
+- How to build the subjonctif in french? [tense]
+        3. person plural +
+    je      -e      nous      -ions  
+    tu      -es     vous      -iez  
+    il/elle -e      ils/elles -ent 
+    
+    Exceptions: aller, avoir, être, faire, falloir, pouvoir, savoir
+    Exceptions: boire, devoir, prendre, venir, voir (1. + 2. pl in Imparfait)
+
+- How to build the conditionel in french? [tense]
+        infinitive + ending imparfait
+    je      -ais    nous      -ions  
+    tu      -ais    vous      -iez  
+    il/elle -ait    ils/elles -aient 
+
+- How to build the futur-simple in french? [tense]
+        infinitive +
+    je      -ai     nous      -ons  
+    tu      -as     vous      -ez  
+    il/elle -a      ils/elles -ont 
+
+- How to build the imparfait in french? [tense]
+    je      -ais    nous      -ions  
+    tu      -ais    vous      -iez  
+    il/elle -ait    ils/elles -aient 
+

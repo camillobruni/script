@@ -95,6 +95,12 @@ Smalltalk garbageCollect.
 
 Author fullName: 'MonkeyGalactikalIntegrator'.
 
+"===================================="
+UpdateStreamer new 
+    beSilent; 
+    elementaryReadServerUpdates.
+
+"===================================="
 Gofer new
 	url: 'http://ss3.gemstone.com/ss/ci';
 	package: 'ConfigurationOfContinousIntegration';
