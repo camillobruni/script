@@ -89,7 +89,7 @@ if File.exists? destination
         exit 1
     else
         `rm -rf #{destination}`
-    endartifact
+    end
 end
 
 # ============================================================================
@@ -219,7 +219,7 @@ case result
 when 'y'
     `rm -R "#{Dir.pwd}"`
 else
-    `open #{Dir.pwd}`
+    `open "#{Dir.pwd}"`
 end
 
 puts `date`

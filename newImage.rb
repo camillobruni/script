@@ -124,16 +124,12 @@ imagePath = "#{Dir.pwd}/#{subdir}.image"
 
 File.open("#{destination}/setup.st", 'w') {|f| 
     f.puts <<IDENTIFIER
-
-| package |
 Author fullName: 'Camillo Bruni'.
 
 Debugger alwaysOpenFullDebugger: true.
 
 FreeTypeSystemSettings loadFt2Library: true.
 FreeTypeFontProvider current updateFromSystem.
-
-((MCRepositoryGroup allInstances gather:#repositories) asSet detect: [:e| e description = 'http://www.squeaksource.com/Nautilus'] ifNone: [^ self]) user:'BVR'; password: 'Nemesis'.
 
 StandardFonts defaultFont: (LogicalFont familyName: 'Lucida Grande' pointSize: 10) forceNotBold.
 GraphicFontSettings resetAllFontToDefault.
