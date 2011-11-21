@@ -198,7 +198,7 @@
     check for all Meta calls.
     Stacktraces won't work in normal mode!
 
-- How to set the bash prompt style? [bash shell sh color colour $PS1 ]
+- How to set the bash prompt style? [bash shell sh color colour $PS1 terminal]
     http://www.ibm.com/developerworks/linux/library/l-tip-prompt/
     [0, 1, 4, 5, 7].each { |attr|
         puts '----------------------------------------------------------------'
@@ -611,7 +611,7 @@
     sudo install_name_tool -change ${OLDNAME} ${NEWNAME} ${MY_SO}
 
 - How to download a complete website using wget?
-    wget --mirror --convert-links --html-extension $URL
+    wget --mirror --page-requisites --convert-links --no-parent --html-extension $URL
     
 - Where do I find the Flash debugger Player? [actionscript]
     http://www.adobe.com/support/flashplayer/downloads.html
@@ -763,4 +763,11 @@
     je      -ais    nous      -ions  
     tu      -ais    vous      -iez  
     il/elle -ait    ils/elles -aient 
+
+- How to access iCal events from the command-line?
+    #use icalBuddy from http://hasseg.org/icalBuddy/
+    icalBuddy eventsToday
+
+- How to create ManPages from Markdown?
+    # use ronn: http://rtomayko.github.com/ronn/
 
