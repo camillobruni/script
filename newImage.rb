@@ -2,20 +2,17 @@
 require 'fileutils'
 
 def help
-    $stderr.puts "    usage /.image pharo"
-    $stderr.puts "              or"    
-    $stderr.puts "    usage /.image nautilus"
-    $stderr.puts "          hack     edit the sources of this script"
-    $stderr.puts "          h/help  show this help text"
+    $stderr.puts "usage #{$0} [pharo] [options] imageName"
+    $stderr.puts ""
+    $stderr.puts ""
+    $stderr.puts "      --hack     edit the sources of this script"
+    $stderr.puts "      -h/--help  show this help text"
 end
 
-if $*.size > 1
+if $*.size > 2 || $*.size == 0
     help
     exit 1
 end
-
-
-vmPath = "/Users/benjamin/Images/StackVM.app/Contents/MacOS/StackVM"
 
 
 def editor()
@@ -58,61 +55,70 @@ version  = '1.4'
 tmp      = `mktemp -d -t pharo`.chomp
 
 if $*[0] == "pharo"
-    imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/Pharo#{version}.zip"
+    subdir = $*[1]
     artifact = "Pharo-#{version}"
-    subdir = "Pharo#{version}"
-    path = "/Users/benjamin/Images/Pharo 1.4"
+    imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
 	extraInstructions = ""
-
-elsif ($*[0] == "nautilus" or $*[0] == nil)
+else
+    subdir = $*[0]
     artifact = "Nautilus#{version}"
-    path = "/Users/benjamin/Images/Nautilus"
-    subdir = artifact
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
 	extraInstructions = "
 SystemBrowser default: Nautilus.
 package := RPackageOrganizer default packageNamed: 'Nautilus'. 
 Nautilus groupsManager addADynamicGroupSilentlyNamed: 'Nautilus' block: [ package orderedClasses ].
-
 "
 end
+
+destination = "#{Dir.pwd}/#{subdir}"
+`mkdir #{subdir}`
 
 # ===========================================================================
 
 puts yellow("fetching the latest image")
+puts "    #{imageUrl}"
 
-`cd "#{path}" && wget --progress-bar -o "artifact.zip" "#{imageUrl}" &&  cp "#{path}/artifact.zip" "#{path}/backup.zip"  || cp "#{path}/backup.zip" "#{path}/artifact.zip"`
+`curl --progress-bar -o "#{artifact}.zip" "#{imageUrl}" &&  cp "#{artifact}.zip" "#{artifact}.bak.zip"  || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
 
-list = Dir["#{path}/#{artifact}*"]
+# ===========================================================================
 
-if list == []
-    id = nil
-else
-    lastName = list.last
-    id = lastName.split.last
+#list = Dir["#{path}/#{artifact}*"]
+#
+#if list == []
+#    id = nil
+#else
+#    lastName = list.last
+#    id = lastName.split.last
+#end
+#
+#if id == nil
+#    arity = ""
+#elsif id == artifact
+#    arity = "\ 1"
+#else
+#    arity = "\ " + (id.to_i()+1).to_s
+#end
+#
+#dir = artifact+arity
+#destination = "#{path}/#{dir}"
+#origin = "#{destination}/#{subdir}"
+#
+puts yellow("Unzipping image")
+
+`unzip -x "#{artifact}.zip" -d "#{destination}"`
+Dir::chdir(destination)
+
+imagePath = `find . -name "*.image"`.chomp
+imagePath = imagePath.chomp(File.extname(imagePath))
+FileUtils.move(imagePath+'.image', "#{subdir}.image")
+FileUtils.move(imagePath+'.changes', "#{subdir}.changes")
+
+if File.exists? File.dirname(imagePath)+"/PharoV10.sources"
+    FileUtils.move(File.dirname(imagePath)+"/PharoV10.sources", "PharoV10.sources")
 end
 
-if id == nil
-    arity = ""
-elsif id == artifact
-    arity = "\ 1"
-else
-    arity = "\ " + (id.to_i()+1).to_s
-end
-
-dir = artifact+arity
-destination = "#{path}/#{dir}"
-origin = "#{destination}/#{subdir}"
-
-`unzip -x "#{path}"/artifact.zip -d "#{path}/#{dir}"`
-
-Dir.glob(File.join(origin, '*')).each do |file|
-    FileUtils.mv file, File.join(destination, File.basename(file))
-end
-
-`rm -R "#{origin}"`
-`rm "#{path}"/artifact.zip`
-`rm -rf "#{tmp}"`
+imagePath = "#{Dir.pwd}/#{subdir}.image"
+`rm -R "#{artifact}"`
 
 # ===========================================================================
 
@@ -120,7 +126,7 @@ File.open("#{destination}/setup.st", 'w') {|f|
     f.puts <<IDENTIFIER
 
 | package |
-Author fullName: 'BenjaminVanRyseghem'.
+Author fullName: 'Camillo Bruni'.
 
 Debugger alwaysOpenFullDebugger: true.
 
@@ -143,8 +149,11 @@ Smalltalk snapshot: true andQuit: true.
 IDENTIFIER
 }
 
-puts '#open "#{destination}/#{subdir}.image" "#{destination}/setup.st"'
 
-`#{vmPath} "#{destination}/#{subdir}.image" "#{destination}/setup.st"`
-`rm "#{destination}/setup.st"`
-`open "#{destination}/#{subdir}.image" &`
+# ===========================================================================
+
+puts yellow("Setting up Image")
+puts "    #{imagePath}"
+
+`stackVM "#{imagePath}" "#{destination}/setup.st"`
+`open #{imagePath}`

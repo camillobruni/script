@@ -17,13 +17,13 @@ destination = "Monkey#{issueNumber}"
 # ============================================================================
 
 def help
-    $stderr.puts "    usage /.image issueNumber"
+    $stderr.puts "usage /.image [options] issueNumber"
     $stderr.puts ""
     $stderr.puts "    loads and tests an issue from the google issue tracker at http://code.google.com/p/pharo/issues/list"
     $stderr.puts "    this script will update the issue status and adds comments if the errors occur during loading"
     $stderr.puts ""
-    $stderr.puts "          --hack     edit the sources of this script"
-    $stderr.puts "          -h/--help  show this help text"
+    $stderr.puts "    --hack     edit the sources of this script"
+    $stderr.puts "    -h/--help  show this help text"
 end
 
 def editor()
@@ -89,7 +89,7 @@ if File.exists? destination
         exit 1
     else
         `rm -rf #{destination}`
-    end
+    endartifact
 end
 
 # ============================================================================
