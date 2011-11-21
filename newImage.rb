@@ -26,16 +26,31 @@ def editor()
     end
 end
 
-if $*[0] == "help" || $*[0] == "h"
+if $*[0] == "--help" || $*[0] == "-h"
     help()
     exit 0
-elsif $*[0] == "hack"
+elsif $*[0] == "--hack"
     sourceFile = `readlink #{__FILE__} || echo #{__FILE__}`
     exec("#{editor()} #{sourceFile}")
 end
 
+# ============================================================================
 
+def colorize(text, color_code)
+  "\033#{color_code}#{text}\033[0m"
+end
 
+def red(text)
+    colorize(text, "[31m")
+end
+
+def green(text)
+    colorize(text, "[32m")
+end
+
+def yellow(text)
+    colorize(text, "[33m")
+end
 
 # ===========================================================================
 
@@ -48,6 +63,7 @@ if $*[0] == "pharo"
     subdir = "Pharo#{version}"
     path = "/Users/benjamin/Images/Pharo 1.4"
 	extraInstructions = ""
+
 elsif ($*[0] == "nautilus" or $*[0] == nil)
     artifact = "Nautilus#{version}"
     path = "/Users/benjamin/Images/Nautilus"
@@ -63,9 +79,9 @@ end
 
 # ===========================================================================
 
-puts "fetching the latest image"
+puts yellow("fetching the latest image")
 
-`cd "#{path}" && wget --tries=2 --timeout=3 --no-check-certificate "#{imageUrl}" --output-document="artifact.zip" &&  cp "#{path}/artifact.zip" "#{path}/backup.zip"  || cp "#{path}/backup.zip" "#{path}/artifact.zip"`
+`cd "#{path}" && wget --progress-bar -o "artifact.zip" "#{imageUrl}" &&  cp "#{path}/artifact.zip" "#{path}/backup.zip"  || cp "#{path}/backup.zip" "#{path}/artifact.zip"`
 
 list = Dir["#{path}/#{artifact}*"]
 
