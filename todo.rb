@@ -36,11 +36,6 @@ class App
             opts.program_name = 'todo'
             opts.version = '0.1'
             opts.banner = 'todo [options] comment'
-            
-            opts.separator ""
-            opts.separator "Specific options:"
-            
-            #to be implemented
 
             opts.separator ""
             opts.separator "Common options:"
@@ -56,8 +51,6 @@ class App
             end
 
             opts.on_tail('--hack', "Edit the programs source") { self.hack }
-            # TODO - add additional options
-                  
         end
         
         if ARGV.empty?
@@ -70,29 +63,29 @@ class App
     end
     
     protected
-        def process_command
-            IO.popen('osascript', 'w') { |f|
-            f.puts <<EOF
--- Variables
-set recipientAddress to "#{self.email}"
-set theSubject to "TODO: #{ARGV.join(' ')}"
---Invoke Mail
-tell application "Mail"
-	set theMessage to make new outgoing message with properties {subject:theSubject, visible:true}
-	tell theMessage
-		make new to recipient with properties {address:recipientAddress}
-		--Send the Message
-		send
-	end tell
-end tell
+    def process_command
+        IO.popen('osascript', 'w') { |f|
+        f.puts <<EOF
+            -- Variables
+            set recipientAddress to "#{self.email}"
+            set theSubject to "TODO: #{ARGV.join(' ')}"
+            --Invoke Mail
+            tell application "Mail"
+            	set theMessage to make new outgoing message with properties {subject:theSubject, visible:true}
+            	tell theMessage
+            		make new to recipient with properties {address:recipientAddress}
+            		--Send the Message
+            		send
+            	end tell
+            end tell
 EOF
-        }
-        end
+    }
+    end
 
     def email
+        return ENV['TODO_EMAIL'] if ENV['TODO_EMAIL']
         return ENV['EMAIL'] if ENV['EMAIL']
-        @opts.warn 'Could not find $EMAIL ENV var'
-        exit -1
+        @opts.abort 'Could not find $EMAIL ENV var'
     end
 
 
@@ -110,6 +103,7 @@ EOF
     end
 end
 
+# ============================================================================
 
 if __FILE__ == $0
     # preamble to change to the current scripts dir
