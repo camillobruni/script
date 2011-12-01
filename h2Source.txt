@@ -712,7 +712,7 @@
 - What is the local url to confogure cupsd?
     http://http://localhost:631/
 
-- How to batch convert conference presentations?
+- How to batch convert/encode conference presentation videos?
     for i in *.AVI; do 
         ffmpeg -i $i -threads 0 -acodec libfaac -ab 32k -ac 1 -ar 22050 -crf 27 -r 16 "${i%.*}.mp4"; 
     done

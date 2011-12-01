@@ -108,7 +108,8 @@ puts yellow("Unzipping image")
 `unzip -x "#{artifact}.zip" -d "#{destination}"`
 Dir::chdir(destination)
 
-imagePath = `find . -name "*.image"`.chomp
+
+imagePath = `find . -name "*.image"`.chomp.split[0]
 imagePath = imagePath.chomp(File.extname(imagePath))
 FileUtils.move(imagePath+'.image', "#{subdir}.image")
 FileUtils.move(imagePath+'.changes', "#{subdir}.changes")
@@ -128,7 +129,7 @@ Author fullName: 'Camillo Bruni'.
 
 Debugger alwaysOpenFullDebugger: true.
 
-FreeTypeSystemSettings loadFt2Library: true.
+[ FreeTypeSystemSettings loadFt2Library: true ] onDNU: #loadFt2Library: do: [ :e| "ignore"].
 FreeTypeFontProvider current updateFromSystem.
 
 StandardFonts defaultFont: (LogicalFont familyName: 'Lucida Grande' pointSize: 10) forceNotBold.
