@@ -26,8 +26,9 @@ class App
         
         # Set defaults
         @options = OpenStruct.new
-        @options.verbose = false
-        @options.quiet   = false
+        @options.send_message = true
+        @options.verbose      = false
+        @options.quiet        = false
     end
 
     def run
@@ -37,6 +38,10 @@ class App
             opts.version = '0.1'
             opts.banner = 'todo [options] comment'
 
+            opts.on("--[no-]send", "Send the message") do |v|
+                @options.send_message = v
+            end
+            
             opts.separator ""
             opts.separator "Common options:"
 
@@ -75,12 +80,14 @@ class App
             	tell theMessage
             		make new to recipient with properties {address:recipientAddress}
             		--Send the Message
-            		send
+                    #{@options.send_message ? 'send' : ''}
             	end tell
+                #{@options.send_message ? '' : 'activate'}
             end tell
 EOF
     }
     end
+
 
     def email
         return ENV['TODO_EMAIL'] if ENV['TODO_EMAIL']
