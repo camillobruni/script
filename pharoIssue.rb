@@ -24,17 +24,17 @@ end
 # ===========================================================================
 updateImage = true
 issueNumber = $*[0]
-version  = '1.4'
-tmp      = `mktemp -d -t pharoXXXXX`.chomp
+version     = '1.4'
+tmp         = `mktemp -d -t pharoXXXXX`.chomp
 
-imageUrl = "https://ci.lille.inria.fr/pharo/job/CI/lastSuccessfulBuild/artifact/CI.zip"
-artifact = "CI"
-name = "CI"
+imageUrl    = "https://ci.lille.inria.fr/pharo/job/CI/lastSuccessfulBuild/artifact/CI.zip"
+artifact    = "CI"
+name        = "CI"
 destination = "Monkey#{issueNumber}"
 
 # ============================================================================
 
-def help(msg, exitStatus=0)
+def help(msg=nil, exitStatus=0)
     if msg
         $stderr.puts red(msg)
         $stderr.puts ""
@@ -58,7 +58,6 @@ def editor()
         return 'vim'
     end
 end
-
 
 def guard()
     exit $?.to_i if !$?.success?

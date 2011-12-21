@@ -21,7 +21,7 @@ end
 
 # ============================================================================
 
-def help(msg, exitStatus=0)
+def help(msg=nil, exitStatus=0)
     if msg
         $stderr.puts red(msg)
         $stderr.puts ""
@@ -117,27 +117,6 @@ puts "    #{imageUrl}"
 
 # ===========================================================================
 
-#list = Dir["#{path}/#{artifact}*"]
-#
-#if list == []
-#    id = nil
-#else
-#    lastName = list.last
-#    id = lastName.split.last
-#end
-#
-#if id == nil
-#    arity = ""
-#elsif id == artifact
-#    arity = "\ 1"
-#else
-#    arity = "\ " + (id.to_i()+1).to_s
-#end
-#
-#dir = artifact+arity
-#destination = "#{path}/#{dir}"
-#origin = "#{destination}/#{subdir}"
-#
 puts yellow("Unzipping image")
 
 `unzip -x "#{artifact}.zip" -d "#{destination}"`
