@@ -771,3 +771,12 @@
 - How to create ManPages from Markdown?
     # use ronn: http://rtomayko.github.com/ronn/
 
+- How to remove / cut out a single version from a git repository?
+    git rebase --onto $COMMIT_SHA^ $COMMIT_SHA master
+
+- How to I fix the following error in vim?
+    #E575: viminfo: Illegal starting char in line: ^B13
+    
+    vim ~/.viminfo
+    # find the mentioned lines and delete the contents, or fully delete .viminfo
+
