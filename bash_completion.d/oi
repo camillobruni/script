@@ -14,6 +14,6 @@ have open && _oi_completion() {
         lists=`find . -name "*.image" -maxdepth 3 | grep "${cur}" | sed "s/^\.\///g"`
     fi
 
-    COMPREPLY=( $(compgen -W "${lists}") )
+    COMPREPLY=( $(compgen -W "${lists}" | awk '{print; count++; if (count==20) { print "..."; exit }}' ))
 } && \
 complete -F _oi_completion oi
