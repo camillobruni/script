@@ -78,7 +78,7 @@ end
 # ============================================================================
 
 if File.exists? destination
-    puts red("Issue has been loaded before #{Dir.pwd}/#{destination}")
+    puts red("Issue has been loaded before:")+" #{Dir.pwd}/#{destination}"
     while true
         print 'exit[e], reuse[r] or delete[D] files: '
         result = $stdin.gets.downcase.chomp
@@ -110,10 +110,9 @@ else
 end
 guard()
 
-
 # ============================================================================
 
-puts yellow("Unzipping the archive")
+puts yellow("Unzipping archive")
 `unzip -x "artifact#{issueNumber}.zip" -d "#{destination}" && rm -rf "#{destination}/__MACOSX"`
 Dir::chdir(destination)
 guard()
@@ -128,8 +127,8 @@ if File.exists? File.dirname(imagePath)+"/#{artifact}.sources"
 end
 
 # ============================================================================
-#
-puts yellow("Cleaing up unzipped files")
+
+puts yellow("Cleaning up unzipped files")
 `rm "../artifact#{issueNumber}.zip" && rm -rf "#{tmp}"`
 guard()
 
@@ -141,10 +140,12 @@ if !system("ping -c 1 ss3.gemstone.com > /dev/null")
 end
 
 # ===========================================================================
+
 File.open("issueLoading.st", 'w') {|f| 
 f.puts <<IDENTIFIER
-| tracker issue |
+| tracker issue color red green yellow |
 
+"===================================="
 World submorphs do: [:each | each delete ].
 
 Smalltalk garbageCollect.
@@ -154,12 +155,32 @@ Smalltalk garbageCollect.
 Author fullName: 'MonkeyGalactikalIntegrator'.
 
 "===================================="
+"some helper blocks for error printing"
+
+color := [:colorCode :text|
+    FileStream stderr 
+        "set the color"
+        nextPut: Character escape; nextPut: $[; print: colorCode; nextPut: $m;
+        nextPutAll: text; crlf;
+        "reset the color"
+        nextPut: Character escape; nextPutAll: '[0m'.
+].
+
+red := [:text| color value: 31 value: text ].
+green := [:text| color value: 32 value: text ].
+yellow := [:text| color value: 33 value: text ].
+
+"===================================="
+
+yellow value: 'Updating the image'.
 
 UpdateStreamer new 
     beSilent; 
     elementaryReadServerUpdates.
 
 "===================================="
+
+yellow value: 'Installing Continuous Integration Services'.
 
 Gofer new
 	url: 'http://ss3.gemstone.com/ss/ci';
@@ -169,6 +190,10 @@ Gofer new
 (Smalltalk at: #ConfigurationOfContinousIntegration) perform: #loadDefault.
 
 "===================================="
+[ 
+"===================================="
+
+yellow value: 'Loading tracker issue #{issueNumber}'.
 
 tracker := GoogleIssueTracker pharo.
 tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
@@ -176,15 +201,34 @@ tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
 "===================================="
 
 issue := tracker issue: #{issueNumber}.
-Smalltalk at: 'MonkeyIssue' put: issue.
+Smalltalk at: #'issue#{issueNumber}' put: issue.
 
 "===================================="
 
-issue loadAndTest.
+yellow value: 'Running tests'.
+changeLoader := issue loadAndTest.
+
+changeLoader isGreen
+    ifFalse:  [ red value: 'Issue #{issueNumber} has errors' ]
+    ifTrue: [ green value: 'Issue #{issueNumber} is ready for integration' ].
 
 "===================================="
 
-Smalltalk snapshot: false andQuit: true.
+] on: Error fork: [ :error|
+    "output the Error warning in read"
+    red value: 'Failed to load Issue:'.
+    FileStream stderr print: error; crlf.
+
+    "should do an exit 1 here"
+    Smalltalk snapshot: true andQuit: true.
+
+    "open the error"
+    error pass.
+].
+
+"===================================="
+
+Workspace openContents: ' issue := Smalltalk at: #''issue#{issueNumber}'''.
 
 IDENTIFIER
 }
@@ -217,22 +261,23 @@ IDENTIFIER
     `stackVM "#{Dir.pwd}/Monkey#{issueNumber}.image" "#{Dir.pwd}/issueLoading.st"`
 end
 
-
 # ===========================================================================
 
 while true
     print "Remove the folder #{Dir.pwd} [yN]?"
     result = $stdin.gets.downcase.chomp
-    break if ['y', 'N',].include? result
+    break if ['y', 'n',].include? result
     break if result.empty?
 end
 
 case result
 when 'y'
-    `rm -R "#{Dir.pwd}"`
+    `cd .. && rm -R "#{Dir.pwd}"`
 else
     `open "#{Dir.pwd}"`
 end
+
+# ===========================================================================
 
 puts `date`
 `open "http://code.google.com/p/pharo/issues/detail?id=#{issueNumber}"`
