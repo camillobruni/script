@@ -110,7 +110,7 @@ tmp      = `mktemp -d -t pharo`.chomp
 
 # ===========================================================================
 
-puts yellow("fetching the latest image")
+puts yellow("Fetching the latest image")
 puts "    #{imageUrl}"
 
 `curl --progress-bar -o "#{artifact}.zip" "#{imageUrl}" &&  cp "#{artifact}.zip" "#{artifact}.bak.zip"  || cp "#{artifact}.bak.zip" "#{artifact}.zip"`

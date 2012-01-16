@@ -124,6 +124,7 @@ alias g='git'
 complete -o default -o nospace -F _git g
 
 alias o='_open'
+alias oi='_open'
 alias oo='open "`path`"'
 alias p1='_ping1'
 alias l='ls -l'

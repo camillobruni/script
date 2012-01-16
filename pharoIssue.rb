@@ -210,7 +210,9 @@ changeLoader := issue loadAndTest.
 
 changeLoader isGreen
     ifFalse:  [ red value: 'Issue #{issueNumber} has errors' ]
-    ifTrue: [ green value: 'Issue #{issueNumber} is ready for integration' ].
+    ifTrue: [ 
+        green value: 'Issue #{issueNumber} is ready for integration'
+        Smalltalk snapshot: true andQuit: true ].
 
 "===================================="
 
