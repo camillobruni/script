@@ -780,3 +780,10 @@
     vim ~/.viminfo
     # find the mentioned lines and delete the contents, or fully delete .viminfo
 
+- How to use vim as a hex editor?
+    :%!xxd       # to switch to hex mode
+    :%!xxd -r    # to exit from hex mode
+
+- How do I use something like strace on OSX?
+    dtruss -f -t open $BINARY $ARGS
+    

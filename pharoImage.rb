@@ -106,7 +106,7 @@ end
 
 tmp      = `mktemp -d -t pharo`.chomp
 `mkdir #{destination}`
-`ln -s $PWD/package-cache #{destination}/package-cache`if File.exists? 'package-cache'
+`cd #{destination} && ln -s ../package-cache ./`if File.exists? 'package-cache'
 
 # ===========================================================================
 
