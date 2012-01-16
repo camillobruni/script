@@ -57,6 +57,7 @@ export HISTCONTROL=ignorespace:erasedups
 shopt -s histappend
 
 # ENCODING SHIZZLE --------------------------------------------------------------
+
 export LANG="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 export LC_COLLATE=C
@@ -74,51 +75,44 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 # ============================================================================
 
-# Prompt: requires git and svn
-function parse_git_branch {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[git:\1] /'
-}
-
-export T_TIME_HEADER=1
-time_header() {
-    COL_SUBS=`printf "%*s" $(( $COLUMNS - 2))`
-    #test $((`date +%s` - $T_TIME_HEADER)) -gt 2 && (echo  ✂ ${COL_SUBS// /-});
-    echo  ✂ ${COL_SUBS// /-};
-}
-
-function last_return_status() {
-    EXIT_STATUS="$?";
-    if [[ $EXIT_STATUS != "0" ]]; then 
-        printf "$RED  ☛  %s$NO_COLOR\n" $EXIT_STATUS
-    fi
-}
-
-export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`"
-export PS1="\$(parse_git_branch)\[$EBLACK\]\W\[$NO_COLOR\]: "
-
-# ============================================================================
-
-export PATH=/usr/local/git/bin/:$PATH:/usr/local/mysql/bin/
-export PATH=$PATH:/opt/subversion/bin/:/opt/local/bin:/opt/local/sbin/
+export PATH=/usr/local/git/bin/:/usr/local/bin/:$PATH:/usr/local/mysql/bin/
+export PATH=$PATH:/opt/subversion/bin/:
+export PATH=$PATH:/opt/local/bin:/opt/local/sbin/
 export PATH=$PATH:/opt/git-svn-clone-externals/
 export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin/
-export PATH=/Library/Frameworks/Python.framework/Versions/2.6/bin:$PATH
+export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
 
 # ============================================================================
 
-export EDITOR=vim
-export SVN_EDITOR=vim
+#export RUBYLIB=$RUBYLIB:/Library/Ruby/Gems/1.8/:/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8/
+#export RSENSE_HOME=/opt/rsense-0.3/
+
+#export PYTHONSTARTUP=/usr/local/bin/ipythonShell
+
+export EDITOR=mvim
+export SVN_EDITOR=mvim
 
 export H2_EDITOR=mvim
+
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export PYTHON_VERSION=2.7
+export IRBRC='~/.irbrc'
+
 
 if [ -f /opt/local/etc/bash_completion ]; then
-     . /opt/local/etc/bash_completion
+    BASH_COMPLETION_DIR=~/.bash_completion.d #manually set the local bash_completion dir
+    export BASH_COMPLETION BASH_COMPLETION_DIR
+    . /opt/local/etc/bash_completion
 fi
 
-#xset b off;
+# Python =====================================================================
+
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+source /usr/local/bin/virtualenvwrapper.sh
+export PIP_REQUIRE_VIRTUALENV=true
+export PIP_VIRTUALENV_BASE=$WORKON_HOME
 
 # ============================================================================
 # colorize ls ouputs
@@ -126,6 +120,12 @@ export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # ============================================================================
+alias g='git'
+complete -o default -o nospace -F _git g
+
+alias o='_open'
+alias oo='open "`path`"'
+alias p1='_ping1'
 alias l='ls -l'
 alias ll='ls -al'
 alias du='du -h'
@@ -135,16 +135,18 @@ alias scn='svn'
 alias irb='irb -rubygems'
 alias path='/Applications/path.app/Contents/MacOS/path'
 alias cdp='cd "`path`"'
-alias tre='tree'
-alias o='open .'
-alias cdesktop='cd ~/Desktop/'
+alias tre='tree | less'
+alias 3='tree | less'
 
-alias chrome='sudo -u flex /Applications/Chrome.app/Contents/MacOS/Google\ Chrome &'
+
+alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 
 alias ssh='ssh -C'
+alias sshprox='ssh -CND 8888 '
+
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
-alias grep='grep -n --color=auto'
+#alias grep='grep -n --color=auto'
 alias rgrep='grep -r -n --color=auto'
 
 alias tvim='vim -c "NERDTree" -c "wincmd p"'
@@ -153,16 +155,48 @@ alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
 
-alias lv='lv -c '
+alias irb='irb1.9 -r "irb/completion"'
 
-alias prox='export http_proxy=http://proxy:80/'
-alias unprox='unset http_proxy'
+# better output
+alias contacts="contacts -lHf '%n %p %mp %e %a'"
+alias contact='contacts'
+alias calendar='icalBuddy'
 
-# enable command line vi mode
-#set -o vi
-#bind "\C-a":beginning-of-line
-#bind "\C-e":end-of-line
-#bind "\C-k":kill-line
+#alias prox='export http_proxy=http://proxy:80/'
+#alias unprox='unset http_proxy'
+
+
+# pman opens man pages in preview / skim ====================================
+pman() {
+    man -t "$@" | open -f -a Skim
+}
+
+# open which opens the current dir if no arg is specified ===================
+_open()
+{
+    if [[ $# -eq 0 ]]; then
+        open .;
+        return $?;
+    fi    
+    open "$*";
+}
+
+# ping google or the provided argument once =================================
+_ping1()
+{
+    if [[ $# -eq 0 ]]; then
+        ping -c 1 www.google.com
+        return $?;
+    fi    
+    ping -c 1 "$*";
+}
+
+# a small single line evaluator for ruby ====================================
+rruby()
+{
+    ruby -e "puts $*"
+}
+alias c=rruby
 
 # cd with history ===========================================================
 # acd_func 1.0.5, 10-nov-2004
@@ -222,7 +256,34 @@ cd_func ()
 
 alias cd=cd_func
 
-#if [[ $BASH_VERSION > "2.05a" ]]; then
-#  # ctrl+w shows the menu
-#  bind -x "\"\C-w\":cd_func -- ;"
-#fi
+# ============================================================================
+# load https://github.com/rupa/z after redefinition of cd
+export _Z_DATA="$HOME/.z"
+. /opt/share/z/z.sh
+
+
+# ============================================================================
+
+# Prompt: requires git and svn
+function parse_git_branch {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[git:\1] /'
+}
+
+export T_TIME_HEADER=1
+time_header() {
+    COL_SUBS=`printf "%*s" $(( $COLUMNS - 2))`
+    #test $((`date +%s` - $T_TIME_HEADER)) -gt 2 && (echo  ✂ ${COL_SUBS// /-});
+    echo  ✂ ${COL_SUBS// /-};
+}
+
+function last_return_status() {
+    EXIT_STATUS="$?";
+    if [[ $EXIT_STATUS != "0" ]]; then 
+        printf "$RED  ☛  %s$NO_COLOR\n" $EXIT_STATUS
+    fi
+}
+
+export PS1="\$(parse_git_branch)\[$EBLACK\]\W\[$NO_COLOR\]: "
+export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`;$PROMPT_COMMAND"
+
+# ============================================================================
