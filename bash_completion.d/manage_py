@@ -1,5 +1,4 @@
-
-_manage_py_completion()
+have type django-admin.py && _manage_py_completion()
 {
     local cur prev opts
     COMPREPLY=()
@@ -9,5 +8,5 @@ _manage_py_completion()
     lists=`./manage.py --help 2>&1 | egrep -o "^\W{2}[a-z_-]+" | sed "s/,//g"| awk '{print $1}'`
     
     COMPREPLY=( $(compgen -W "${lists}" -- ${cur}) )
-}
+} && \
 complete -F _manage_py_completion manage.py django-admin.py django-admin

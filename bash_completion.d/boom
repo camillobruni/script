@@ -1,4 +1,4 @@
-_boom_complete() {
+have boom && _boom_complete() {
     local cur prev lists
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
@@ -19,5 +19,5 @@ _boom_complete() {
         done
         ;;
     esac
-}
+} && \
 complete -F _boom_complete boom
