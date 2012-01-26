@@ -75,9 +75,7 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 # ============================================================================
 
-export PATH=/usr/local/git/bin/:/usr/local/bin/:$PATH:/usr/local/mysql/bin/
-export PATH=$PATH:/opt/subversion/bin/:
-export PATH=$PATH:/opt/local/bin:/opt/local/sbin/
+export PATH=/usr/local/git/bin/:/usr/local/bin/:/opt/local/bin:/opt/local/sbin/:$PATH:/usr/local/mysql/bin/
 export PATH=$PATH:/opt/git-svn-clone-externals/
 export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin/
 export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
@@ -126,6 +124,7 @@ complete -o default -o nospace -F _git g
 alias o='_open'
 alias oi='_open'
 alias oo='open "`path`"'
+alias f='find . -name '
 alias p1='_ping1'
 alias l='ls -l'
 alias ll='ls -al'

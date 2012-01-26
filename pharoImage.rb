@@ -113,17 +113,31 @@ tmp      = `mktemp -d -t pharo`.chomp
 puts yellow("Fetching the latest image")
 puts "    #{imageUrl}"
 
-`curl --progress-bar -o "#{artifact}.zip" "#{imageUrl}" &&  cp "#{artifact}.zip" "#{artifact}.bak.zip"  || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
+`curl --progress-bar --retry 1 --retry-delay 1 --connect-timeout 3 --retry-max-time 4 -o "#{artifact}.zip" "#{imageUrl}" || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
 
 # ===========================================================================
 
 puts yellow("Unzipping image")
+`unzip -x "#{artifact}.zip" -d "#{destination}" > /dev/null 2>&1`
 
-`unzip -x "#{artifact}.zip" -d "#{destination}"`
 Dir::chdir(destination)
-
-
 imagePath = `find . -name "*.image"`.chomp.split[0]
+
+# consider using the backed-up zip if the image file can't be found
+if imagePath.nil? or not File.exist? imagePath
+    #Code duplication? nooooo, where?
+    Dir::chdir('..')
+    puts red("Could not properly download image files restoring local backup")
+    `cp "#{artifact}.bak.zip" "#{artifact}.zip"`
+    puts yellow("Unzipping image")
+    `unzip -x "#{artifact}.zip" -d "#{destination}"`
+    Dir::chdir(destination)
+    imagePath = `find . -name "*.image"`.chomp.split[0]
+end
+
+# create a backup
+`cp "../#{artifact}.zip" "../#{artifact}.bak.zip"`
+
 imagePath = imagePath.chomp(File.extname(imagePath))
 FileUtils.move(imagePath+'.image', "#{subdir}.image")
 FileUtils.move(imagePath+'.changes', "#{subdir}.changes")
@@ -139,15 +153,40 @@ imagePath = "#{Dir.pwd}/#{subdir}.image"
 
 File.open("#{destination}/setup.st", 'w') {|f| 
     f.puts <<IDENTIFIER
-Author fullName: 'Camillo Bruni'.
+| color red green yellow |
+"===================================="
+"some helper blocks for error printing"
+
+color := [:colorCode :text|
+    FileStream stderr 
+        "set the color"
+        nextPut: Character escape; nextPut: $[; print: colorCode; nextPut: $m;
+        nextPutAll: text; crlf;
+        "reset the color"
+        nextPut: Character escape; nextPutAll: '[0m'.
+].
+
+red := [:text| color value: 31 value: text ].
+green := [:text| color value: 32 value: text ].
+yellow := [:text| color value: 33 value: text ].
 
 "===================================="
+"===================================="
+
+Author fullName: 'Camillo Bruni'.
+World submorphs do: [:each | each delete ].
+
+"===================================="
+
+yellow value: 'Updating image'.
 
 UpdateStreamer new 
     beSilent; 
     elementaryReadServerUpdates.
 
 "===================================="
+
+yellow value: 'Loading custom preferences'.
 
 Debugger alwaysOpenFullDebugger: true.
 

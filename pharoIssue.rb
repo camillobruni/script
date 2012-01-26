@@ -144,17 +144,8 @@ end
 File.open("issueLoading.st", 'w') {|f| 
 f.puts <<IDENTIFIER
 | tracker issue color red green yellow |
-
 "===================================="
-World submorphs do: [:each | each delete ].
 
-Smalltalk garbageCollect.
-Smalltalk garbageCollect.
-Smalltalk garbageCollect.
-
-Author fullName: 'MonkeyGalactikalIntegrator'.
-
-"===================================="
 "some helper blocks for error printing"
 
 color := [:colorCode :text|
@@ -166,9 +157,20 @@ color := [:colorCode :text|
         nextPut: Character escape; nextPutAll: '[0m'.
 ].
 
-red := [:text| color value: 31 value: text ].
-green := [:text| color value: 32 value: text ].
+red    := [:text| color value: 31 value: text ].
+green  := [:text| color value: 32 value: text ].
 yellow := [:text| color value: 33 value: text ].
+
+"===================================="
+"===================================="
+
+World submorphs do: [:each | each delete ].
+
+Smalltalk garbageCollect.
+Smalltalk garbageCollect.
+Smalltalk garbageCollect.
+
+Author fullName: 'MonkeyGalactikalIntegrator'.
 
 "===================================="
 
@@ -209,20 +211,21 @@ yellow value: 'Running tests'.
 changeLoader := issue loadAndTest.
 
 changeLoader isGreen
-    ifFalse:  [ red value: 'Issue #{issueNumber} has errors' ]
+    ifFalse:  [ 
+        red value: 'Issue #{issueNumber} has errors'.
+        issue changeLoader buildRedReportOn: FileStream stderr]
     ifTrue: [ 
         green value: 'Issue #{issueNumber} is ready for integration'
-        Smalltalk snapshot: true andQuit: true ].
-
+       ].
+    
 "===================================="
 
 ] on: Error fork: [ :error|
-    "output the Error warning in read"
+    "output the Error warning in red"
     red value: 'Failed to load Issue:'.
     FileStream stderr print: error; crlf.
 
     "should do an exit 1 here"
-    Smalltalk snapshot: true andQuit: true.
 
     "open the error"
     error pass.
@@ -230,7 +233,12 @@ changeLoader isGreen
 
 "===================================="
 
-Workspace openContents: ' issue := Smalltalk at: #''issue#{issueNumber}'''.
+Smalltalk snapshot: true andQuit: true.
+
+Workspace openContents: ' 
+issue := Smalltalk at: #''issue#{issueNumber}''
+issue changeLoader errors
+'.
 
 IDENTIFIER
 }

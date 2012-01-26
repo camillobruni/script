@@ -21,8 +21,10 @@
 	exiv2 -r'%Y%-%m%-%d_%H%MS_:basename:' rename *
 	
 - How to insert a character in verbatim in VIM (insert tab)
-	CTRL-V <Tab>
-	
+	CTRL-V <TAB>    # in insert mode
+    CTRL-Q <TAB>    # alternative solution
+	.               # to repeat the last action inserting more TAB
+
 - How to get all bash arguments? [bash args]
 	$@
 	
