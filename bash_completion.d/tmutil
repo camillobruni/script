@@ -1,0 +1,12 @@
+have type tmutil && _tmutil_completion()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    lists=`tmutil --help | egrep -o "Usage: tmutil [^ ]+" | awk '{print $3}'`
+    
+    COMPREPLY=( $(compgen -W "${lists}" -- ${cur}) )
+} && \
+complete -F _tmutil_completion tmutil 
