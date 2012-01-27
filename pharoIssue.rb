@@ -65,6 +65,27 @@ end
 
 # ============================================================================
 
+def googleCodeUser
+    return ENV['PHARO_CI_USER']  if ENV.has_key? 'PHARO_CI_USER'
+    
+    puts "Enter code.google.com username: "
+    return ENV['PHARO_CI_USER'] = gets.chomp
+end
+
+def googleCodePassword
+    return ENV['PHARO_CI_PWD'] if ENV.has_key? 'PHARO_CI_PWD'
+    #TODO: support for keyring under ubuntu
+    #TODO: mask password form the command line
+    password = `security find-internet-password -a #{googleCodeUser()} -g 2>&1 | grep password`
+    if not password.nil? 
+        return ENV['PHARO_CI_PWD'] = password.split[1][1..-2]
+    end
+    puts "Password for #{googleCodeUser()}: "
+    return ENV['PHARO_CI_PWD'] = gets.chomp 
+end
+
+# ============================================================================
+
 if $*[0] == "--help" || $*[0] == "-h"
     help()
     exit 0
@@ -198,7 +219,7 @@ Gofer new
 yellow value: 'Loading tracker issue #{issueNumber}'.
 
 tracker := GoogleIssueTracker pharo.
-tracker authenticate: 'pharo.ulysse@gmail.com' with: 'AydsInJis'.
+tracker authenticate: '#{googleCodeUser()}' with: '#{googleCodePassword()}'.
 
 "===================================="
 
