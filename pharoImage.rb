@@ -154,9 +154,8 @@ imagePath = "#{Dir.pwd}/#{subdir}.image"
 File.open("#{destination}/setup.st", 'w') {|f| 
     f.puts <<IDENTIFIER
 | color red green yellow |
-"===================================="
+"============================================================================="
 "some helper blocks for error printing"
-
 color := [:colorCode :text|
     FileStream stderr 
         "set the color"
@@ -169,14 +168,12 @@ color := [:colorCode :text|
 red := [:text| color value: 31 value: text ].
 green := [:text| color value: 32 value: text ].
 yellow := [:text| color value: 33 value: text ].
-
-"===================================="
-"===================================="
+"============================================================================="
 
 Author fullName: 'Camillo Bruni'.
 World submorphs do: [:each | each delete ].
 
-"===================================="
+"============================================================================="
 
 yellow value: 'Updating image'.
 
@@ -184,7 +181,8 @@ UpdateStreamer new
     beSilent; 
     elementaryReadServerUpdates.
 
-"===================================="
+
+"============================================================================="
 
 yellow value: 'Loading custom preferences'.
 
@@ -201,13 +199,20 @@ PolymorphSystemSettings
 	desktopColor: Color gray;
 	showDesktopLogo: false.
 
-UITheme currentSettings fastDragging: true.
+"UITheme currentSettings fastDragging: true."
 
 TextEditorDialogWindow autoAccept: true.
 
-"===================================="
+"============================================================================="
 
-(Workspace new openLabel: '')
+(Workspace new contents: 
+'Gofer new
+    squeaksource: ''MetacelloRepository'';
+    package: ''ConfigurationOfOCompletion'';
+    load.
+
+(Smalltalk at: #ConfigurationOfOCompletion) perform: #loadStable.';
+    openLabel: '')
 	width: 1200; height: 230;
 	setToAdhereToEdge: #bottomLeft;
 	makeUnclosable.
@@ -217,11 +222,11 @@ MCWorkingCopyBrowser new show window
 	setToAdhereToEdge: #topLeft;
 	makeUnclosable.
     
-"===================================="
+"============================================================================="
 
 #{extraInstructions}
 
-"===================================="
+"============================================================================="
 
 Smalltalk snapshot: true andQuit: true.
 

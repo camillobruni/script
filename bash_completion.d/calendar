@@ -5,8 +5,8 @@ have calendar && _calendar_completion()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    lists=`icalBuddy --help | awk '{print $1}' | grep "^['-]" | sed "s/^\.\///g`
+    lists=`icalBuddy --help | awk '{print $1}' | grep "^['-]" | sed "s/^\.\///g"`
     
-    COMPREPLY=( $(compgen -W "${lists}" -- ${cur} | cut -b 18-) )
+    COMPREPLY=( $(compgen -W "${lists}" -- ${cur}) )
 } && \
 complete -F _calendar_completion calendar

@@ -137,6 +137,7 @@ alias path='/Applications/path.app/Contents/MacOS/path'
 alias cdp='cd "`path`"'
 alias tre='tree | less'
 alias 3='tree | less'
+hash hub && alias git='hub'
 
 
 alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
