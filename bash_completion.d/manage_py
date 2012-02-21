@@ -9,4 +9,4 @@ have type django-admin.py && _manage_py_completion()
     
     COMPREPLY=( $(compgen -f -W "${lists}" -- ${cur}) )
 } && \
-complete -F _manage_py_completion manage.py django-admin.py django-admin
+complete -F _manage_py_completion manage.py

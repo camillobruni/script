@@ -1,0 +1,12 @@
+have type django-admin.py && _django-admin_py_completion()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    lists=`env django-admin.py --help 2>&1 | egrep -o "^\W{2}[a-z_-]+" | sed "s/,//g"| awk '{print $1}'`
+    
+    COMPREPLY=( $(compgen -f -W "${lists}" -- ${cur}) )
+} && \
+complete -F _django-admin_py_completion django-admin.py django-admin

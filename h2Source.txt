@@ -829,3 +829,6 @@
     
     # check if the gem is avail
     gem list -r hola
+
+- How to use python with virtualenvwrapper?
+    workon [TAB]
