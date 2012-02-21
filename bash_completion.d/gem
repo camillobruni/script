@@ -1,5 +1,5 @@
-# Michael Schuerig, michael@schuerig.de, 2007-02-24
-# Free for all uses.
+# bash_completion script for gem
+# free to reuse
 
 have type gem && _gem()
 {
@@ -9,179 +9,26 @@ have type gem && _gem()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
 
-    COMMANDS='build cert check cleanup contents dependency\
-      environment help install list query rdoc search specification\
-      uninstall unpack update'
-
-    COMMON_OPTIONS='\
-      --source
-      -p --http-proxy --no-http-proxy\
-      -h --help\
-      --config-file\
-      --backtrace\
-      --debug'
-
-    CERT_OPTIONS='\
-      -a -add\
-      -l --list\
-      -r --remove\
-      -b --build\
-      -C --certificate\
-      -K --private-key\
-      -s --sign'
-
-    CHECK_OPTIONS='\
-      -v --verify\
-      -a --alien\
-      -t --test\
-      -V --version'
-
-    CLEANUP_OPTIONS='\
-      -d --dry-run'
-
-    CONTENTS_OPTIONS='\
-      -l --list\
-      -V --version\
-      -s --spec-dir\
-      -v --verbose'
-
-    DEPENDENCY_OPTIONS='\
-      -v --version\
-      -r --reverse-dependencies --no-reverse-dependencies\
-      -p --pipe'
-
-    HELP_OPTIONS=$COMMANDS
-
-    INSTALL_OPTIONS='\
-      -v --version\
-      -l --local\
-      -r --remote\
-      -b --both\
-      -i --install-dir\
-      -B --build-root\
-      -d --rdoc --no-rdoc\
-      --ri --no-ri\
-      -f --force --no-force\
-      -t --test --no-test\
-      -w --wrappers --no-wrappers\
-      -P --trust-policy\
-      --ignore-dependencies\
-      -y --include-dependencies'
-
-    LIST_OPTIONS='\
-      -d --details --no-details\
-      -l --local\
-      -r --remote\
-      -b --both'
-
-    QUERY_OPTIONS='\
-      -n --name-matches\
-      -d --details --no-details\
-      -l --local\
-      -r --remote\
-      -b --both'
-
-    RDOC_OPTIONS='\
-      --all\
-      --rdoc --no-rdoc\
-      --ri --no-ri\
-      -v --version'
-
-    SEARCH_OPTIONS='\
-      -d --details --no-details\
-      -l --local\
-      -r --remote\
-      -b --both'
-
-    SPECIFICATION_OPTIONS='\
-      -v --version\
-      -l --local\
-      -r --remote\
-      -b --both\
-      -all'
-
-    UNINSTALL_OPTIONS='\
-      -a --all --no-all\
-      -i --ignore-dependencies --no-ignore-dependencies\
-      -x --executables --no-executables\
-      -v --version'
-
-    UNPACK_OPTIONS='\
-      -v --version'
-
-    UPDATE_OPTIONS='\
-      -i --install-dir\
-      -B --build-root\
-      -d --rdoc --no-rdoc\
-      -ri --no-ri\
-      -f --force --no-force\
-      -t --test --no-test\
-      -w --wrappers --no-wrappers\
-      -P --trust-policy\
-      --ignore-dependencies\
-      -y --include-dependencies\
-      --system'
-
-    case "${prev}" in
-      build)
-        completions="$COMMON_OPTIONS $BUILD_OPTIONS"
-        ;;
-      cert)
-        completions="$COMMON_OPTIONS $CERT_OPTIONS"
-        ;;
-      check)
-        completions="$COMMON_OPTIONS $CHECK_OPTIONS"
-        ;;
-      cleanup)
-        completions="$COMMON_OPTIONS $CLEANUP_OPTIONS"
-        ;;
-      contents)
-        completions="$COMMON_OPTIONS $CONTENTS_OPTIONS"
-        ;;
-      dependency)
-        completions="$COMMON_OPTIONS $DEPENDENCY_OPTIONS"
-        ;;
-      environment)
-        completions="$COMMON_OPTIONS $ENVIRONMENT_OPTIONS"
-        ;;
-      help)
-        completions="$COMMON_OPTIONS $HELP_OPTIONS"
-        ;;
-      install)
-        completions="$COMMON_OPTIONS $INSTALL_OPTIONS"
-        ;;
-      list)
-        completions="$COMMON_OPTIONS $LIST_OPTIONS"
-        ;;
-      query)
-        completions="$COMMON_OPTIONS $QUERY_OPTIONS"
-        ;;
-      rdoc)
-        completions="$COMMON_OPTIONS $RDOC_OPTIONS"
-        ;;
-      search)
-        completions="$COMMON_OPTIONS $SEARCH_OPTIONS"
-        ;;
-      specification)
-        completions="$COMMON_OPTIONS $SPECIFICATION_OPTIONS"
-        ;;
-      uninstall)
-        completions="$COMMON_OPTIONS $UNINSTALL_OPTIONS"
-        ;;
-      unpack)
-        completions="$COMMON_OPTIONS $UNPACK_OPTIONS"
-        ;;
-      update)
-        completions="$COMMON_OPTIONS $UPDATE_OPTIONS"
-        ;;
-      *)
-        completions="$COMMANDS"
-        COMPREPLY=( $( compgen -W "$completions" -- $cur ))
+    # get all subcommands
+    COMMANDS=`gem help commands 2>&1 | egrep -o "^\W{4}[a-zA-Z]+" | awk '{print $1}'`
+    
+    # is $prev a full COMMAND? 
+    if echo $COMMANDS | egrep "^${prev}\W|\W${prev}\W|\W${prev}$" 1>/dev/null 2>&1; 
+    then 
+        #use the gem gelp to figure out the options
+        OPTIONS=`gem help ${prev} 2>&1 | grep -o "^\W+-[a-zA-Z]+" | sed "s/,//g"| awk '{print $1}'`
+        # additional step for boolean [no-] options
+        BOOLEAN_OPTIONS=`gem help ${prev} 2>&1 | egrep -oe "--\[no-\][^ ]+"`
+        # strip away [no-]
+        BOOLEAN_OPTIONS_TRUE=`echo $BOOLEAN_OPTIONS | sed "s/\[no-\]//g"`
+        # only keep the no-
+        BOOLEAN_OPTIONS_FALSE=`echo $BOOLEAN_OPTIONS | sed -E "s/\[|\]//g"`
+        COMPREPLY=( $( compgen -f -W "$BOOLEAN_OPTIONS_TRUE $BOOLEAN_OPTIONS_FALSE $OPTIONS" -- $cur ))
         return 0
-        ;;
-    esac
+    fi
 
-    COMPREPLY=( $( compgen -f -W "$completions" -- $cur ))
+    COMPREPLY=( $( compgen -W "$COMMANDS" -- $cur ))
     return 0
+
 } && \
 complete -F _gem gem1.8 gem1.9 gem
