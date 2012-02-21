@@ -179,7 +179,7 @@ have type gem && _gem()
         ;;
     esac
 
-    COMPREPLY=( $( compgen -W "$completions" -- $cur ))
+    COMPREPLY=( $( compgen -f -W "$completions" -- $cur ))
     return 0
 } && \
 complete -F _gem gem1.8 gem1.9 gem

@@ -788,4 +788,44 @@
 
 - How do I use something like strace on OSX?
     dtruss -f -t open $BINARY $ARGS
+   
+- How to run a gem locally?
+    # require the hola lib
+    irb -I$PATH_TO/lib -rGEM_NAME
+
+    # test locally using ruby
+    ruby -I$PATH_TO/lib $PATH_TO/bin/GEM_BIN 
+
+- How to structure a gem?
+    ├─ bin
+    │   └─ hola_bin
+    ├─ hola.gemspec
+    ├─ lib
+    │   ├─ hola.rb
+        
+    Gem::Specification.new do |s|
+        s.name        = ''
+        s.executables << 'hola_bin'
+        s.version     = '0.0.0'
+        s.date        = '2010-04-28'
+        s.summary     = ""
+        s.description = ""
+        s.authors     = [""]
+        s.email       = '@gmail.com'
+        s.files       = ["lib/hola.rb"]
+        s.homepage    = 'http://github.com/XXX'
+        s.add_dependency('term-ansicolor',  '>= 1.0.7')
+    end
     
+- How to build and deploy / upload / push a gem?
+    # create a new gem
+    gem build hola.gemspec
+
+    # locally install the gem
+    gem install ./hola-0.0.0.gem
+    
+    # upload the gem
+    gem push hola-0.0.0.gem
+    
+    # check if the gem is avail
+    gem list -r hola
