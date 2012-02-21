@@ -8,17 +8,19 @@ have type gem && _gem()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
+    
+    HELP_COMMAND='env gem help'
 
-    # get all subcommands
-    COMMANDS=`gem help commands 2>&1 | egrep -o "^\W{4}[a-zA-Z]+" | awk '{print $1}'`
+     # get all subcommands
+    COMMANDS=`$HELP_COMMAND commands 2>&1 | egrep -o "^\W{4}[a-zA-Z]+" | awk '{print $1}'`
     
     # is $prev a full COMMAND? 
     if echo $COMMANDS | egrep "^${prev}\W|\W${prev}\W|\W${prev}$" 1>/dev/null 2>&1; 
     then 
-        #use the gem gelp to figure out the options
-        OPTIONS=`gem help ${prev} 2>&1 | grep -o "^\W+-[a-zA-Z]+" | sed "s/,//g"| awk '{print $1}'`
+        #use the help to figure out the options
+        OPTIONS=`$HELP_COMMAND ${prev} 2>&1 | grep -oE "^\W+-[-a-zA-Z]+=?" | sed "s/,//g"| awk '{print $1}'`
         # additional step for boolean [no-] options
-        BOOLEAN_OPTIONS=`gem help ${prev} 2>&1 | egrep -oe "--\[no-\][^ ]+"`
+        BOOLEAN_OPTIONS=`$HELP_COMMAND ${prev} 2>&1 | egrep -oe "--\[no-\][^ ]+"`
         # strip away [no-]
         BOOLEAN_OPTIONS_TRUE=`echo $BOOLEAN_OPTIONS | sed "s/\[no-\]//g"`
         # only keep the no-
@@ -28,7 +30,5 @@ have type gem && _gem()
     fi
 
     COMPREPLY=( $( compgen -W "$COMMANDS" -- $cur ))
-    return 0
-
 } && \
 complete -F _gem gem1.8 gem1.9 gem
