@@ -175,7 +175,9 @@ have type gem && _gem()
         completions="$COMMON_OPTIONS $UPDATE_OPTIONS"
         ;;
       *)
-        completions="$COMMANDS $COMMON_OPTIONS"
+        completions="$COMMANDS"
+        COMPREPLY=( $( compgen -W "$completions" -- $cur ))
+        return 0
         ;;
     esac
 
