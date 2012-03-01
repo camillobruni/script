@@ -5,7 +5,7 @@ set encoding=utf-8
 let mapleader=";"
 
 " Configure & load bundles
-let g:easytags_cmd = '/opt/homebrew/bin/ctags'
+let g:easytags_cmd = '/opt/local/bin/ctags'
 let g:tagbar_ctags_bin = g:easytags_cmd
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
 let $JS_CMD = 'node'
@@ -69,9 +69,13 @@ CommandAlias W w
 nnoremap € q
 
 syntax on
+" Syntax coloring lines that are too long just slows down the world
+set synmaxcol=2048
 filetype plugin indent on
 let g:tex_flavor='latex'
 set omnifunc=syntaxcomplete#Complete
+
+let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$', '\.aux$', '\.out$', '\..*\.orig$', '\.synctex.gz$', '\.toc$', '\.blg$', '\.bbl', '\.lof', '\.lot']
 
 set laststatus=2
 " let &statusline=' %f%( %y%m%r%)%=L%l C%v '
@@ -87,6 +91,12 @@ if version >= 700
     " unfortunately impossible to reuse the variables from solarized.vim
     "autocmd InsertEnter * exe "highlight! StatusLine" . s:fmt_none . s:fg_base3 . :bg_orange . s:fmt_revbb
     "autocmd InsertLeave * exe "highlight! StatusLine" . s:fmt_none . s:fg_base1 . s:bg_base01 . s:fmt_revbb
+	" FileTypes ==================================================================
+	" autowrap for .txt and .tex files
+	autocmd FileType tex setlocal wrap spell
+	autocmd BufRead,BufNewFile *.txt setlocal wrap spell
+	autocmd BufRead,BufNewFile *.md setlocal wrap spell
+	
 endif
 
 set ignorecase
@@ -106,6 +116,7 @@ set visualbell
 set fillchars=""
 set cursorline
 set nofoldenable
+set history=1000
 
 " Integrate copy/paste with Mac OS
 set clipboard=unnamed
@@ -113,8 +124,13 @@ set clipboard=unnamed
 
 " Sane indentation defaults
 set expandtab
-set smartindent
+set smart-indent
 set autoindent
+
+" undoing even after closing the file
+set undofile
+set undodir=~/.vim-undo
+set undoreload=10000 "maximum number lines to save for undo on a buffer reload
 
 function! SetIndent(...)
     let size = (a:0 == 0) ? 4 : a:1
@@ -152,6 +168,86 @@ nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>
 
 " Opening files relative to current one, e.g. :e %/bar.txt
 cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
+
+" mark character exceeding the 80 limit as errors
+" match Error /\%>80v/
+
+" latex suite settings =======================================================
+let g:Tex_DefaultTargetFormat = 'pdf'
+ 
+let g:Tex_CompileRule_dvi         = 'latex --interaction=nonstopmode $*'
+let g:Tex_CompileRule_ps          = 'dvips -Pwww -o $*.ps $*.dvi'
+let g:Tex_CompileRule_pspdf       = 'ps2pdf $*.ps'
+let g:Tex_CompileRule_dvipdf      = 'dvipdfm $*.dvi'
+let g:Tex_CompileRule_pdf         = 'trex $* || pdflatex -synctex=1 -interaction=nonstopmode $*'
+ 
+let g:Tex_ViewRule_dvi            = 'texniscope'
+let g:Tex_ViewRule_ps             = 'Preview'
+let g:Tex_ViewRule_pdf            = 'Skim'
+ 
+let g:Tex_FormatDependency_ps     = 'dvi,ps'
+let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
+let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
+" arrow mapping ===============================================================
+" arrows shouldn't jump over wrapped lines
+nnoremap <Down> gj
+nnoremap <Up> gk
+nnoremap <buffer> <silent> <Home> g<Home>
+nnoremap <buffer> <silent> <End>  g<End>
+
+vnoremap <Down> gj
+vnoremap <Up> gk
+vnoremap <buffer> <silent> <Home> g<Home>
+vnoremap <buffer> <silent> <End>  g<End>
+
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+inoremap <buffer> <silent> <Home> <C-o>g<Home>
+inoremap <buffer> <silent> <End> <C-o>g<End>
+
+
+"" key mappings ===============================================================
+
+command Q q " Bind :Q to :q
+
+" directly jump to edit mode from visual mode
+vmap i <ESC>i
+vmap o <ESC>o
+vmap a <ESC>a
+vmap A <ESC>A
+" eclipse whuwhu style autocompletion
+imap <C-SPACE> <C-p>
+"imap <C-]> <ESC><C-]>i
+"map  <C-[> <C-t>
+"imap <C-[> <ESC><C-t>i
+imap <D-.> <ESC>:
+
+
+"" Code folding
+set foldmethod=syntax
+set nofoldenable
+let g:Tex_FoldedSections=""
+let g:Tex_FoldedEnvironments=""
+let g:Tex_FoldedMisc=""
+map  <C-LEFT>  <ESC>zc
+imap <C-LEFT>  <ESC>zci
+map  <C-RIGHT> <ESC>zo
+imap <C-RIGHT> <ESC>zoi
+
+
+" enable terminal like per line jumping
+map  <C-e> <ESC>$
+imap <C-e> <ESC>A
+map  <C-a> <ESC>^
+imap <C-a> <ESC>^i
+imap <C-k> <ESC>Di
+map  <C-k> <ESC>D
+
+" directly jump into visual block mode from insert mode
+imap <C-v> <ESC><C-v>
+
+"AlignCtrl l:
+vmap <C-A> :Align=<CR> 
 
 " Remap line-exchange commands to match TextMate's shortcuts. Thanks to vimcasts.org for this :)
 " Requires vim-unimpaired
