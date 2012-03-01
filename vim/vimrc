@@ -108,7 +108,7 @@ set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zw
 set ruler
 set showcmd
 set showmode
-"set number
+set number
 set hidden
 set wrap
 nmap <leader>w :set wrap!<cr>
@@ -124,7 +124,7 @@ set clipboard=unnamed
 
 " Sane indentation defaults
 set expandtab
-set smart-indent
+set smartindent
 set autoindent
 
 " undoing even after closing the file
@@ -188,6 +188,7 @@ let g:Tex_ViewRule_pdf            = 'Skim'
 let g:Tex_FormatDependency_ps     = 'dvi,ps'
 let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
 let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
+
 " arrow mapping ===============================================================
 " arrows shouldn't jump over wrapped lines
 nnoremap <Down> gj
@@ -205,9 +206,7 @@ inoremap <Up> <C-o>gk
 inoremap <buffer> <silent> <Home> <C-o>g<Home>
 inoremap <buffer> <silent> <End> <C-o>g<End>
 
-
 "" key mappings ===============================================================
-
 command Q q " Bind :Q to :q
 
 " directly jump to edit mode from visual mode
@@ -217,6 +216,7 @@ vmap a <ESC>a
 vmap A <ESC>A
 " eclipse whuwhu style autocompletion
 imap <C-SPACE> <C-p>
+map <C-SPACE> i<C-p>
 "imap <C-]> <ESC><C-]>i
 "map  <C-[> <C-t>
 "imap <C-[> <ESC><C-t>i
@@ -224,15 +224,15 @@ imap <D-.> <ESC>:
 
 
 "" Code folding
-set foldmethod=syntax
-set nofoldenable
-let g:Tex_FoldedSections=""
-let g:Tex_FoldedEnvironments=""
-let g:Tex_FoldedMisc=""
-map  <C-LEFT>  <ESC>zc
-imap <C-LEFT>  <ESC>zci
-map  <C-RIGHT> <ESC>zo
-imap <C-RIGHT> <ESC>zoi
+"set foldmethod=syntax
+"set nofoldenable
+"let g:Tex_FoldedSections=""
+"let g:Tex_FoldedEnvironments=""
+"let g:Tex_FoldedMisc=""
+"map  <C-LEFT>  <ESC>zc
+"imap <C-LEFT>  <ESC>zci
+"map  <C-RIGHT> <ESC>zo
+"imap <C-RIGHT> <ESC>zoi
 
 
 " enable terminal like per line jumping
