@@ -832,3 +832,8 @@
 
 - How to use python with virtualenvwrapper?
     workon [TAB]
+
+- How to delete chrome autocompleted url entries? [omnibar]
+    select the entry
+    mac: SHIFT + DEL
+    win: DEL

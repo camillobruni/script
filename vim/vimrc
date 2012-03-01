@@ -1,0 +1,228 @@
+set nocompatible " be iMproved
+set encoding=utf-8
+
+" Prefix/namespace for user commands
+let mapleader=";"
+
+" Configure & load bundles
+let g:easytags_cmd = '/opt/homebrew/bin/ctags'
+let g:tagbar_ctags_bin = g:easytags_cmd
+" jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
+let $JS_CMD = 'node'
+
+runtime bundles.vim
+
+" Setup bundles
+let g:acp_behaviorKeywordLength = 3
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
+let g:cssColorVimDoNotMessMyUpdatetime = 'kthxbye'
+" indent guides
+let g:indent_guides_indent_levels = 12
+let g:indent_guides_start_level = 3
+" let g:indent_guides_guide_size = 0
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :highlight link IndentGuidesOdd CursorLine
+autocmd VimEnter,Colorscheme * :highlight clear IndentGuidesEven
+let g:CommandTMaxHeight=7
+let g:CommandTMatchWindowReverse=1
+nnoremap <leader>nt :NERDTreeToggle<cr>
+nnoremap <leader>tb :TagbarToggle<cr>
+nnoremap <leader>e  :CommandT<cr>
+nnoremap <leader>TF :CommandTFlush<cr>
+
+" Load project-local settings if any
+set exrc secure
+
+" Anticipating some common typos
+function! CommandAlias(abbreviation, expansion)
+    execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
+endfunction
+command! -nargs=+ CommandAlias call CommandAlias(<f-args>)
+" Use it on itself to define a simpler abbreviation for itself.
+CommandAlias alias CommandAlias
+
+" Quick (re)sourcing to .vimrc & testing vimscript code
+nmap <leader>src :source $MYVIMRC<cr>
+function! DoIt() range
+    let lines = join(getline(a:firstline, a:lastline), "\n")
+    execute lines
+endfunction
+command! DoIt call DoIt()
+map <leader>d :DoIt<cr>
+
+" Quick modeline insertion
+function! AppendModeline()
+    let l:modeline = printf(" vim: set ts=%d sw=%d ts=%d :", &tabstop, &shiftwidth, &softtabstop)
+    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
+    call append(line("$"), l:modeline)
+endfunction
+nnoremap <silent> <Leader>ml :call AppendModeline()<cr>
+
+" Remap 'quit' keys
+if ! exists('vimpager')
+    nnoremap q :q
+endif
+CommandAlias qw wq
+CommandAlias W w
+" macros can still be nice sometimes, so put them on € (option-@)
+nnoremap € q
+
+syntax on
+filetype plugin indent on
+let g:tex_flavor='latex'
+set omnifunc=syntaxcomplete#Complete
+
+set laststatus=2
+" let &statusline=' %f%( %y%m%r%)%=L%l C%v '
+" set statusline+=%(%{fugitive#statusline()}\ %)
+" let Powerline_symbols='unicode'
+
+if version >= 700
+    " set the status line to flashy colors in insert mode
+    autocmd InsertEnter * highlight ModeMsg    term=reverse ctermfg=15 ctermbg=9
+    autocmd InsertLeave * highlight ModeMsg    term=NONE    ctermfg=4  ctermbg=NONE
+    " autocmd InsertEnter * highlight StatusLine term=reverse ctermfg=15 ctermbg=9
+    " autocmd InsertLeave * highlight StatusLine term=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
+    " unfortunately impossible to reuse the variables from solarized.vim
+    "autocmd InsertEnter * exe "highlight! StatusLine" . s:fmt_none . s:fg_base3 . :bg_orange . s:fmt_revbb
+    "autocmd InsertLeave * exe "highlight! StatusLine" . s:fmt_none . s:fg_base1 . s:bg_base01 . s:fmt_revbb
+endif
+
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set showmatch
+set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git
+set ruler
+set showcmd
+set showmode
+"set number
+set hidden
+set wrap
+nmap <leader>w :set wrap!<cr>
+set visualbell
+set fillchars=""
+set cursorline
+set nofoldenable
+
+" Integrate copy/paste with Mac OS
+set clipboard=unnamed
+"set mouse=a
+
+" Sane indentation defaults
+set expandtab
+set smartindent
+set autoindent
+
+function! SetIndent(...)
+    let size = (a:0 == 0) ? 4 : a:1
+    execute 'set tabstop=' . size
+    execute 'set shiftwidth=' . size
+    execute 'set softtabstop=' . size
+endfunction
+command! -nargs=? SetIndent call SetIndent(<f-args>)
+cnoremap seti SetIndent
+" call once to set the default
+SetIndent
+
+" Which EOL conventions to detect
+set fileformats=unix,dos,mac
+
+set backspace=indent,eol,start
+"set cpoptions+=$ " mark changed area
+set whichwrap=b,s,h,l,<,>,[,]
+" <Del> works, I don't see why <BS> shouldn't
+map <bs> X
+
+nmap <leader>qf :botright copen<cr>
+nmap <leader>spell :setlocal spell!<cr>
+
+" Sudo write that file!
+command! SudoWrite write !sudo tee % > /dev/null
+cmap w!! :SudoWrite
+
+" Invisible characters: shortcut to rapidly toggle
+nmap <leader>i :set list!<cr>
+set listchars=tab:▸\ ,eol:\ ,trail:·,nbsp:_,extends:→,precedes:→
+
+" Unhighlight search results in normal mode (and still redraw screen)
+nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>
+
+" Opening files relative to current one, e.g. :e %/bar.txt
+cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
+
+" Remap line-exchange commands to match TextMate's shortcuts. Thanks to vimcasts.org for this :)
+" Requires vim-unimpaired
+nmap <C-up> [e
+nmap <C-down> ]e
+vmap <C-up> [egv
+vmap <C-down> ]egv
+vnoremap < <gv
+vnoremap > >gv
+
+" Emacs-style jump to end of line
+imap <C-e> <C-o>A
+imap <C-a> <C-o>I
+" move around according to visual lines
+if exists('vimpager')
+    nnoremap <silent> <home>      gg
+    nnoremap <silent> <end>       G
+else
+    nnoremap <silent> <up>        gk
+    nnoremap <silent> <down>      gj
+    nnoremap <silent> <home>      g<home>
+    nnoremap <silent> <end>       g<end>
+    inoremap <silent> <up>   <C-o>gk
+    inoremap <silent> <down> <C-o>gj
+    inoremap <silent> <home> <C-o>g<home>
+    inoremap <silent> <end>  <C-o>g<end>
+endif
+
+" Open line above (ctrl-shift-o much easier than ctrl-o shift-O)
+"imap <C-Enter> <C-o>o
+"nmap <C-Enter> o
+"imap <C-S-Enter> <C-o>O
+"nmap <C-S-Enter> O
+
+" Show highlighting group for current word
+function! <SID>SyntaxStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunction
+nmap <leader>P :call <SID>SyntaxStack()<Enter>
+
+" Create directories when saving
+augroup BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * if expand("<afile>")!~#'^\w\+:/' && !isdirectory(expand("%:h")) | execute "silent! !mkdir -p %:h" | redraw! | endif
+augroup END
+
+" Remove GUI menu and toolbar
+set guioptions-=T
+"set guioptions-=m
+set guifont=Consolas:h11,Menlo:h11
+" Mac-like tab navigation
+map <D-S-]> gt
+map <D-S-[> gT
+
+if has('mouse')
+    set mouse=a
+endif
+
+" Color scheme and tweaks
+set background=dark
+let g:solarized_menu=0
+colorscheme solarized
+highlight Cursor guibg=#ecff55
+                 " was #eabf50
+highlight NonText term=NONE ctermfg=2 ctermbg=NONE guifg=#4a4a59
+highlight SpecialKey guifg=#4a4a59
+highlight clear Conceal
+highlight default link Conceal Statement
+highlight default link qfSeparator Conceal
+
+" vim: set ts=4 sw=4 ts=4 :
