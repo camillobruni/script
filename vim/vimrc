@@ -111,6 +111,7 @@ set showmode
 set number
 set hidden
 set wrap
+set scrolloff=2
 nmap <leader>w :set wrap!<cr>
 set visualbell
 set fillchars=""
@@ -311,14 +312,40 @@ endif
 
 " Color scheme and tweaks
 set background=dark
-let g:solarized_menu=0
-colorscheme solarized
-highlight Cursor guibg=#ecff55
-                 " was #eabf50
+"let g:solarized_menu=0
+colorscheme mustang
+highlight Cursor guibg=#ecff55 
+                       " was #eabf50
 highlight NonText term=NONE ctermfg=2 ctermbg=NONE guifg=#4a4a59
 highlight SpecialKey guifg=#4a4a59
 highlight clear Conceal
 highlight default link Conceal Statement
 highlight default link qfSeparator Conceal
+
+
+" quit vim if the last buffer opened is NERDTree
+function! NERDTreeQuit()
+  redir => buffersoutput
+  silent buffers
+  redir END
+"                     1BufNo  2Mods.     3File           4LineNo
+  let pattern = '^\s*\(\d\+\)\(.....\) "\(.*\)"\s\+line \(\d\+\)$'
+  let windowfound = 0
+
+  for bline in split(buffersoutput, "\n")
+    let m = matchlist(bline, pattern)
+
+    if (len(m) > 0)
+      if (m[2] =~ '..a..')
+        let windowfound = 1
+      endif
+    endif
+  endfor
+
+  if (!windowfound)
+    quitall
+  endif
+endfunction
+autocmd WinEnter * call NERDTreeQuit()
 
 " vim: set ts=4 sw=4 ts=4 :

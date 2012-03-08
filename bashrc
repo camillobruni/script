@@ -47,10 +47,8 @@ BMAGENTA='\e[45m'
 
 # ============================================================================
 
-export TERM=linux
-
 # Make bash check its window size after a process completes
-shopt -s checkwinsize
+#shopt -s checkwinsize
 
 export HISTFILESIZE=10000 # the bash history should save 3000 commands
 export HISTCONTROL=ignorespace:erasedups
@@ -284,7 +282,7 @@ function last_return_status() {
     fi
 }
 
-export PS1="\$(__git_ps1)\[$EBLACK\]\W\[$NO_COLOR\]: "
+export PS1="\$(__git_ps1)\[$YELLOW\]\W\[$NO_COLOR\]: "
 export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`;$PROMPT_COMMAND"
 
 # ============================================================================
