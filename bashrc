@@ -3,6 +3,10 @@ if [ -z "$PS1" ]; then
    return
 fi
 
+# use this for profiling the bashrc..
+#PS4='+ $(date "+%s.%N")\011 '
+#exec 3>&2 2>/tmp/bashstart.$$.log
+
 # ============================================================================
 
 # Colors from http://wiki.archlinux.org/index.php/Color_Bash_Prompt
@@ -73,10 +77,9 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 # ============================================================================
 
-export PATH=/usr/local/git/bin/:/usr/local/bin/:/opt/local/bin:/opt/local/sbin/:$PATH:/usr/local/mysql/bin/
-export PATH=$PATH:/opt/git-svn-clone-externals/
-export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin/
-export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+export PATH=/usr/local/git/bin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
+export PATH=$PATH:/opt/git-svn-clone-externals
+export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin
 
 # ============================================================================
 
@@ -87,12 +90,13 @@ export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
 
 export EDITOR=mvim
 export SVN_EDITOR=mvim
-
 export H2_EDITOR=mvim
 
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export PYTHON_VERSION=2.7
+export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+
 export IRBRC='~/.irbrc'
 
 

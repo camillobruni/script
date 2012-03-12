@@ -72,7 +72,7 @@ if $*[0] == "pharo"
 else
     subdir = $*[0]
     artifact = "Nautilus#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
+    imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus-Release/lastSuccessfulBuild/artifact/#{artifact}.zip"
 	extraInstructions = "
 SystemBrowser default: Nautilus.
 package := RPackageOrganizer default packageNamed: 'Nautilus'. 
