@@ -1,0 +1,309 @@
+\documentclass[10pt]{sigplanconf}
+%=============================================================================
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%\usepackage{parskip}
+\usepackage{xspace}
+\usepackage[htt]{hyphenat} % hypenations in texttt environments
+% provides a verbatim-like environment in which the meaning of slashes and 
+% curly braces is unchanged 
+\usepackage{alltt} 
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{ifthen}
+\usepackage{subfigure}
+\usepackage{xspace}
+\usepackage{bold-extra}
+\usepackage{stmaryrd}   % for the \shortuparrow
+\usepackage{float}      % for the strong here [H] of figures
+
+% ============================================================================
+% Markup macros for proof-reading
+\usepackage{ifthen}
+\usepackage[normalem]{ulem} % for \sout
+\usepackage{xcolor}
+\newcommand{\ra}{$\rightarrow$\xspace}
+\newboolean{showedits}
+%\setboolean{showedits}{true} % toggle to show or hide edits
+\ifthenelse{\boolean{showedits}}
+{
+	\newcommand{\ugh}[1]{\textcolor{red}{\uwave{#1}}}   % please rephrase
+	\newcommand{\ins}[1]{\textcolor{blue}{\uline{#1}}}  % please insert
+	\newcommand{\del}[1]{\textcolor{red}{\sout{#1}}}    % please delete
+	\newcommand{\chg}[2]{
+            \textcolor{red}{\sout{#1}}{\ra}
+            \textcolor{blue}{\uline{#2}}}               % please change
+}{
+	\newcommand{\ugh}[1]{#1}                            % please rephrase
+	\newcommand{\ins}[1]{#1}                            % please insert
+	\newcommand{\del}[1]{}                              % please delete
+	\newcommand{\chg}[2]{#2}
+}
+% ============================================================================
+% Put edit comments in a really ugly standout display
+%\usepackage{ifthen}
+\usepackage{amssymb}
+\newboolean{showcomments}
+%\setboolean{showcomments}{true}
+
+\newcommand{\yellowbox}[1]{
+        \fcolorbox{gray}{yellow}{\bfseries\sffamily\scriptsize#1}}
+\newcommand{\triangles}[1]{{
+        \sf\small$\blacktriangleright$\textit{#1}$\blacktriangleleft$}}
+
+\ifthenelse{\boolean{showcomments}}
+%{\newcommand{\nb}[2]{{\yellowbox{#1}\triangles{#2}}}
+{\newcommand{\nbc}[3]{
+ {\colorbox{#3}{\bfseries\sffamily\scriptsize\textcolor{white}{#1}}}
+ {\textcolor{#3}{\sf\small$\blacktriangleright$\textit{#2}$\blacktriangleleft$}}}
+ }
+{\newcommand{\nbc}[3]{}
+ 
+\renewcommand{\ugh}[1]{#1}  % please rephrase
+\renewcommand{\ins}[1]{#1}  % please insert
+\renewcommand{\del}[1]{}    % please delete
+\renewcommand{\chg}[2]{#2}  % please change
+\newcommand{\version}{}}
+
+\newcommand{\nb}[2]{\nbc{#1}{#2}{orange}}
+\newcommand{\here}{\yellowbox{$\Rightarrow$ CONTINUE HERE $\Leftarrow$}}
+\newcommand\rev[2]{\nb{TODO (rev #1)}{#2}} % reviewer comments
+\newcommand\fix[1]{\nb{FIX}{#1}}
+\newcommand\todo[1]{\nb{TO DO}{#1}}
+
+% author macros --------------------------------------------------------------
+\newcommand\cb[1]{\nbc{CB}{#1}{purple}}
+% add more author macros here
+
+\newcommand\reva[1]{\nbc{REV1}{#1}{orange}}
+\newcommand\revb[1]{\nbc{REV2}{#1}{orange}}
+
+% ============================================================================
+% Make quotes be italic
+\renewenvironment{quote}
+    {\list{}{\rightmargin\leftmargin}%
+     \item\relax\begin{it}}
+    {\end{it}\endlist}
+
+\newcommand{\ttimes}{\ensuremath{\times}}
+
+%=============================================================================
+
+\usepackage{needspace}
+\newcommand{\needlines}[1]{\Needspace{#1\baselineskip}}
+
+\usepackage{xcolor}
+\definecolor{source}{gray}{0.95}
+% source code formatting
+\usepackage{listings}
+    % global settings for source code listing package
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    showspaces=false,
+    showstringspaces=false,
+    captionpos=b, 
+    columns=fullflexible}
+
+\lstdefinelanguage{ST}{
+    keywordsprefix=\#,
+    morekeywords=[0]{true,false,nil},
+    morekeywords=[1]{self,super,thisContext},
+    morekeywords=[2]{ifTrue:,ifFalse:,whileTrue:,whileFalse:,and:,or:,xor:,not:,by:,timesRepeat:},
+    sensitive=true,
+    morecomment=[s]{"}{"},
+    morestring=[d]',
+    escapechar={!},
+    alsoletter={., :, -, =, +, <},
+    moredelim=**[is][\itshape]{/+}{+/},
+    literate=
+        {^}{{$\uparrow$}}1
+        {:=}{{$\leftarrow$}}1
+        {~}{{$\sim$}}1
+        {-}{{\sf -\hspace{-0.13em}-}}1  % the goal is to make - the same width as +
+        {+}{\raisebox{0.08ex}{+}}1		% and to raise + off the baseline to match V
+        , % Don't forget the comma at the end!
+    style=STStyle
+}
+\lstdefinestyle{STStyle}{
+    tabsize=4,
+    %frame=leftline,
+    % frame=bl,
+    %framerule=2pt,
+    %rulecolor=\color{gray},
+    % backgroundcolor=\color{white},
+    %backgroundcolor=\usebeamercolor[bg]{listing},
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bf\ttfamily,
+    % stringstyle=\color{orange},
+    stringstyle=\mdseries\slshape,
+    commentstyle=\it\rmfamily\color{darkgray}, 
+    commentstyle=\mdseries\slshape\color{gray},
+    %commentstyle=\mdseries\slshape,
+    emphstyle=\bf\ttfamily,
+    escapeinside={!}{!},
+	backgroundcolor=\color{source},
+    %emphstyle={[2]\color{red}},
+    %emphstyle={[3]\color{blue}\bf},
+    %emphstyle={[4]\color{blue}},
+    keepspaces=true
+} 
+
+\lstnewenvironment{javacode}  [2][]{\lstset{language=java,#1}\needlines{#2}}{} 
+\lstnewenvironment{pythoncode}[2][]{\lstset{language=python,#1}\needlines{#2}}{}
+\lstnewenvironment{stcode}    [2][]{\lstset{language=ST,#1}\needlines{#2}}{}
+\lstnewenvironment{ccode}     [2][]
+    {\lstset{language=C,numbers=left,escapechar=\$,numberstyle=\tiny,#1}\needlines{#2}}{}
+
+% ON: I tried to pass the linenumber options in as arg #1 but it does not work for me
+% I also could net get the line numbers to consistently increase
+\lstnewenvironment{numstcode} [2][]{
+        \lstset{language=ST,numbers=left,numberstyle=\tiny,numbersep=2pt,#1}\needlines{#2}}{}
+\lstnewenvironment{numstcodecont} [2][]{
+        \lstset{language=ST,numbers=left,numberstyle=\tiny,numbersep=2pt,firstnumber=last#1}\needlines{#2}}{}
+
+\newcommand{\st}{
+        \!\lstinline[mathescape=false,backgroundcolor=\color{white},basicstyle={\ttfamily\upshape}]}
+
+\newcommand{\lst}[1]{{\tt #1}}
+
+% In-line code (literal)
+% Normally use this for all in-line code:
+\newcommand{\ct}{\lstinline[mathescape=false,backgroundcolor=\color{white},basicstyle={\sffamily\upshape}]}
+% In-line code (latex enabled)
+% Use this only in special situations where \ct does not work
+% (within section headings ...):
+\newcommand{\lct}[1]{{\textsf{\textup{#1}}}}
+% Code environments
+\lstnewenvironment{code}{%
+	\lstset{%
+		% frame=lines,
+		frame=single,
+		framerule=0pt,
+		mathescape=false
+	}
+}{}
+%----------------------------------------------------------------------------
+\def\figureautorefname{Figure}%
+\def\tableautorefname{Table}%
+\def\partautorefname{Part}%
+\def\chapterautorefname{Chapter}%
+\def\sectionautorefname{Section}%
+
+\newcommand{\bs}{\symbol{'134}} % backslash
+\newcommand{\us}{\symbol{'137}} % underscore
+\newcommand{\ie}{\emph{i.e.},\xspace}
+\newcommand{\eg}{\emph{e.g.},\xspace}
+\newcommand{\etal}{\emph{et al.}\xspace}
+\newcommand{\ns}{\!\!\!\!} %big negative space
+%----------------------------------------------------------------------------
+\newcommand{\seclabel}[1] {\label{sec:#1}}
+\newcommand{\figlabel}[1] {\label{fig:#1}}
+\newcommand{\lstlabel}[1] {\label{lst:#1}}
+\newcommand{\tablabel}[1] {\label{tab:#1}}
+\newcommand{\eqlabel} [1] {\label{eq:#1}}
+
+\newcommand{\secref}  [1] {\autoref{sec:#1}}
+\newcommand{\figref}  [1] {\autoref{fig:#1}}
+\newcommand{\lstref}  [1] {\autoref{lst:#1}}
+\newcommand{\tabref}  [1] {\autoref{tab:#1}}
+\renewcommand{\eqref} [1] {\autoref{eq:#1}}
+%----------------------------------------------------------------------------
+\newcommand{\ST}  {Small\-talk\xspace}
+
+\hyphenation{me-ta-ob-jects in-ter-pre-ters en-vi-ron-ments}
+%----------------------------------------------------------------------------
+\usepackage[pdftex=true, colorlinks=true, urlcolor=black, linkcolor=black,
+            citecolor=black, bookmarksnumbered=true, bookmarks=true,pdftex]{hyperref}
+% ===========================================================================
+\begin{document}
+% ===========================================================================
+
+% to be copied from the conference website
+%\conferenceinfo{OOPSLA'11,} {October 22--27, 2011, Portland, Oregon, USA.}
+%\CopyrightYear{2011}
+%\copyrightdata{978-1-4503-0940-0/11/10}
+
+\titlebanner{}  % These are ignored unless 'preprint' option specified.
+\preprintfooter{??}
+
+\title{??}
+\subtitle{??}
+
+\authorinfo{Camillo Bruni}
+{RMoD, INRIA Lille - Nord Europe, France}
+{\url{http://rmod.lille.inria.fr}}
+
+% ===========================================================================
+\maketitle
+% ===========================================================================
+\begin{abstract}
+??
+\end{abstract}
+% ===========================================================================
+
+%\category{D.3.4}{Programming Language}
+%                {Processors}
+%                [Interpreters, Runtime environments]
+%\category{D.3.3}{Programming Language}
+%                {Language Constructs and Features}
+%\category{D.3.2}{Programming Language}
+%                {Language Class\-if\-ic\-at\-ions}
+%                [Very high-level languages]
+%\terms
+%Reflection
+%\keywords
+%\ST, Structural Reflection, Metaobject Protocol, Traits
+
+% ===========================================================================
+\section{Introduction}
+\seclabel{introduction}
+% ===========================================================================
+
+
+The contributions of this paper are:
+\begin{itemize}
+\item ??
+\end{itemize}
+
+
+\paragraph{Outline}
+In \secref{related} ??
+
+% ===========================================================================
+\section{Related Work}
+\seclabel{related}
+% ===========================================================================
+
+
+% ===========================================================================
+%\section{Discussion}
+%\seclabel{discussion}
+% ===========================================================================
+
+% ===========================================================================
+\section{Conclusion}
+\seclabel{conclusion}
+% ===========================================================================
+
+
+% ===========================================================================
+\acks
+
+% ===========================================================================
+% We recommend abbrvnat bibliography style.
+
+\bibliographystyle{abbrvnat}
+
+% The bibliography should be embedded for final submission.
+
+% \bibliography{scgbib/scg,local}
+
+% when submitting a paper include the compiled bibliography here...
+%\begin{thebibliography}{27...}
+%\end{thebibliography}
+
+
+% ===========================================================================
+\end{document}
+
