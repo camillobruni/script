@@ -40,6 +40,10 @@ def green(text)
     colorize(text, "[32m")
 end
 
+def yellow(text)
+    colorize(text, "[33m")
+end
+
 # ============================================================================
 
 def check_action
@@ -74,10 +78,13 @@ if __FILE__ == $0
     end
     
     File.readlines(source()).each { |line|
-        if line =~/^\-\ .*/
+        if line =~/^\-\ (.*)/
+            #opening a new topic
             current_element = []
+            line = $1   # strip the leading "- "
             topics[line] = current_element 
         else
+            #appending a new line to the current topic
             current_element.push line
         end
     }
@@ -94,7 +101,7 @@ if __FILE__ == $0
         }
         if matches
             # the header in green
-            output += green(k.strip) + "\n"
+            output += yellow(k.strip) + "\n"
             # strip the first indentation of each body line
             output += v.collect{|l| l.gsub(/^(\t|    )/, '')}.join.strip
             output += "\n\n"
@@ -105,10 +112,10 @@ if __FILE__ == $0
     $*.each { |search|
         output.length.times { |i|
             # if its the green header line, add a green continue color
-            if output[i].match('^\\033\[31m') or output[i][1]==91
-                output[i].gsub!(search, "\033[30m" + '\0' + "\033[32m")
+            if output[i].match('^\\033\[33m') or output[i][1]==91
+                output[i].gsub!(search, "\033[32m" + '\0' + "\033[33m")
             else
-                output[i].gsub!(search, "\033[30m" + '\0' + "\033[0m")
+                output[i].gsub!(search, "\033[32m" + '\0' + "\033[0m")
             end
         }
     }

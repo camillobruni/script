@@ -837,3 +837,8 @@
     select the entry
     mac: SHIFT + DEL
     win: DEL
+
+- How to make sure all shell pipelines are executed with &&? [bash]
+    set -e "Exit immediately if a pipeline fails"
+
+
