@@ -113,7 +113,7 @@ tmp      = `mktemp -d -t pharo`.chomp
 puts yellow("Fetching the latest image")
 puts "    #{imageUrl}"
 
-`curl --progress-bar --retry 1 --retry-delay 1 --connect-timeout 3 --retry-max-time 4 -o "#{artifact}.zip" "#{imageUrl}" || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
+`curl --progress-bar --retry 1 --retry-delay 1 --insecure --connect-timeout 3 --retry-max-time 4 -o "#{artifact}.zip" "#{imageUrl}" || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
 
 # ===========================================================================
 

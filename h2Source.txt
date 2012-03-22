@@ -841,4 +841,8 @@
 - How to make sure all shell pipelines are executed with &&? [bash]
     set -e "Exit immediately if a pipeline fails"
 
+- How to change the current __LINE__ and __FILE__ macro in C?
+    #line linenum
+    #line linenum filename
+    #line "text with macros matching the previous two forms" 
 
