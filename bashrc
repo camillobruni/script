@@ -276,7 +276,7 @@ export T_TIME_HEADER=1
 time_header() {
     COL_SUBS=`printf "%*s" $(( $COLUMNS - 2))`
     #test $((`date +%s` - $T_TIME_HEADER)) -gt 2 && (echo  ✂ ${COL_SUBS// /-});
-    echo  ✂ ${COL_SUBS// /-};
+    echo  ✂ ${COL_SUBS// /—};
 }
 
 function last_return_status() {

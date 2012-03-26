@@ -846,3 +846,55 @@
     #line linenum filename
     #line "text with macros matching the previous two forms" 
 
+- How to conjugate spanish verbs in present / presente?
+    
+    -ar:              ┃  -er:                ┃  -ir:
+    -o      -amos     ┃  -o       -emos      ┃  -o     -imos
+    -as     -áis      ┃  -es      -éis       ┃  -es    -ís
+    -a      -an       ┃  -e       -en        ┃  -e     -en
+
+- How to conjugate spanish verbs in the preterite / pretérito indefinido? 
+    Used like the french passé composé to describe completed actions in the past.
+
+    -ar:              ┃  -er / -ir:          ┃  -ir / -er:
+    -é      -amos     ┃  -í       -imos      ┃  -í     -imos
+    -aste   -asteis   ┃  -iste    -isteis    ┃  -iste  -isteis
+    -ó      -aron     ┃  -ió      -ieron     ┃  -ió    -ieron
+
+    ser / ir:         ┃  hacer:              ┃  dar:
+    fui     fuimos    ┃  hice     hicimos    ┃  di     dimos
+    fuiste  fuisteis  ┃  hiciste  hicisteis  ┃  diste  disteis
+    fue     fueron    ┃  hizo     hicieron   ┃  dio    dieron
+
+    ver               ┃  decir:              ┃  traer:  
+    vi      vimos     ┃  dije     dijimos    ┃  traje     trajimos
+    viste   visteis   ┃  dijiste  dijisteis  ┃  trajiste  trajisteis
+    vio     vieron    ┃  dijo     dijeron    ┃  trajo     trajeron
+    
+    irregular verbs often follow a common pattern:             ┃  poner  →  pus- 
+    -e      -imos     ┃  andar →  anduve-    ┃  caber →  cup-  ┃  saber  →  sup- 
+    -iste   -isteis   ┃  estar →  estuve-    ┃  haber →  hub-  ┃  querer →  quis- 
+    -o      -ieron    ┃  tener →  tuve-      ┃  poder →  pud-  ┃  venir  →  vin-
+                                                           
+
+- How to conjugate spanish verbs  in imperfect / pretérito imperfecto?
+    Used like in french to describe things / persons in the past including
+    repetitive tasks and actions.
+
+    -ar:              ┃  -er / -ir:          ┃  -ir / -er:
+    -aba    -ábamos   ┃  -ía      -íamos     ┃  -ía    -íamos
+    -abas   -abais    ┃  -ías     -íais      ┃  -ías   -íais
+    -aba    -aban     ┃  -ía      -ían       ┃  -ía    -ían
+
+    ser:              ┃  ir:                 ┃  ver:
+    era     éramos    ┃  iba      íbamos     ┃  veía   veíamos
+    eras    erais     ┃  ibas     ibais      ┃  veías  veíais
+    er      eran      ┃  iba      iba        ┃  veía   veían
+
+
+- How to conjugate spanish verbs in present perfect?
+    Used for actions that continue from the past and have an effect on the
+    present.
+    
+    haber + 
+    
