@@ -7,10 +7,14 @@ have open && _oi_completion() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     # show *.image files up to 3 levels deep and replace the ./ prefix
-   
+    if [[ -f "$prev" ]]; then
+        COMPREPLY=( $( compgen -f -- $cur ))
+        return 0
+    fi
     if [[ -z "$cur" ]]; then
         lists=`find . -name '*.image' -maxdepth 3 | sed "s/^\.\///g"`
     else
+        # is the current selection an existing file?
         lists=`find . -name "*.image" -maxdepth 3 | grep "${cur}" | sed "s/^\.\///g"`
     fi
 

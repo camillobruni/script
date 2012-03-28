@@ -866,7 +866,7 @@
     fuiste  fuisteis  ┃  hiciste  hicisteis  ┃  diste  disteis
     fue     fueron    ┃  hizo     hicieron   ┃  dio    dieron
 
-    ver               ┃  decir:              ┃  traer:  
+    ver:              ┃  decir:              ┃  traer:  
     vi      vimos     ┃  dije     dijimos    ┃  traje     trajimos
     viste   visteis   ┃  dijiste  dijisteis  ┃  trajiste  trajisteis
     vio     vieron    ┃  dijo     dijeron    ┃  trajo     trajeron
@@ -896,5 +896,9 @@
     Used for actions that continue from the past and have an effect on the
     present.
     
-    haber + 
-    
+    haber + past participle
+
+    haber:            ┃
+    he      hemos     ┃
+    has     habéis    ┃
+    ha      han       ┃
