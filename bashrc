@@ -60,26 +60,32 @@ shopt -s histappend
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
-export LANG="en_US.UTF-8"
-export LC_CTYPE="en_US.UTF-8"
-export LC_COLLATE=C
-export LC_MESSAGES="en_US.UTF-8"
-# numbers and money in swiss format 
+# swiss format 
 export LC_MONETARY="de_CH.utf-8"
 export LC_NUMERIC="de_CH.utf-8"
 export LC_TIME="de_CH.utf-8"
-export LC_PAPER="en_US.UTF-8"
+export LC_PAPER="de_CH.UTF-8"
+export LC_TELEPHONE="de_CH.UTF-8"
+export LC_MEASUREMENT="de_CH.UTF-8"
+export LC_ADDRESS="de_CH.UTF-8"
+# for everything else we use en_US
+export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+export LC_COLLATE="en_US.UTF-8"
+export LC_MESSAGES="en_US.UTF-8"
 export LC_NAME="en_US.UTF-8"
-export LC_ADDRESS="en_US.UTF-8"
-export LC_TELEPHONE="en_US.UTF-8"
-export LC_MEASUREMENT="en_US.UTF-8"
 export LC_IDENTIFICATION="en_US.UTF-8"
+
+# override all previous LC_* settings
+# export LC_ALL="en_US.UTF-8"
 
 # ============================================================================
 
-export PATH=/usr/local/git/bin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
+export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
 export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin
+# homebrew ruby
+export PATH=$PATH:/usr/local/Cellar/ruby/1.9.3-p125/bin
 
 # ============================================================================
 
@@ -88,7 +94,9 @@ export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin
 
 #export PYTHONSTARTUP=/usr/local/bin/ipythonShell
 
+export BROWSER=open
 export EDITOR=mvim
+export VISUAL=mvim
 export SVN_EDITOR=mvim
 export H2_EDITOR=mvim
 
@@ -99,16 +107,15 @@ export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
 
 export IRBRC='~/.irbrc'
 
-
-if [ -f /opt/local/etc/bash_completion ]; then
+if [ -f `brew --prefix`/etc/bash_completion ]; then
     BASH_COMPLETION_DIR=~/.bash_completion.d #manually set the local bash_completion dir
     export BASH_COMPLETION BASH_COMPLETION_DIR
-    . /opt/local/etc/bash_completion
+    . `brew --prefix`/etc/bash_completion
 fi
 
 # Python =====================================================================
 
-export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+#export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 source /usr/local/bin/virtualenvwrapper.sh
 export PIP_REQUIRE_VIRTUALENV=true
@@ -158,7 +165,7 @@ alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
 
-alias irb='irb1.9 -r "irb/completion"'
+#alias irb='irb1.9 -r "irb/completion"'
 
 # better output
 alias contacts="contacts -lHf '%n %p %mp %e %a'"
@@ -284,6 +291,10 @@ function last_return_status() {
     if [[ $EXIT_STATUS != "0" ]]; then 
         printf "$RED  ☛  %s$NO_COLOR\n" $EXIT_STATUS
     fi
+}
+
+function __git_ps1() {
+    echo "";
 }
 
 export PS1="\$(__git_ps1)\[$YELLOW\]\W\[$NO_COLOR\]: "

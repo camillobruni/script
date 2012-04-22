@@ -1,5 +1,7 @@
 #!env ruby
+#
 require 'rubygems'
+require 'irb/completion'
 
 require 'map_by_method'
 require 'what_methods'
@@ -7,7 +9,7 @@ require 'pp'
 
 # =======================================================================
 
-IRB.conf[:SAVE_HISTORY] = 1000
+IRB.conf[:SAVE_HISTORY] = 10000
 IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
 #
 ##IRB.conf[:PROMPT_MODE] = :SIMPLE
@@ -35,7 +37,7 @@ class Object
     (obj.methods - obj.class.superclass.instance_methods).sort
   end
   
-  # print documentation
+  # print documentationwhat_methods
   #
   #   ri 'Array#pop'
   #   Array.ri

@@ -63,21 +63,24 @@ end
 # ===========================================================================
 
 version  = '1.4'
+extraInstructions = ""
 
 if $*[0] == "pharo"
     subdir = $*[1]
     artifact = "Pharo-#{version}"
     imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
-	extraInstructions = ""
 else
     subdir = $*[0]
     artifact = "Nautilus#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus-Release/lastSuccessfulBuild/artifact/#{artifact}.zip"
-	extraInstructions = "
-SystemBrowser default: Nautilus.
-package := RPackageOrganizer default packageNamed: 'Nautilus'. 
-Nautilus groupsManager addADynamicGroupSilentlyNamed: 'Nautilus' block: [ package orderedClasses ].
-"
+    imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
+    extraInstructions = <<SOURCE
+    Gofer new
+        squeaksource: 'TilingWindowManager';
+        package: 'ConfigurationOfTilingWindowManager';
+        load.
+    (Smalltalk at: #ConfigurationOfTilingWindowManager) load.
+    TWMBar open.
+SOURCE
 end
 
 # ===========================================================================

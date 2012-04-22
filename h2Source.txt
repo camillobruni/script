@@ -856,10 +856,10 @@
 - How to conjugate spanish verbs in the preterite / pretérito indefinido? 
     Used like the french passé composé to describe completed actions in the past.
 
-    -ar:              ┃  -er / -ir:          ┃  -ir / -er:
-    -é      -amos     ┃  -í       -imos      ┃  -í     -imos
-    -aste   -asteis   ┃  -iste    -isteis    ┃  -iste  -isteis
-    -ó      -aron     ┃  -ió      -ieron     ┃  -ió    -ieron
+    -ar:              ┃  -er / -ir:
+    -é      -amos     ┃  -í       -imos
+    -aste   -asteis   ┃  -iste    -isteis
+    -ó      -aron     ┃  -ió      -ieron
 
     ser / ir:         ┃  hacer:              ┃  dar:
     fui     fuimos    ┃  hice     hicimos    ┃  di     dimos
@@ -871,20 +871,21 @@
     viste   visteis   ┃  dijiste  dijisteis  ┃  trajiste  trajisteis
     vio     vieron    ┃  dijo     dijeron    ┃  trajo     trajeron
     
-    irregular verbs often follow a common pattern:             ┃  poner  →  pus- 
-    -e      -imos     ┃  andar →  anduve-    ┃  caber →  cup-  ┃  saber  →  sup- 
-    -iste   -isteis   ┃  estar →  estuve-    ┃  haber →  hub-  ┃  querer →  quis- 
-    -o      -ieron    ┃  tener →  tuve-      ┃  poder →  pud-  ┃  venir  →  vin-
-                                                           
+    irregular verbs often follow a common pattern:             
+    -e      -imos     ┃  andar →  anduve-    ┃  caber →  cup-   
+    -iste   -isteis   ┃  estar →  estuve-    ┃  haber →  hub-   
+    -o      -ieron    ┃  tener →  tuve-      ┃  poder →  pud-  
+                      ┃  poner  →  pus-      ┃  saber  →  sup-
+                      ┃  querer →  quis-     ┃  venir  →  vin-     
 
 - How to conjugate spanish verbs  in imperfect / pretérito imperfecto?
     Used like in french to describe things / persons in the past including
     repetitive tasks and actions.
 
-    -ar:              ┃  -er / -ir:          ┃  -ir / -er:
-    -aba    -ábamos   ┃  -ía      -íamos     ┃  -ía    -íamos
-    -abas   -abais    ┃  -ías     -íais      ┃  -ías   -íais
-    -aba    -aban     ┃  -ía      -ían       ┃  -ía    -ían
+    -ar:              ┃  -er / -ir:
+    -aba    -ábamos   ┃  -ía      -íamos
+    -abas   -abais    ┃  -ías     -íais
+    -aba    -aban     ┃  -ía      -ían
 
     ser:              ┃  ir:                 ┃  ver:
     era     éramos    ┃  iba      íbamos     ┃  veía   veíamos
