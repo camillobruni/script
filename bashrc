@@ -110,7 +110,8 @@ export IRBRC='~/.irbrc'
 if [ -f `brew --prefix`/etc/bash_completion ]; then
     BASH_COMPLETION_DIR=~/.bash_completion.d #manually set the local bash_completion dir
     export BASH_COMPLETION BASH_COMPLETION_DIR
-    . `brew --prefix`/etc/bash_completion
+    . $(brew --prefix)/etc/bash_completion
+    . $(brew --repository)/Library/Contributions/brew_bash_completion.sh
 fi
 
 # Python =====================================================================

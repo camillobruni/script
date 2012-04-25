@@ -26,7 +26,7 @@ def help(msg=nil, exitStatus=0)
         $stderr.puts red(msg)
         $stderr.puts ""
     end
-    $stderr.puts "USAGE: #{$0} [pharo] [options] IMAGE_NAME"
+    $stderr.puts "USAGE: #{$0} [1.4 2.0] [options] IMAGE_NAME"
     $stderr.puts ""
     $stderr.puts "     Creates a new image at `$IMAGE_NAME/$IMAGE_NAME.image` and installs a"
     $stderr.puts "     symlink $IMAGE_NAME/package-cache -> ./package-cache"
@@ -62,15 +62,38 @@ end
 
 # ===========================================================================
 
-version  = '1.4'
+version           = ''
 extraInstructions = ""
 
-if $*[0] == "pharo"
-    subdir = $*[1]
+if $*[0] == "1.4"
+    subdir   = $*[1]
+    version  = '1.4'
     artifact = "Pharo-#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/view/Pharo%20#{version}/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
+    imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
+
+elsif $*[0] == "2.0"
+    version  = '2.0'
+    subdir  = $*[1]
+    artifact = "Pharo-#{version}"
+    imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo-#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
+    extraInstructions = <<SOURCE
+    Gofer new
+        squeaksource: 'TilingWindowManager';
+        package: 'ConfigurationOfTilingWindowManager';
+        load.
+    (Smalltalk at: #ConfigurationOfTilingWindowManager) load.
+    "TWMBar open."
+    
+    Gofer it
+        squeaksource: 'Spotlight';
+        package: 'ConfigurationOfSpotlight';
+        load.
+    (Smalltalk at: #ConfigurationOfSpotlight) loadBleedingEdge.
+SOURCE
+
 else
-    subdir = $*[0]
+    version  = '2.0'
+    subdir   = $*[0]
     artifact = "Nautilus#{version}"
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
     extraInstructions = <<SOURCE
@@ -79,7 +102,13 @@ else
         package: 'ConfigurationOfTilingWindowManager';
         load.
     (Smalltalk at: #ConfigurationOfTilingWindowManager) load.
-    TWMBar open.
+    "TWMBar open."
+    
+    Gofer it
+        squeaksource: 'Spotlight';
+        package: 'ConfigurationOfSpotlight';
+        load.
+    (Smalltalk at: #ConfigurationOfSpotlight) loadBleedingEdge.
 SOURCE
 end
 
