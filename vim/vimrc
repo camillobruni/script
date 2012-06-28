@@ -5,7 +5,7 @@ set encoding=utf-8
 let mapleader=";"
 
 " Configure & load bundles
-let g:easytags_cmd = '/opt/local/bin/ctags'
+let g:easytags_cmd = '/usr/local/bin/ctags'
 let g:tagbar_ctags_bin = g:easytags_cmd
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
 let $JS_CMD = 'node'
@@ -33,7 +33,7 @@ nnoremap <leader>TF :CommandTFlush<cr>
 
 " 
 function! TexSpell()
-    cexp system('trex check')
+    cexp system('trex check ')
     copen
 endfunction
 command! TexSpell call TexSpell()

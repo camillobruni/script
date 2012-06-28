@@ -118,7 +118,6 @@ fi
 
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-source /usr/local/bin/virtualenvwrapper.sh
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_VIRTUALENV_BASE=$WORKON_HOME
 
@@ -147,6 +146,7 @@ alias path='/Applications/path.app/Contents/MacOS/path'
 alias cdp='cd "`path`"'
 alias tre='tree | less'
 alias 3='tree | less'
+alias t='trex'
 hash hub && alias git='hub'
 
 
@@ -302,3 +302,6 @@ export PS1="\$(__git_ps1)\[$YELLOW\]\W\[$NO_COLOR\]: "
 export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`;$PROMPT_COMMAND"
 
 # ============================================================================
+
+# enable this if virtualenvs are used
+#source /usr/local/bin/virtualenvwrapper.sh

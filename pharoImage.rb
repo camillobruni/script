@@ -71,28 +71,31 @@ if $*[0] == "1.4"
     artifact = "Pharo-#{version}"
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
 
+elsif $*[0] == "2.0-core"
+    version  = '2.0'
+    subdir  = $*[1]
+    artifact = "Pharo-#{version}"
+    imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo-#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
+    extraInstructions = <<SOURCE
+SOURCE
+
 elsif $*[0] == "2.0"
     version  = '2.0'
     subdir  = $*[1]
     artifact = "Pharo-#{version}"
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo-#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
     extraInstructions = <<SOURCE
-    Gofer new
-        squeaksource: 'TilingWindowManager';
-        package: 'ConfigurationOfTilingWindowManager';
-        load.
-    (Smalltalk at: #ConfigurationOfTilingWindowManager) load.
-    "TWMBar open."
-    
-    Gofer it
-        squeaksource: 'Spotlight';
-        package: 'ConfigurationOfSpotlight';
-        load.
-    (Smalltalk at: #ConfigurationOfSpotlight) loadBleedingEdge.
+"Gofer new
+	    squeaksource: 'glamoroust'; 
+	    package: 'ConfigurationOfGlamoroust';
+	    load.
+(Smalltalk at: #ConfigurationOfGlamoroust)
+    perform: #loadDevelopment.
+GTInspector registerToolsOn: Smalltalk tools."
 SOURCE
 
 else
-    version  = '2.0'
+    version  = '1.4'
     subdir   = $*[0]
     artifact = "Nautilus#{version}"
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
@@ -118,7 +121,7 @@ destination = "#{Dir.pwd}/#{subdir}"
 
 if File.exists? destination
     puts red("Image has been created before:")
-    puts ("    #{destination}")
+    puts destination
     while true
         print 'exit[E], reuse[r] or delete[d] files: '
         result = $stdin.gets.downcase.chomp
@@ -143,7 +146,7 @@ tmp      = `mktemp -d -t pharo`.chomp
 # ===========================================================================
 
 puts yellow("Fetching the latest image")
-puts "    #{imageUrl}"
+puts imageUrl
 
 `curl --progress-bar --retry 1 --retry-delay 1 --insecure --connect-timeout 3 --retry-max-time 4 -o "#{artifact}.zip" "#{imageUrl}" || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
 
@@ -200,6 +203,7 @@ color := [:colorCode :text|
 red := [:text| color value: 31 value: text ].
 green := [:text| color value: 32 value: text ].
 yellow := [:text| color value: 33 value: text ].
+white := [:text| FileStream stderr nextPutAll: text; crlf ].
 "============================================================================="
 
 Author fullName: 'Camillo Bruni'.
@@ -220,13 +224,16 @@ yellow value: 'Loading custom preferences'.
 
 Debugger alwaysOpenFullDebugger: true.
 
+white value: '- enabling TrueType fonts'.
 [ FreeTypeSystemSettings loadFt2Library: true ] onDNU: #loadFt2Library: do: [ :e| "ignore"].
 FreeTypeFontProvider current updateFromSystem.
 
+white value: '- set default fonts'.
 StandardFonts defaultFont: (LogicalFont familyName: 'Lucida Grande' pointSize: 10) forceNotBold.
 GraphicFontSettings resetAllFontToDefault.
 StandardFonts codeFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
 
+white value: '- preparing tools'.
 PolymorphSystemSettings 
 	desktopColor: Color gray;
 	showDesktopLogo: false.
@@ -243,7 +250,16 @@ TextEditorDialogWindow autoAccept: true.
     package: ''ConfigurationOfOCompletion'';
     load.
 
-(Smalltalk at: #ConfigurationOfOCompletion) perform: #loadStable.';
+(Smalltalk at: #ConfigurationOfOCompletion) perform: #loadStable.
+
+    
+    Gofer it
+        squeaksource: ''Spotlight'';
+        package: ''ConfigurationOfSpotlight'';
+        load.
+    (Smalltalk at: #ConfigurationOfSpotlight) loadBleedingEdge.
+
+';
     openLabel: '')
 	width: 1200; height: 230;
 	setToAdhereToEdge: #bottomLeft;
@@ -269,7 +285,7 @@ IDENTIFIER
 # ===========================================================================
 
 puts yellow("Setting up Image")
-puts "    #{imagePath}"
+puts imagePath
 
-`stackVM "#{imagePath}" "#{destination}/setup.st"`
+`cogVM "#{imagePath}" "#{destination}/setup.st"`
 `open #{imagePath}`

@@ -903,3 +903,19 @@
     he      hemos     ┃
     has     habéis    ┃
     ha      han       ┃
+
+- How do I copy stuff from the command line to the clipboard in OSX?
+    pbcopy < file.txt
+
+- How do I paste stuff from the clipboard to the command line?
+    pbpaste
+
+- How can I detect the current OS from within bash?
+    TMP_OS=`uname | tr '[:upper:]' '[:lower:]'`
+    if [[ "{$TMP_OS}" = *windows* ]]; then
+        OS='win'
+    elif [[ "{$TMP_OS}" = *darwin* ]]; then
+        OS='mac'
+    elif [[ "{$TMP_OS}" = *linux* ]]; then
+        OS='linux'
+    fi
