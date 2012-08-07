@@ -138,8 +138,8 @@ end
 guard()
 
 # ============================================================================
-
 puts yellow("Unzipping archive")
+
 `unzip -x "artifact#{issueNumber}.zip" -d "#{destination}" && rm -rf "#{destination}/__MACOSX"`
 Dir::chdir(destination)
 guard()
@@ -154,8 +154,8 @@ if File.exists? File.dirname(imagePath)+"/#{artifact}.sources"
 end
 
 # ============================================================================
-
 puts yellow("Cleaning up unzipped files")
+
 `rm "../artifact#{issueNumber}.zip" && rm -rf "#{tmp}"`
 guard()
 
@@ -193,10 +193,6 @@ yellow := [:text| color value: 33 value: text ].
 
 World submorphs do: [:each | each delete ].
 
-Smalltalk garbageCollect.
-Smalltalk garbageCollect.
-Smalltalk garbageCollect.
-
 Author fullName: 'MonkeyGalactikalIntegrator'.
 
 "===================================="
@@ -213,10 +209,10 @@ yellow value: 'Installing Continuous Integration Services'.
 
 Gofer new
 	url: 'http://ss3.gemstone.com/ss/ci';
-	package: 'ConfigurationOfContinousIntegration';
+	package: 'ConfigurationOfCI';
 	load.
 	
-(Smalltalk at: #ConfigurationOfContinousIntegration) perform: #loadDefault.
+(Smalltalk at: #ConfigurationOfCI) perform: #loadDefault.
 
 "===================================="
 [ 

@@ -100,18 +100,6 @@ else
     artifact = "Nautilus#{version}"
     imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
     extraInstructions = <<SOURCE
-    Gofer new
-        squeaksource: 'TilingWindowManager';
-        package: 'ConfigurationOfTilingWindowManager';
-        load.
-    (Smalltalk at: #ConfigurationOfTilingWindowManager) load.
-    "TWMBar open."
-    
-    Gofer it
-        squeaksource: 'Spotlight';
-        package: 'ConfigurationOfSpotlight';
-        load.
-    (Smalltalk at: #ConfigurationOfSpotlight) loadBleedingEdge.
 SOURCE
 end
 
@@ -188,7 +176,7 @@ imagePath = "#{Dir.pwd}/#{subdir}.image"
 
 File.open("#{destination}/setup.st", 'w') {|f| 
     f.puts <<IDENTIFIER
-| color red green yellow |
+| color red green yellow white |
 "============================================================================="
 "some helper blocks for error printing"
 color := [:colorCode :text|
@@ -200,10 +188,10 @@ color := [:colorCode :text|
         nextPut: Character escape; nextPutAll: '[0m'.
 ].
 
-red := [:text| color value: 31 value: text ].
-green := [:text| color value: 32 value: text ].
+red    := [:text| color value: 31 value: text ].
+green  := [:text| color value: 32 value: text ].
 yellow := [:text| color value: 33 value: text ].
-white := [:text| FileStream stderr nextPutAll: text; crlf ].
+white  := [:text| FileStream stderr nextPutAll: text; crlf ].
 "============================================================================="
 
 Author fullName: 'Camillo Bruni'.
@@ -217,7 +205,6 @@ UpdateStreamer new
     beSilent; 
     elementaryReadServerUpdates.
 
-
 "============================================================================="
 
 yellow value: 'Loading custom preferences'.
@@ -225,7 +212,7 @@ yellow value: 'Loading custom preferences'.
 Debugger alwaysOpenFullDebugger: true.
 
 white value: '- enabling TrueType fonts'.
-[ FreeTypeSystemSettings loadFt2Library: true ] onDNU: #loadFt2Library: do: [ :e| "ignore"].
+FreeTypeSystemSettings loadFt2Library: true.
 FreeTypeFontProvider current updateFromSystem.
 
 white value: '- set default fonts'.
@@ -244,22 +231,7 @@ TextEditorDialogWindow autoAccept: true.
 
 "============================================================================="
 
-(Workspace new contents: 
-'Gofer new
-    squeaksource: ''MetacelloRepository'';
-    package: ''ConfigurationOfOCompletion'';
-    load.
-
-(Smalltalk at: #ConfigurationOfOCompletion) perform: #loadStable.
-
-    
-    Gofer it
-        squeaksource: ''Spotlight'';
-        package: ''ConfigurationOfSpotlight'';
-        load.
-    (Smalltalk at: #ConfigurationOfSpotlight) loadBleedingEdge.
-
-';
+(Workspace new contents: '';
     openLabel: '')
 	width: 1200; height: 230;
 	setToAdhereToEdge: #bottomLeft;

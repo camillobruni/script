@@ -479,7 +479,7 @@
     #define QUOTEME(x) QUOTEME_(x)
     printf("FOO=%s\n", QUOTEME(FOO)); // => printf("FOO=%s\n", "bar");
 
-- How to create a condensed list in latex?
+- How to create a condensed / compact list / enum / description in latex?
     \usepackage{mdwlist}            % single spaced lists, much nicer
     \begin{enumerate*}              % itemize* is supported as well
         \setlength{\parskip}{-5pt}  % space after the item title
@@ -919,3 +919,11 @@
     elif [[ "{$TMP_OS}" = *linux* ]]; then
         OS='linux'
     fi
+
+- How can I delete a git tag?
+    git tag -d 12345
+    git push origin :refs/tags/12345
+
+
+- How do I handle update conflicts with brew update/upgrade?
+   check the files in /usr/local/

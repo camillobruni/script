@@ -6,7 +6,6 @@ fi
 # use this for profiling the bashrc..
 #PS4='+ $(date "+%s.%N")\011 '
 #exec 3>&2 2>/tmp/bashstart.$$.log
-
 # ============================================================================
 
 # Colors from http://wiki.archlinux.org/index.php/Color_Bash_Prompt
@@ -209,6 +208,14 @@ rruby()
 }
 alias c=rruby
 
+# open google search results from the command line ==========================
+google()
+{
+    QUERY=`echo "$*" | perl -MURI::Escape -ne 'print uri_escape($_)'`
+    open "https://encrypted.google.com/search?q=$QUERY"
+}
+alias ggl=google
+
 # cd with history ===========================================================
 # acd_func 1.0.5, 10-nov-2004
 # petar marinov, http:/geocities.com/h2428, this is public domain
@@ -271,7 +278,6 @@ alias cd=cd_func
 # load https://github.com/rupa/z after redefinition of cd
 export _Z_DATA="$HOME/.z"
 . /opt/share/z/z.sh
-
 
 # ============================================================================
 
