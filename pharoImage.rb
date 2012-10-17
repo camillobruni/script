@@ -69,40 +69,15 @@ if $*[0] == "1.4"
     subdir   = $*[1]
     version  = '1.4'
     artifact = "Pharo-#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo%20#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
-
-elsif $*[0] == "2.0-core"
-    version  = '2.0'
-    subdir  = $*[1]
-    artifact = "Pharo-#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo-#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
-    extraInstructions = <<SOURCE
-SOURCE
-
-elsif $*[0] == "2.0"
-    version  = '2.0'
-    subdir  = $*[1]
-    artifact = "Pharo-#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/job/Pharo-#{version}/lastSuccessfulBuild/artifact/#{artifact}.zip"
-    extraInstructions = <<SOURCE
-"Gofer new
-	    squeaksource: 'glamoroust'; 
-	    package: 'ConfigurationOfGlamoroust';
-	    load.
-(Smalltalk at: #ConfigurationOfGlamoroust)
-    perform: #loadDevelopment.
-GTInspector registerToolsOn: Smalltalk tools."
-SOURCE
-
+    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/14/latest.zip'
 else
-    version  = '1.4'
-    subdir   = $*[0]
-    artifact = "Nautilus#{version}"
-    imageUrl = "https://ci.lille.inria.fr/pharo/job/Nautilus/lastSuccessfulBuild/artifact/#{artifact}.zip"
-    extraInstructions = <<SOURCE
-SOURCE
+    version  = 'latest'
+    subdir  = $*[0]
+    artifact = "Pharo-#{version}"
+    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/20/latest.zip'
 end
 
+puts yellow("Building #{version} image")
 # ===========================================================================
 
 destination = "#{Dir.pwd}/#{subdir}"

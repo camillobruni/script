@@ -11,11 +11,13 @@ have open && _oi_completion() {
         COMPREPLY=( $( compgen -f -- $cur ))
         return 0
     fi
+    #list all image names but avoid looking in package-cache
+    FIND="find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print"
     if [[ -z "$cur" ]]; then
-        lists=`find . -name '*.image' -maxdepth 3 | sed "s/^\.\///g"`
+        lists=`find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print | sed "s/^\.\///g"`
     else
         # is the current selection an existing file?
-        lists=`find . -name "*.image" -maxdepth 3 | grep "${cur}" | sed "s/^\.\///g"`
+        lists=`find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print | grep "${cur}" | sed "s/^\.\///g"`
     fi
 
     COMPREPLY=( $(compgen -W "${lists}" | awk '{print; count++; if (count==20) { print "..."; exit }}' ))

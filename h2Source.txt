@@ -589,7 +589,7 @@
     http://www.gigamonkeys.com/book/
 
 - How to create a reverse ssh tunnel?
-    # on the local machine create a revers tunnel to ${SERVER}
+    # on the local machine create a reverse tunnel to ${SERVER}
     ssh ${REMOTE_USER}@${SERVER} -nNTR 0:localhost:${LOCAL_PORT}
     # then you can connect on the ${SERVER} to the port returned by the previous command
     ssh ${LOCAL_USER}@localhost -p ${PORT}
@@ -927,3 +927,9 @@
 
 - How do I handle update conflicts with brew update/upgrade?
    check the files in /usr/local/
+
+- How do I squash several git commits into one?
+    # rebase N commits from the HEAD on
+    git rebase -i HEAD~N
+    # mark all the unimportant commits with s for squash and save
+    # done

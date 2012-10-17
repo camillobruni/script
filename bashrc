@@ -82,7 +82,6 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
-export PATH=$PATH:/opt/llvm-gcc-4.2-2.7-x86_64-apple-darwin10/bin
 # homebrew ruby
 export PATH=$PATH:/usr/local/Cellar/ruby/1.9.3-p125/bin
 
@@ -130,7 +129,7 @@ alias g='git'
 complete -o default -o nospace -F _git g
 
 alias o='_open'
-alias oi='_open'
+alias oi='_open' #see bash-completion for functionality
 alias oo='open "`path`"'
 alias f='find . -name '
 alias p1='_ping1'
@@ -277,7 +276,7 @@ alias cd=cd_func
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
 export _Z_DATA="$HOME/.z"
-. /opt/share/z/z.sh
+source `brew --prefix`/etc/profile.d/z.sh
 
 # ============================================================================
 
