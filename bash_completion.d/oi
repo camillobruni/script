@@ -12,7 +12,7 @@ have open && _oi_completion() {
         return 0
     fi
     #list all image names but avoid looking in package-cache
-    FIND="find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print"
+    FIND="find . -name package-cache -prune -o -name '*.image' -maxdepth 3 -print"
     if [[ -z "$cur" ]]; then
         lists=`find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print | sed "s/^\.\///g"`
     else

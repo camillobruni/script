@@ -111,7 +111,20 @@ tmp      = `mktemp -d -t pharo`.chomp
 puts yellow("Fetching the latest image")
 puts imageUrl
 
-`curl --progress-bar --retry 1 --retry-delay 1 --insecure --connect-timeout 3 --retry-max-time 4 -o "#{artifact}.zip" "#{imageUrl}" || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
+# Download the image
+# - single retry only
+# - don't download if remote didn't change
+# - if connection failed use the local backup
+`curl \
+  --progress-bar \
+  --retry 1 \
+  --retry-delay 1 \
+  --insecure \
+  --connect-timeout 3 \
+  --retry-max-time 4 \
+  --time-cond "#{artifact}.zip" \
+  --output "#{artifact}.zip" "#{imageUrl}" \
+|| cp "#{artifact}.bak.zip" "#{artifact}.zip"`
 
 # ===========================================================================
 
@@ -170,7 +183,6 @@ white  := [:text| FileStream stderr nextPutAll: text; crlf ].
 "============================================================================="
 
 Author fullName: 'Camillo Bruni'.
-World submorphs do: [:each | each delete ].
 
 "============================================================================="
 
@@ -188,12 +200,10 @@ Debugger alwaysOpenFullDebugger: true.
 
 white value: '- enabling TrueType fonts'.
 FreeTypeSystemSettings loadFt2Library: true.
-FreeTypeFontProvider current updateFromSystem.
 
 white value: '- set default fonts'.
-StandardFonts defaultFont: (LogicalFont familyName: 'Lucida Grande' pointSize: 10) forceNotBold.
+StandardFonts defaultFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
 GraphicFontSettings resetAllFontToDefault.
-StandardFonts codeFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
 
 white value: '- preparing tools'.
 PolymorphSystemSettings 

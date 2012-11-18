@@ -933,3 +933,27 @@
     git rebase -i HEAD~N
     # mark all the unimportant commits with s for squash and save
     # done
+
+- How to copy Monticello version from one repository to another [squeaksource gemstone smalltalkhub]
+    conf := #ConfigurationOfSoup.
+    ss := 'Soup'.
+    ss3 := 'soup'.
+    
+    gofer := Gofer new
+    	package: conf.
+    
+    gofer copy 
+    	squeaksource: ss;
+    	load.
+    
+    project := (Smalltalk at: conf) project latestVersion.
+    project packages do: [:spec| gofer package: spec name. ].
+    
+    gofer copy
+    	squeaksource: ss;
+    	fetch.
+    	
+    gofer copy 
+    	url: 'http://ss3.gemstone.com/ss/', ss3;
+    	push.
+

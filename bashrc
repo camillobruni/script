@@ -114,7 +114,7 @@ fi
 
 # Python =====================================================================
 
-#export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_VIRTUALENV_BASE=$WORKON_HOME
@@ -309,4 +309,4 @@ export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s
 # ============================================================================
 
 # enable this if virtualenvs are used
-#source /usr/local/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper.sh
