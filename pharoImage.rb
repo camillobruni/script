@@ -129,10 +129,10 @@ puts imageUrl
 # ===========================================================================
 
 puts yellow("Unzipping image")
-`unzip -x "#{artifact}.zip" -d "#{destination}" > /dev/null 2>&1`
+`unzip -x "#{artifact}.zip" -d "#{destination}/extract-image" > /dev/null 2>&1`
 
 Dir::chdir(destination)
-imagePath = `find . -name "*.image"`.chomp.split[0]
+imagePath = `find extract-image -name "Pharo-*.image"`.chomp.split[0]
 
 # consider using the backed-up zip if the image file can't be found
 if imagePath.nil? or not File.exist? imagePath
@@ -141,10 +141,11 @@ if imagePath.nil? or not File.exist? imagePath
     puts red("Could not properly download image files restoring local backup")
     `cp "#{artifact}.bak.zip" "#{artifact}.zip"`
     puts yellow("Unzipping image")
-    `unzip -x "#{artifact}.zip" -d "#{destination}"`
-    Dir::chdir(destination)
-    imagePath = `find . -name "*.image"`.chomp.split[0]
+    `unzip -x "#{artifact}.zip" -d "#{destination}/extract-image"`
 end
+Dir::chdir(destination)
+imagePath = `find extract-image -name "Pharo-*.image"`.chomp.split[0]
+
 
 # create a backup
 `cp "../#{artifact}.zip" "../#{artifact}.bak.zip"`
@@ -152,6 +153,7 @@ end
 imagePath = imagePath.chomp(File.extname(imagePath))
 FileUtils.move(imagePath+'.image', "#{subdir}.image")
 FileUtils.move(imagePath+'.changes', "#{subdir}.changes")
+`rm -rf extract-image`
 
 if File.exists? File.dirname(imagePath)+"/PharoV10.sources"
     FileUtils.move(File.dirname(imagePath)+"/PharoV10.sources", "PharoV10.sources")

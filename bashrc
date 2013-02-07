@@ -82,8 +82,9 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
-# homebrew ruby
-export PATH=$PATH:/usr/local/Cellar/ruby/1.9.3-p125/bin
+# homebrew ruby gem path, cannot use fixed path as it would include a changing
+# version number
+export PATH=$PATH:$(cd $(which gem)/..; pwd)
 
 # ============================================================================
 
@@ -114,7 +115,8 @@ fi
 
 # Python =====================================================================
 
-export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+# manually add DYLD path for python mysql gagu
+#export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_VIRTUALENV_BASE=$WORKON_HOME
@@ -129,7 +131,7 @@ alias g='git'
 complete -o default -o nospace -F _git g
 
 alias o='_open'
-alias oi='_open' #see bash-completion for functionality
+alias oi='_open' #placeholder to trigger bash-completion
 alias oo='open "`path`"'
 alias f='find . -name '
 alias p1='_ping1'
@@ -145,6 +147,7 @@ alias cdp='cd "`path`"'
 alias tre='tree | less'
 alias 3='tree | less'
 alias t='trex'
+alias j='_jump'
 hash hub && alias git='hub'
 
 
@@ -278,6 +281,11 @@ alias cd=cd_func
 export _Z_DATA="$HOME/.z"
 source `brew --prefix`/etc/profile.d/z.sh
 
+function _jump {
+	# first try jump with all the options then z (auto tracker)
+	jump $* || z $*
+}
+
 # ============================================================================
 
 # Prompt: requires git and svn
@@ -307,6 +315,9 @@ export PS1="\$(__git_ps1)\[$YELLOW\]\W\[$NO_COLOR\]: "
 export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`;$PROMPT_COMMAND"
 
 # ============================================================================
+
+#jump bash completion
+source `jump-bin --bash-integration`/shell_driver
 
 # enable this if virtualenvs are used
 source /usr/local/bin/virtualenvwrapper.sh

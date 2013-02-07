@@ -360,12 +360,19 @@
     .
     QUIT
 
-- How to delete a file form history in git?
-    # from the topdir
+- How to delete a file from/rewrite history in git?
+    # 1. a single file, run the command from the topdir
     git filter-branch -f --index-filter 'git update-index --remove filename' HEAD
+
+    # 2. multiple files by name using git-rm
+    git filter-branch -f --prune-empty  \
+        --index-filter 'git rm -rf --cached --ignore-unmatch **/FILENAME.EXT' \
+       --tag-name-filter cat -- --all
+
+    # then push the changes (force them since you will overwrite the main refs)
     git push --force --verbose --dry-run
     git push --force
-
+    
 - How to set the escapecharacter, exclamation mark lstlisting?
     \begin{lstlisting}[escapechar=!]
 
@@ -484,8 +491,24 @@
     \begin{enumerate*}              % itemize* is supported as well
         \setlength{\parskip}{-5pt}  % space after the item title
         \setlength{\itemsep}{10pt}  % space before the item title
-
     \end{enumerate*}
+    
+    \usepackage{enumitem}
+    
+    Less space:
+    \begin{itemize}[noitemsep]
+        \item foo
+        \item bar
+        \item baz
+    \end{itemize}
+    
+    Even more compact:
+    \begin{itemize}[noitemsep,nolistsep]
+        \item foo
+        \item bar
+        \item baz
+    \end{itemize}
+    \end{document}
 
 - How to put as much text as possible on one LaTeX page?
     \usepackage{savetrees} % condense up to the ugliness
@@ -835,7 +858,7 @@
 
 - How to delete chrome autocompleted url entries? [omnibar]
     select the entry
-    mac: SHIFT + DEL
+    mac: SHIFT + Fn + DEL
     win: DEL
 
 - How to make sure all shell pipelines are executed with &&? [bash]
@@ -957,3 +980,27 @@
     	url: 'http://ss3.gemstone.com/ss/', ss3;
     	push.
 
+- How do I refer to a source code listing in LaTeX?
+    \begin{lstlisting}[
+            caption={a caption},
+            label={lst:myListing},
+            numbers=left,
+            escapeinside={@}{@} ]
+    foooFunction
+        @\label{lst:myListing_2}@doSomething();
+        self bar.
+        self foo.
+    \end{lstlisting}
+
+    \ref{lst:myListing} is referring to the list
+    \ref{lst:myListing_2} is referring to marked source line
+
+- How do I create an empty 1MB file?
+    dd if=/dev/zero of=output.file bs=1024 count=1024
+
+- How do I loop over a range of Numbers in Bash?
+    for i in `seq 1 $END`; do echo $i; done
+
+- How do I delete a remote branch in git?
+    # simply prefix with a colon
+    git push origin :branchName
