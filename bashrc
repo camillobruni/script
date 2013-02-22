@@ -282,7 +282,7 @@ export _Z_DATA="$HOME/.z"
 source `brew --prefix`/etc/profile.d/z.sh
 
 function _jump {
-	# first try jump with all the options then z (auto tracker)
+	# first try `jump` with all the options then `z` (auto tracker)
 	jump $* || z $*
 }
 
@@ -316,8 +316,5 @@ export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s
 
 # ============================================================================
 
-#jump bash completion
-source `jump-bin --bash-integration`/shell_driver
-
 # enable this if virtualenvs are used
-source /usr/local/bin/virtualenvwrapper.sh
+# source /usr/local/bin/virtualenvwrapper.sh

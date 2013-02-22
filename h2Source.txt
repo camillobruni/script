@@ -1004,3 +1004,6 @@
 - How do I delete a remote branch in git?
     # simply prefix with a colon
     git push origin :branchName
+
+- How to do a portscan under linux? [netcat]
+     nc -z $SERVER 1-1023
