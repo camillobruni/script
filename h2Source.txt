@@ -1007,3 +1007,10 @@
 
 - How to do a portscan under linux? [netcat]
      nc -z $SERVER 1-1023
+
+- How to echo to stderr in bash?
+    echoerr() { echo "$@" 1>&2; }
+    echoerr hello world
+
+- How to connect to tmux in bash?
+    tmux attach

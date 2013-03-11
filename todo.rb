@@ -71,19 +71,9 @@ class App
     def process_command
         IO.popen('osascript', 'w') { |f|
         f.puts <<EOF
-            -- Variables
-            set recipientAddress to "#{self.email}"
-            set theSubject to "TODO: #{ARGV.join(' ')}"
-            --Invoke Mail
-            tell application "Mail"
-            	set theMessage to make new outgoing message with properties {subject:theSubject, visible:true}
-            	tell theMessage
-            		make new to recipient with properties {address:recipientAddress}
-            		--Send the Message
-                    #{@options.send_message ? 'send' : ''}
-            	end tell
-                #{@options.send_message ? '' : 'activate'}
-            end tell
+tell app "Reminders"
+make new reminder with properties {name: "#{ARGV.join(' ')}"}
+end
 EOF
     }
     end

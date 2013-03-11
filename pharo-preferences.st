@@ -1,4 +1,7 @@
+StartupLoader default executeAtomicItems: {
+StartupAction name: 'Image Setup' code: [
 | color red green yellow white |
+
 "============================================================================="
 "some helper blocks for error printing"
 color := [:colorCode :text|
@@ -17,14 +20,6 @@ white  := [:text| FileStream stderr nextPutAll: text; crlf ].
 "============================================================================="
 
 Author fullName: 'Camillo Bruni'.
-
-"============================================================================="
-
-yellow value: 'Updating image'.
-
-UpdateStreamer new 
-    beSilent; 
-    elementaryReadServerUpdates.
 
 "============================================================================="
 
@@ -47,6 +42,9 @@ PolymorphSystemSettings
 "UITheme currentSettings fastDragging: true."
 
 TextEditorDialogWindow autoAccept: true.
+UITheme currentSettings
+	preferGradientFill: false;
+	menuColor: Color white.
 
 "============================================================================="
 
@@ -60,3 +58,7 @@ MCWorkingCopyBrowser new show window
 	width: 700; height: 230;
 	setToAdhereToEdge: #topLeft;
 	makeUnclosable.
+	
+
+] 
+runOnce: true}.

@@ -87,6 +87,11 @@ export PATH=$PATH:/opt/git-svn-clone-externals
 export PATH=$PATH:$(cd $(which gem)/..; pwd)
 
 # ============================================================================
+export M2_HOME=/opt/mvn/
+export M2=$M2_HOME/bin
+export PATH=$M2:$PATH
+
+# ============================================================================
 
 #export RUBYLIB=$RUBYLIB:/Library/Ruby/Gems/1.8/:/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8/
 #export RSENSE_HOME=/opt/rsense-0.3/
