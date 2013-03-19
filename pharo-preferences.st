@@ -25,7 +25,9 @@ Author fullName: 'Camillo Bruni'.
 
 yellow value: 'Loading custom preferences'.
 
-Debugger alwaysOpenFullDebugger: true.
+Debugger 
+	alwaysOpenFullDebugger: true;
+	filterCommonMessageSends: true.
 
 white value: '- enabling TrueType fonts'.
 FreeTypeSystemSettings loadFt2Library: true.
@@ -42,8 +44,12 @@ PolymorphSystemSettings
 "UITheme currentSettings fastDragging: true."
 
 TextEditorDialogWindow autoAccept: true.
+
+SHPreferences setStyleTableNamed: 'Tango'.
+
 UITheme currentSettings
 	preferGradientFill: false;
+	preferRoundCorner: true;
 	menuColor: Color white.
 
 "============================================================================="
