@@ -1,3 +1,4 @@
+Smalltalk isHeadless ifFalse: [
 StartupLoader default executeAtomicItems: {
 StartupAction name: 'Image Setup' code: [
 | color red green yellow white |
@@ -67,4 +68,4 @@ MCWorkingCopyBrowser new show window
 	
 
 ] 
-runOnce: true}.
+runOnce: true}].

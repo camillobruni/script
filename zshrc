@@ -1,0 +1,234 @@
+# System-wide .bashrc file for interactive bash(1) shells.
+if [ -z "$PS1" ]; then
+   return
+fi
+
+ZSH=$HOME/.oh-my-zsh
+
+ZSH_THEME="cami"
+plugins=(git brew textmate osx rsync zsh-syntax-highlighting)
+
+source $ZSH/oh-my-zsh.sh
+
+fpath=( `brew --prefix`/share/zsh-completions $fpath)
+
+ZSH_THEME_LAST_PRINT_DATE=0
+
+# ============================================================================
+
+# Colors from http://wiki.archlinux.org/index.php/Color_Bash_Prompt
+# Misc
+NO_COLOR='\e[0m' #disable any colors
+# Regular colors
+  BLACK='\e[0;30m'
+    RED='\e[0;31m'
+  GREEN='\e[0;32m'
+ YELLOW='\e[0;33m'
+   BLUE='\e[0;34m'
+MAGENTA='\e[0;35m'
+   CYAN='\e[0;36m'
+  WHITE='\e[0;37m'
+# Emphasized (bolded) colors
+  EBLACK='\e[1;30m'
+    ERED='\e[1;31m'
+  EGREEN='\e[1;32m'
+ EYELLOW='\e[1;33m'
+   EBLUE='\e[1;34m'
+EMAGENTA='\e[1;35m'
+   ECYAN='\e[1;36m'
+  EWHITE='\e[1;37m'
+# Underlined colors
+  UBLACK='\e[4;30m'
+    URED='\e[4;31m'
+  UGREEN='\e[4;32m'
+ UYELLOW='\e[4;33m'
+   UBLUE='\e[4;34m'
+UMAGENTA='\e[4;35m'
+   UCYAN='\e[4;36m'
+  UWHITE='\e[4;37m'
+# Background colors
+  BBLACK='\e[40m'
+    BRED='\e[41m'
+  BGREEN='\e[42m'
+ BYELLOW='\e[43m'
+   BBLUE='\e[44m'
+BMAGENTA='\e[45m'
+   BCYAN='\e[46m'
+  BWHITE='\e[47m'
+
+# ============================================================================
+
+export HISTFILESIZE=10000 # the bash history should save 3000 commands
+export HISTCONTROL=ignorespace:erasedups
+
+# ENCODING SHIZZLE --------------------------------------------------------------
+
+# swiss format 
+export LC_MONETARY="de_CH.utf-8"
+export LC_NUMERIC="de_CH.utf-8"
+export LC_TIME="de_CH.utf-8"
+export LC_PAPER="de_CH.UTF-8"
+export LC_TELEPHONE="de_CH.UTF-8"
+export LC_MEASUREMENT="de_CH.UTF-8"
+export LC_ADDRESS="de_CH.UTF-8"
+# for everything else we use en_US
+export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+export LC_COLLATE="en_US.UTF-8"
+export LC_MESSAGES="en_US.UTF-8"
+export LC_NAME="en_US.UTF-8"
+export LC_IDENTIFICATION="en_US.UTF-8"
+
+# override all previous LC_* settings
+# export LC_ALL="en_US.UTF-8"
+
+# ============================================================================
+
+export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
+export PATH=$PATH:/opt/git-svn-clone-externals
+# homebrew ruby gem path, cannot use fixed path as it would include a changing
+# version number
+export PATH=$PATH:$(cd $(which gem)/..; pwd)
+
+# ============================================================================
+export M2_HOME=/opt/mvn/
+export M2=$M2_HOME/bin
+export PATH=$M2:$PATH
+
+# ============================================================================
+
+#export RUBYLIB=$RUBYLIB:/Library/Ruby/Gems/1.8/:/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8/
+#export RSENSE_HOME=/opt/rsense-0.3/
+
+#export PYTHONSTARTUP=/usr/local/bin/ipythonShell
+
+export BROWSER=open
+export EDITOR=mvim
+export VISUAL=mvim
+export SVN_EDITOR=mvim
+export H2_EDITOR=mvim
+
+export MANPATH=/opt/local/share/man:$MANPATH
+
+export PYTHON_VERSION=2.7
+export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+
+export IRBRC='~/.irbrc'
+
+# Python =====================================================================
+
+# manually add DYLD path for python mysql gagu
+#export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+#export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+#export PIP_REQUIRE_VIRTUALENV=true
+#export PIP_VIRTUALENV_BASE=$WORKON_HOME
+
+
+# ============================================================================
+alias g='git'
+alias o='_open'
+alias oi='_open' #placeholder to trigger bash-completion
+alias oo='open "`path`"'
+alias f='find . -name '
+alias p1='_ping1'
+alias l='ls -l'
+alias ll='ls -al'
+alias du='du -h'
+alias cdup='cd ..'
+alias ping1='ping -c 1'
+alias scn='svn'
+alias irb='irb -rubygems'
+alias path='/Applications/path.app/Contents/MacOS/path'
+alias cdp='cd "`path`"'
+alias tre='tree | less'
+alias 3='tree | less'
+alias t='trex'
+hash hub && alias git='hub'
+
+
+alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+
+alias ssh='ssh -C'
+alias sshprox='ssh -CND 8888 '
+
+alias x11='DISPLAY = :0.0;export DISPLAY;'
+
+#alias grep='grep -n --color=auto'
+alias rgrep='grep -r -n --color=auto'
+
+alias tvim='vim -c "NERDTree" -c "wincmd p"'
+alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
+
+alias svndiff='svn diff "${@}" | colordiff | lv -c'
+alias svnlog='svn log --verbose | less'
+
+#alias irb='irb1.9 -r "irb/completion"'
+
+# better output
+alias contacts="contacts -lHf '%n %p %mp %e %a'"
+alias contact='contacts'
+alias calendar='icalBuddy'
+
+#alias prox='export http_proxy=http://proxy:80/'
+#alias unprox='unset http_proxy'
+
+
+# pman opens man pages in preview / skim ====================================
+pman() {
+    man -t "$@" | open -f -a Skim
+}
+
+# open which opens the current dir if no arg is specified ===================
+_open()
+{
+    if [[ $# -eq 0 ]]; then
+        open .;
+        return $?;
+    fi    
+    open "$*";
+}
+
+# ping google or the provided argument once =================================
+_ping1()
+{
+    if [[ $# -eq 0 ]]; then
+        ping -c 1 www.google.com
+        return $?;
+    fi    
+    ping -c 1 "$*";
+}
+
+# a small single line evaluator for ruby ====================================
+rruby()
+{
+    ruby -e "puts $*"
+}
+alias c=rruby
+
+# open google search results from the command line ==========================
+google()
+{
+    QUERY=`echo "$*" | perl -MURI::Escape -ne 'print uri_escape($_)'`
+    open "https://encrypted.google.com/search?q=$QUERY"
+}
+alias ggl=google
+
+# ============================================================================
+# load https://github.com/rupa/z after redefinition of cd
+export _Z_DATA="$HOME/.z"
+
+source `jump-bin --zsh-integration`
+[[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
+alias j=_jump
+
+function _jump {
+	# first try `jump` with all the options then autojump
+	jump $* 2&>> /dev/null || autojump $* || ( echo "'$*' not found" && exit 1)
+}
+
+# ============================================================================
+
+# enable this if virtualenvs are used
+# source /usr/local/bin/virtualenvwrapper.sh
+
+

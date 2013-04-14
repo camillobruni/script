@@ -10,7 +10,6 @@ command! BundleUpdate BundleInstall!
 Bundle 'gmarik/vundle'
 
 " UI improvements
-Bundle 'wincent/Command-T'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdtree'
@@ -56,6 +55,6 @@ Bundle 'hallettj/jslint.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'DamienCassou/textlint'
-
+Bundle 'vim-peepopen'
 
 filetype plugin indent on

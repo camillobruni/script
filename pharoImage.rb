@@ -26,7 +26,7 @@ def help(msg=nil, exitStatus=0)
         $stderr.puts red(msg)
         $stderr.puts ""
     end
-    $stderr.puts "USAGE: #{$0} [1.4 2.0] [options] IMAGE_NAME"
+    $stderr.puts "USAGE: #{$0} [1.4 2.0 3.0] [options] IMAGE_NAME"
     $stderr.puts ""
     $stderr.puts "     Creates a new image at `$IMAGE_NAME/$IMAGE_NAME.image` and installs a"
     $stderr.puts "     symlink $IMAGE_NAME/package-cache -> ./package-cache"
@@ -69,11 +69,17 @@ if $*[0] == "1.4"
     version  = '1.4'
     artifact = "Pharo-#{version}"
     imageUrl = 'http://pharo.gforge.inria.fr/ci/image/14/latest.zip'
+elsif $*[0] == "2.0"
+    subdir   = $*[1]
+    version  = '2.0'
+    artifact = "Pharo-#{version}"
+    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/20/latest.zip'
+
 else
     version  = 'latest'
     subdir  = $*[0]
     artifact = "Pharo-#{version}"
-    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/20/latest.zip'
+    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/30/latest.zip'
 end
 
 puts yellow("Building #{version} image")
