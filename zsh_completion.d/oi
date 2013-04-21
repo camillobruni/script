@@ -1,0 +1,25 @@
+# oi is a shortcut for opening pharo images, hence only complete *.image
+
+have open && _oi_completion() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    # show *.image files up to 3 levels deep and replace the ./ prefix
+    if [[ -f "$prev" ]]; then
+        COMPREPLY=( $( compgen -f -- $cur ))
+        return 0
+    fi
+    #list all image names but avoid looking in package-cache
+    FIND="find . -name package-cache -prune -o -name '*.image' -maxdepth 3 -print"
+    if [[ -z "$cur" ]]; then
+        lists=`find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print | sed "s/^\.\///g"`
+    else
+        # is the current selection an existing file?
+        lists=`find . -name package-cache -prune -o -name '*.image' -maxdepth 2 -print | grep "${cur}" | sed "s/^\.\///g"`
+    fi
+
+    COMPREPLY=( $(compgen -W "${lists}" | awk '{print; count++; if (count==20) { print "..."; exit }}' ))
+} && \
+complete -F _oi_completion oi

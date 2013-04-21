@@ -3,14 +3,17 @@ if [ -z "$PS1" ]; then
    return
 fi
 
+skip_global_compinit=1
+
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git brew textmate osx rsync zsh-syntax-highlighting)
+plugins=(git brew textmate osx rsync zsh-syntax-highlighting oi)
 
 source $ZSH/oh-my-zsh.sh
 
 fpath=( `brew --prefix`/share/zsh-completions $fpath)
+ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion dir
 
 ZSH_THEME_LAST_PRINT_DATE=0
 
@@ -215,7 +218,7 @@ alias ggl=google
 
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
-export _Z_DATA="$HOME/.z"
+export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
 [[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
@@ -223,12 +226,5 @@ alias j=_jump
 
 function _jump {
 	# first try `jump` with all the options then autojump
-	jump $* 2&>> /dev/null || autojump $* || ( echo "'$*' not found" && exit 1)
+	jump $* 2&>> /dev/null || cd `autojump $*` || ( echo "'$*' not found" && exit 1)
 }
-
-# ============================================================================
-
-# enable this if virtualenvs are used
-# source /usr/local/bin/virtualenvwrapper.sh
-
-

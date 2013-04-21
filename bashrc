@@ -283,7 +283,7 @@ alias cd=cd_func
 
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
-export _Z_DATA="$HOME/.z"
+export _Z_DATA="$HOME/.z/"
 source `brew --prefix`/etc/profile.d/z.sh
 
 function _jump {
