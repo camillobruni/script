@@ -87,7 +87,8 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 # ============================================================================
 
-export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH:/usr/local/mysql/bin
+export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
+export PAHT=$PARH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
 # homebrew ruby gem path, cannot use fixed path as it would include a changing
 # version number
