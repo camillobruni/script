@@ -1,2 +1,0 @@
-#!/bin/bash
-scp "$1" mdenker@scm.gforge.inria.fr:/home/groups/pharo/htdocs/updates/pharo1.4/
