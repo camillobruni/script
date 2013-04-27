@@ -1014,3 +1014,10 @@
 
 - How to connect to tmux in bash?
     tmux attach
+
+- How to add new parents to an existing git commit?
+
+    echo ""$COMMIT_SHA $PARENT_1_SHA $PARENT_2_SHA..." > .git/info/grafts
+    git filter-branch
+    git gc
+    rm .git/info/grafts
