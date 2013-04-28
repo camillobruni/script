@@ -147,7 +147,7 @@ alias cdp='cd "`path`"'
 alias tre='tree | less'
 alias 3='tree | less'
 alias t='trex'
-hash hub && alias git='hub'
+function git(){ hub $@ }
 
 
 alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
