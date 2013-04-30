@@ -68,18 +68,18 @@ if $*[0] == "1.4"
     subdir   = $*[1]
     version  = '1.4'
     artifact = "Pharo-#{version}"
-    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/14/latest.zip'
+    imageUrl = 'http://files.pharo.org/image/14/latest.zip'
 elsif $*[0] == "2.0"
     subdir   = $*[1]
     version  = '2.0'
     artifact = "Pharo-#{version}"
-    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/20/latest.zip'
+    imageUrl = 'http://files.pharo.org/image/20/latest.zip'
 
 else
     version  = 'latest'
     subdir  = $*[0]
     artifact = "Pharo-#{version}"
-    imageUrl = 'http://pharo.gforge.inria.fr/ci/image/30/latest.zip'
+    imageUrl = 'http://files.pharo.org/image/30/latest.zip'
 end
 
 puts yellow("Building #{version} image")
