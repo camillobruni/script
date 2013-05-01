@@ -120,24 +120,27 @@ puts imageUrl
 # - single retry only
 # - don't download if remote didn't change
 # - if connection failed use the local backup
-`curl \
+`rm -f "#{artifact}_down.zip" && \
+curl \
   --progress-bar \
-  --retry 1 \
+  --retry 2 \
   --retry-delay 1 \
   --insecure \
   --connect-timeout 3 \
   --retry-max-time 4 \
   --time-cond "#{artifact}.zip" \
-  --output "#{artifact}.zip" "#{imageUrl}" \
+  --output "#{artifact}_down.zip" "#{imageUrl}" \
+&& mv -f "#{artifact}_down.zip" "#{artifact}.zip" &> /dev/null \
 || cp "#{artifact}.bak.zip" "#{artifact}.zip"`
 
 # ===========================================================================
 
 puts yellow("Unzipping image")
-`unzip -x "#{artifact}.zip" -d "#{destination}/extract-image" > /dev/null 2>&1`
+`unzip "#{artifact}.zip" -d "#{destination}/extract-image" > /dev/null 2>&1`
+
 
 Dir::chdir(destination)
-imagePath = `find extract-image -name "Pharo-*.image"`.chomp.split[0]
+imagePath = `find extract-image -name "Pharo*.image"`.chomp.split[0]
 
 # consider using the backed-up zip if the image file can't be found
 if imagePath.nil? or not File.exist? imagePath
@@ -149,7 +152,7 @@ if imagePath.nil? or not File.exist? imagePath
     `unzip -x "#{artifact}.zip" -d "#{destination}/extract-image"`
 end
 Dir::chdir(destination)
-imagePath = `find extract-image -name "Pharo-*.image"`.chomp.split[0]
+imagePath = `find extract-image -name "Pharo*.image"`.chomp.split[0]
 
 
 # create a backup
@@ -165,8 +168,6 @@ if File.exists? File.dirname(imagePath)+"/PharoV10.sources"
 end
 
 imagePath = "#{Dir.pwd}/#{subdir}.image"
-`rm -R "#{artifact}"`
-
 
 # ===========================================================================
 puts imagePath
