@@ -53,6 +53,17 @@ UITheme currentSettings
 	preferRoundCorner: true;
 	menuColor: Color white.
 
+[ :job |
+	job title: 'loading eclipse icons'.
+	Gofer new
+		smalltalkhubUser: 'estebanlm' project: 'EclipsePack';
+		package: 'EclipsePack';
+		load.
+	ThemeIcons current: EclipseUIThemeIcons new.
+	World resetWorldMenu.
+	NautilusUI resetIconCaches.
+] asJob run.
+
 "============================================================================="
 
 (Workspace new contents: '';

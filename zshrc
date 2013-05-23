@@ -136,7 +136,7 @@ alias oo='open "`path`"'
 alias f='find . -name '
 alias p1='_ping1'
 alias l='ls -l'
-alias ll='ls -al'
+alias ll='ls -Aflhp'
 alias du='du -h'
 alias cdup='cd ..'
 alias ping1='ping -c 1'
@@ -147,6 +147,8 @@ alias cdp='cd "`path`"'
 alias tre='tree | less'
 alias 3='tree | less'
 alias t='trex'
+alias fname="find-name"
+alias find-name="find . -name "
 function git(){ hub $@ }
 
 

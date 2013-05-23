@@ -384,10 +384,15 @@
     # or while editing .vimrc
     :so %
 
-- How to tar files properly?
+- How to tar/compress files properly?
     # to create a tar 
     tar -cvzf file.tar.gz inputfile1 inputfile2
     tar -cvf - inputfile1 inputfile2 | gzip > file.tar.gz
+
+- How to untar/decompress files correctly?
+    tar -xvf  file.tar
+    tar -xzvf file.tar.gz
+    tar -xjvf file.tar.bz2
 
 - How to prune .svn dirs from a find result?
     find $DIR -path '*/.svn' -prune -o -type f -print
