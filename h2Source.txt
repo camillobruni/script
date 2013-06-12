@@ -1026,3 +1026,10 @@
     git filter-branch
     git gc
     rm .git/info/grafts
+
+- How to enable a revers tunnel on the public network interface?
+    # /etc/ssh/sshd_config
+    GatewayPorts yes
+
+- How to run more than 1 command with sudo? [root]
+    sudo -s -- 'whoami; whoami;'
