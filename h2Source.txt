@@ -1033,3 +1033,7 @@
 
 - How to run more than 1 command with sudo? [root]
     sudo -s -- 'whoami; whoami;'
+
+- How to track a remote branch with git?
+  git branch -a
+  git branch --track $LOCAL_BRANCH_NAME origin/$REMOTE_BRANCH_NAME
