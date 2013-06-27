@@ -1037,3 +1037,12 @@
 - How to track a remote branch with git?
   git branch -a
   git branch --track $LOCAL_BRANCH_NAME origin/$REMOTE_BRANCH_NAME
+
+- How to switch line ending mode in VIM?
+    CR    :e ++ff=mac
+    CRLF  :e ++ff=dos
+    LF    :e ++ff=unix
+
+- What are the line end characters in display in VIM?
+    ^J = \n  = Line Feed    
+    ^M = \r = Carriage Return

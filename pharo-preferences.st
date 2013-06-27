@@ -57,6 +57,13 @@ Author fullName: 'Camillo Bruni'.
 		preferGradientFill: false;
 		preferRoundCorner: true;
 		menuColor: Color white.
+		
+	NECPreferences
+		popupShowAutomatic: false;
+		popupShowWithShortcut: Character tab asKeyCombination.
+		
+	NNavNavigation
+		useArrowsShortcuts: true.
 
 	yellow value: 'loading eclipse icons'.
 	isIssueImage ifFalse: [
