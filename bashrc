@@ -154,7 +154,7 @@ alias 3='tree | less'
 alias t='trex'
 alias j='_jump'
 hash hub && alias git='hub'
-
+alias password='apg -a1 -m20'
 
 alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 

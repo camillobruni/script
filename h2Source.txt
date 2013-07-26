@@ -1046,3 +1046,18 @@
 - What are the line end characters in display in VIM?
     ^J = \n  = Line Feed    
     ^M = \r = Carriage Return
+
+- How to manipulate strings with bash? [bash string]
+    # see http://tldp.org/LDP/abs/html/string-manipulation.html
+    STRING='123'
+    # length
+    ${#STRING}
+    # Substring Extraction
+    ${STRING:start}
+    A
+    ${STRING:start:length}
+
+- How to pause Crashplan?
+    1. open crashplan
+    2. double click on the crash plan icon
+    3. Enter "pause XXX" in the shell, with XXX the number of minutes to paus

@@ -35,7 +35,7 @@ Author fullName: 'Camillo Bruni'.
 
 	Debugger 
 		alwaysOpenFullDebugger: true;
-		filterCommonMessageSends: true.
+		filterCommonMessageSends: false.
 
 
 	white value: '- set default fonts'.
@@ -72,7 +72,7 @@ Author fullName: 'Camillo Bruni'.
 				smalltalkhubUser: 'estebanlm' project: 'EclipsePack';
 				package: 'EclipsePack';
 				load.
-			ThemeIcons current: EclipseUIThemeIcons new.
+			ThemeIcons current: #EclipseUIThemeIcons asClass new.
 			World resetWorldMenu.
 			NautilusUI resetIconCaches ]].
 	(isIssueImage and: [ Smalltalk isInteractive ])
