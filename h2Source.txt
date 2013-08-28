@@ -80,6 +80,11 @@
     test $1 $op $2
     
     if [[ $1 $op $2 ]]; then
+        
+    elif: [[ ... ]]; then
+        
+    else
+        
     fi
 
 - What are the possible conditions for testing in bash? 

@@ -36,7 +36,9 @@ Author fullName: 'Camillo Bruni'.
 	Debugger 
 		alwaysOpenFullDebugger: true;
 		filterCommonMessageSends: false.
-
+	
+	Smalltalk at: #SpecDebugger ifPresent: [ :class |
+		class alwaysOpenFullDebugger: true ].
 
 	white value: '- set default fonts'.
 	StandardFonts defaultFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
@@ -52,11 +54,6 @@ Author fullName: 'Camillo Bruni'.
 	TextEditorDialogWindow autoAccept: true.
 
 	SHPreferences setStyleTableNamed: 'Tango'.
-
-	UITheme currentSettings
-		preferGradientFill: false;
-		preferRoundCorner: true;
-		menuColor: Color white.
 		
 	NECPreferences
 		popupShowAutomatic: false;
@@ -65,16 +62,33 @@ Author fullName: 'Camillo Bruni'.
 	NNavNavigation
 		useArrowsShortcuts: true.
 
-	yellow value: 'loading eclipse icons'.
 	isIssueImage ifFalse: [
 		(SystemVersion current major >= 3) ifTrue: [
+		
+			[
+				Gofer new
+					version: 'Glamour-Morphic-Theme-EstebanLorenzano.77';
+					load.
+				PolymorphSystemSettings uiThemeClass: GLMUITheme.
+				
+				UITheme currentSettings
+					preferGradientFill: false;
+					preferRoundCorner: true;
+					menuColor: Color white.
+			] fork.
+			
+			yellow value: 'loading eclipse icons'.
 			Gofer new
 				smalltalkhubUser: 'estebanlm' project: 'EclipsePack';
 				package: 'EclipsePack';
 				load.
 			ThemeIcons current: #EclipseUIThemeIcons asClass new.
 			World resetWorldMenu.
-			NautilusUI resetIconCaches ]].
+			NautilusUI resetIconCaches.
+			
+	]].
+			
+	"Do not load anything special in an issue image due to possible side effects"
 	(isIssueImage and: [ Smalltalk isInteractive ])
 		ifTrue: [ | slice |
 			"open a slice inspector"
@@ -82,7 +96,7 @@ Author fullName: 'Camillo Bruni'.
 			(MCFileRepositoryInspector repository: (MCHttpRepository inboxRepository) workingCopy: nil)
 				versionSearchAccept: slice;
 				show.
-		]
+		].
 ] fork.
 
 white value: '- enabling TrueType fonts'.

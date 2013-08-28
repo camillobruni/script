@@ -150,7 +150,7 @@ alias t='trex'
 alias fname="find-name"
 alias find-name="find . -name "
 function git(){ hub $@ }
-alias password='apg -a1 -m20'
+alias password='apg -a1 -m20 -n10'
 
 alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 
