@@ -9,7 +9,7 @@ Change parent to a specific commit.
 
 Usage:
 
-    git-chparent.sh [-b <branch>]  <target revision> <parent revision>... 
+    git-set-parent.sh [-b <branch>]  <commit SHA> <parent SHA>... 
 
 Options:
 
@@ -56,6 +56,7 @@ echo "$target_commit$parent_commits" > $grafts
 # ============================================================================
 git filter-branch \
     --force \
+	--tag-name-filter "cat" \
     $range
 
 git gc

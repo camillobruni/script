@@ -1,5 +1,7 @@
 "Put this in ~/Library/Preferences/pharo/ "
 
+FileStream stderr nextPutAll: 'asdfasdf';lf.
+
 Smalltalk isHeadless ifFalse: [
 StartupLoader default executeAtomicItems: {
 StartupAction name: 'Image Setup' code: [
@@ -36,9 +38,9 @@ Author fullName: 'Camillo Bruni'.
 	Debugger 
 		alwaysOpenFullDebugger: true;
 		filterCommonMessageSends: false.
-	
-	Smalltalk at: #SpecDebugger ifPresent: [ :class |
-		class alwaysOpenFullDebugger: true ].
+		
+	SpecDebugger
+		alwaysOpenFullDebugger: true.
 
 	white value: '- set default fonts'.
 	StandardFonts defaultFont: (LogicalFont familyName: 'Consolas' pointSize: 10).

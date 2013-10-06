@@ -5,9 +5,11 @@
 	man hosts
 	flush the cache db by typing 
 	lookupd -flushcache 
-		or on 10.5+
+	# in 10.5+
 	dscacheutil -flushcache
-	
+    # in 10.8+
+    dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+
 - How to check for incoming Bills in cxg:
 	http://bills.cxg.ch/cms/modules/Bill/esr.php
 	
@@ -58,16 +60,16 @@
     git reset --hard HEAD
     git clean -f
 
-- How to play custom animated MovieClip importes from Flash in Flex? 
+- How to play custom animated MovieClip imports from Flash in Flex? 
     [flex flash import export swc animation]
-    - make sure to explicitely add every custom subclassed element to the 
+    - make sure to explicitly add every custom subclassed element to the 
         stage e.g. in a hidden or of timeline layer. Otherwise the 
-        sublcassing gets stolen by the flex compiler!
+        subclassing gets stolen by the flex compiler!
     - make sure that the MovieClip name and the Class name are distinct
         otherwise the Class is not importable
 
 - How to update an easy_install package? [python easy_install update]
-    easy_isntall --update Trac
+    easy_install --update Trac
 
 - What different kinds of bash variables are there? 
     [bash variable argument param]
@@ -275,10 +277,21 @@
     os.popen("ls").readlines()
 
 - How to get the current script location? [bash dir]
+    # resolve all the symlinks to this file until we en up in the real directory
+    DIR="${BASH_SOURCE[0]}"
+    while [ -h "$SOURCE" ] ; do 
+        DIR=`readlink "$DIR"`;
+        cd `dirname $DIR`
+        DIR=`basename $DIR`
+    done
+    DIR=`pwd -P`
+
+    # a simpler version for single dereferencing
     DIR=`readlink "$0"` || DIR="$0";
     DIR=`dirname "$DIR"`;
     cd "$DIR"
-    DIR=`pwd`
+    DIR=`pwd -P`
+
 
 - How to get the current scripts location? [ruby dir]
     def dir
@@ -372,7 +385,8 @@
     # 2. multiple files by name using git-rm
     git filter-branch -f --prune-empty  \
         --index-filter 'git rm -rf --cached --ignore-unmatch **/FILENAME.EXT' \
-       --tag-name-filter cat -- --all
+       --tag-name-filter cat \
+       -- --all
 
     # then push the changes (force them since you will overwrite the main refs)
     git push --force --verbose --dry-run
@@ -1028,7 +1042,7 @@
 - How to add new parents to an existing git commit?
 
     echo ""$COMMIT_SHA $PARENT_1_SHA $PARENT_2_SHA..." > .git/info/grafts
-    git filter-branch
+    git filter-branch --tag-name-filter cat -- --all
     git gc
     rm .git/info/grafts
 
