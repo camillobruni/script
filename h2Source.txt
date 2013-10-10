@@ -1080,3 +1080,9 @@
     1. open crashplan
     2. double click on the crash plan icon
     3. Enter "pause XXX" in the shell, with XXX the number of minutes to paus
+
+- How to scale a figure / image to the width of the text / column in Latex?
+    \includegraphics[width=0.5\textwidth]{file}
+    % \textwidth  = the global width of the text part 
+    % \linewidth  = local text width (changes depending on the current context)
+    % \columnwidth

@@ -1,7 +1,5 @@
 "Put this in ~/Library/Preferences/pharo/ "
 
-FileStream stderr nextPutAll: 'asdfasdf';lf.
-
 Smalltalk isHeadless ifFalse: [
 StartupLoader default executeAtomicItems: {
 StartupAction name: 'Image Setup' code: [
