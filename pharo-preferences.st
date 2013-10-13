@@ -63,30 +63,8 @@ Author fullName: 'Camillo Bruni'.
 		useArrowsShortcuts: true.
 
 	isIssueImage ifFalse: [
-		(SystemVersion current major >= 3) ifTrue: [
-		
-			[
-				Gofer new
-					version: 'Glamour-Morphic-Theme-EstebanLorenzano.77';
-					load.
-				PolymorphSystemSettings uiThemeClass: GLMUITheme.
-				
-				UITheme currentSettings
-					preferGradientFill: false;
-					preferRoundCorner: true;
-					menuColor: Color white.
-			] fork.
 			
-			yellow value: 'loading eclipse icons'.
-			Gofer new
-				smalltalkhubUser: 'estebanlm' project: 'EclipsePack';
-				package: 'EclipsePack';
-				load.
-			ThemeIcons current: #EclipseUIThemeIcons asClass new.
-			World resetWorldMenu.
-			NautilusUI resetIconCaches.
-			
-	]].
+	].
 			
 	"Do not load anything special in an issue image due to possible side effects"
 	(isIssueImage and: [ Smalltalk isInteractive ])
@@ -100,7 +78,9 @@ Author fullName: 'Camillo Bruni'.
 ] fork.
 
 white value: '- enabling TrueType fonts'.
-FreeTypeSystemSettings loadFt2Library: true.
+FreeTypeSystemSettings 
+	loadFt2Library: false;
+	loadFt2Library: true.
 "============================================================================="
 
 (Workspace new contents: '';
