@@ -38,12 +38,13 @@ target_commit=$(git rev-parse $commit)
 
 
 echo "CHANGING DATE OF $target_commit TO $date"
+
 # ============================================================================
 git filter-branch \
     --force \
 	--tag-name-filter "cat" \
 	--env-filter \
-    "if [ $GIT_COMMIT = $commit ]
+    "if [ \$GIT_COMMIT = $commit ]
      then
          export GIT_AUTHOR_DATE=\"$date\"
          export GIT_COMMITTER_DATE=\"$date\"
