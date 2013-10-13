@@ -43,9 +43,6 @@ shift $(($OPTIND - 1))
 grafts="$(git rev-parse --show-toplevel)/.git/info/grafts" \
 	|| (echo "Could not find Git repository"; exit 1)
 
-echo $custom_commit
-echo $commit
-
 if [ -n "$custom_commit" ]; then
 	target_commit=$(git rev-parse $commit)
 else
@@ -56,7 +53,6 @@ parent_commits=`for parent_commit in $*; do echo -n " $(git rev-parse $parent_co
 
 echo "CHANGING PARENTS OF $target_commit TO $parent_commits"
 
-exit 1
 echo "$target_commit$parent_commits" > $grafts
 
 # ============================================================================
