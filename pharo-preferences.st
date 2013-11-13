@@ -33,9 +33,10 @@ Author fullName: 'Camillo Bruni'.
 [
 	yellow value: 'Loading custom preferences'.
 
-	Debugger 
-		alwaysOpenFullDebugger: true;
-		filterCommonMessageSends: false.
+	Smalltalk at: #Debugger ifPresent: [ :debugger|
+		debugger
+			alwaysOpenFullDebugger: true;
+			filterCommonMessageSends: false ].
 		
 	SpecDebugger
 		alwaysOpenFullDebugger: true.
