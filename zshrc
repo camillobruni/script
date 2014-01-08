@@ -61,8 +61,8 @@ BMAGENTA='\e[45m'
 
 # ============================================================================
 
-export HISTFILESIZE=10000 # the bash history should save 3000 commands
-export HISTCONTROL=ignorespace:erasedups
+export HISTFILESIZE=10000 # the bash history should save 10000 commands
+export HISTCONTROL=ignorespace
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
@@ -87,8 +87,8 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 
 # ============================================================================
 
-export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
-export PAHT=$PARH:/usr/local/mysql/bin
+export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/share/python:$PATH
+export PATH=$PATH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
 # homebrew ruby gem path, cannot use fixed path as it would include a changing
 # version number
@@ -115,7 +115,7 @@ export H2_EDITOR=mvim
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export PYTHON_VERSION=2.7
-export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+#export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
 
 export IRBRC='~/.irbrc'
 
