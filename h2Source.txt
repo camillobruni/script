@@ -843,7 +843,7 @@
     # test locally using ruby
     ruby -I$PATH_TO/lib $PATH_TO/bin/GEM_BIN 
 
-- How to structure a gem?
+- How to structure a gem and its gemspec?
     ├─ bin
     │   └─ hola_bin
     ├─ hola.gemspec
@@ -865,7 +865,8 @@
     end
     
 - How to build and deploy / upload / push a gem?
-    # create a new gem
+    # first create a properly formatted gemspec
+    # create a new gem version from its spec
     gem build hola.gemspec
 
     # locally install the gem
@@ -874,7 +875,7 @@
     # upload the gem
     gem push hola-0.0.0.gem
     
-    # check if the gem is avail
+    # check if the gem is available
     gem list -r hola
 
 - How to use python with virtualenvwrapper?
