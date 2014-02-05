@@ -8,7 +8,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git brew textmate osx rsync zsh-syntax-highlighting oi)
+plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -16,6 +16,11 @@ fpath=( `brew --prefix`/share/zsh-completions $fpath)
 ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion dir
 
 ZSH_THEME_LAST_PRINT_DATE=0
+
+# ============================================================================
+# display system information on startup
+
+archey
 
 # ============================================================================
 

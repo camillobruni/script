@@ -8,6 +8,8 @@ require 'rubygems'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
+require 'pp'
+require 'ruby-debug'
 
 # ----------------------------------------------------------------------------
 # Emulating javascript's escape behaviour
@@ -24,7 +26,7 @@ class String
             else
                 f
             end
-        }.to_s
+        }.join('')
     end
 end
 
@@ -73,25 +75,16 @@ end
 def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
     time = sbb_get_time(time)
     date = sbb_get_date(date)
-    departure = isDepartureTime ? '1' : '0'
+    departure = isDepartureTime ? 'depart' : 'arrive'
     url = URI.parse("http://fahrplan.sbb.ch/bin/query.exe/dn?" +
-        "queryPageDisplayed=yes&R" +
-        "EQ0JourneyStopsS0G=#{from.urlencode}&R" +
-        "EQ0JourneyStopsS0ID=&" +
-        "REQ0JourneyStopsS0A=7&" +
-        "REQ0JourneyStopsZ0G=#{to.urlencode}&" +
-        "REQ0JourneyStopsZ0ID=&" +
-        "REQ0JourneyStopsZ0A=7&" +
-        "REQ0JourneyStops1.0G=&" +
-        "REQ0JourneyStops1.0A=1&" +
-        "REQ0HafasOptimize1=1%3A1&" +
-        "existOptimizePrice=0&" +
-        "REQ0JourneyDate=#{date.urlencode}&" +
-        "REQ0JourneyTime=#{time.urlencode}&" +
-        "REQ0HafasSearchForw=#{departure.urlencode}&" +
-        "REQ0HafasSkipLongChanges=1&" +
-        "REQ0HafasMaxChangeTime=200&" +
-        "start=%BB%A0Verbindung+suchen#focus")
+        "_charset_=UTF-8&" +
+        "start=1&" +
+        "S=#{from.urlencode}&" +
+        "Z=#{to.urlencode}&" +
+        "date=#{date.urlencode}&" +
+        "time=#{time.urlencode}&" +
+        "timesel=#{departure.urlencode}")
+    pp url
     if ENV['http_proxy']
         proxy = URI.parse(ENV['http_proxy'])
         res = Net::HTTP::Proxy(proxy.host, proxy.port).get(url)
@@ -103,7 +96,9 @@ end
 
 
 def sbb_parse_html_results(html)
+    #pp html
     doc = Nokogiri::HTML(html)
+    debugger
     entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
     
     table = TextTable.new
