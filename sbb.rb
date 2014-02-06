@@ -2,14 +2,16 @@
 
 # ----------------------------------------------------------------------------
 
-$KCODE = 'UTF-8'
+$KCODE = 'UTF-8' if RUBY_VERSION < '1.9.0'
 
 require 'rubygems'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
 require 'pp'
-require 'ruby-debug'
+require 'pry'
+require 'pry-nav'
+require 'pry-stack_explorer'
 
 # ----------------------------------------------------------------------------
 # Emulating javascript's escape behaviour
@@ -48,9 +50,9 @@ class TextTable
         (0..row.size-1).each { |i|
             row[i] = '' if row[i].nil?
             if @row_widths[i].nil?
-                @row_widths[i] = row[i].to_a.size
+                @row_widths[i] = row[i].size
             else
-                @row_widths[i] = [@row_widths[i], row[i].to_a.size].max
+                @row_widths[i] = [@row_widths[i], row[i].size].max
             end
             @row_widths[i] = 0 if @row_widths.nil? 
         }
@@ -84,7 +86,6 @@ def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
         "date=#{date.urlencode}&" +
         "time=#{time.urlencode}&" +
         "timesel=#{departure.urlencode}")
-    pp url
     if ENV['http_proxy']
         proxy = URI.parse(ENV['http_proxy'])
         res = Net::HTTP::Proxy(proxy.host, proxy.port).get(url)
@@ -96,23 +97,21 @@ end
 
 
 def sbb_parse_html_results(html)
-    #pp html
     doc = Nokogiri::HTML(html)
-    debugger
-    entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
+    entries = doc.xpath('//tr[@class="overview "]') # NOTE: the space is on purpose
     
     table = TextTable.new
     table.add_row(['Station', '', 'Time', '', 'Dur.', 'Chng.', 'Type'])
     entries.each_slice(2) { |el|
-        first_row = el[0].text.sub("\302\240", '').split(/[\n\n]+/)
-        first_row[0].gsub!(/^[0-9]/, '')
-        first_row.delete_at 1
-        table.add_row(first_row)
+        row = el[0].elements.collect {|node|
+          node.text.strip
+        }
+        table.add_row([row[2], row[4], row[5], '', row[8], row[9], row[10]])
         
-        second_row = el[1].text.sub("\302\240", '').split(/[\n\n]+(\302\240)?/)
-        second_row.delete_at 1
-        second_row.delete_at 1
-        table.add_row(second_row)
+        row = el[1].elements.collect {|node|
+          node.text.strip
+        }
+        table.add_row([row[1], row[3], row[4], '', '', '', ''])
         table.add_row()
     }
     puts table.to_s
