@@ -40,6 +40,7 @@ if [[ $1 == "-c" ]] || [[ $1 == "--color" ]] || [[ $2 == "-c" ]] || [[ $2 == "--
   PURPLE='\033[00;35m'
   CYAN='\033[00;36m'
   BLUE='\033[00;34m'
+  ORANGE='\033[38;5;220m'
 fi
 
 # Add a -m command to switch to macports or default to brew
@@ -64,20 +65,27 @@ cpuText="${textColor}CPU:${normal}"
 memoryText="${textColor}Memory:${normal}"
 diskText="${textColor}Disk:${normal}"
 
-echo -e "
 
-${GREEN}                 ###
-${GREEN}               ####	              $userText $user
-${GREEN}               ###                    $hostnameText $hostname
-${GREEN}       #######    #######             $distroText $distro
-${YELLOW}     ######################           $kernelText $kernel
-${YELLOW}    #####################             $uptimeText $uptime
-${LRED}    ####################              $shellText $shell
-${RED}    ####################              $terminalText $terminal
-${RED}    #####################             $packagehandlerText $packagehandler
-${PURPLE}     ######################           $cpuText $cpu
-${PURPLE}      ####################	      $memoryText $ram
-${BLUE}        ################              $diskText $disk
-${BLUE}         ####     ##### ${normal}
+print() {
+	echo -e "$ORANGE$1"
+	sleep 0.03
+}
 
-"
+
+print ""
+print ""
+print "              ░▓███████▒░              $userText $user"
+print "          ░▒█████████████▓▒░           $hostnameText $hostname"
+print "        ░▒███████████████████░         $distroText $distro"
+print "       ████████████████████████░       $kernelText $kernel"
+print "      ▓████▓▒░░        ░▒▓██████       $uptimeText $uptime"
+print "     ░████░              ▒█████▒       $shellText $shell"
+print "     ▒████                ▓█████░      $terminalText $terminal"
+print "      ████░               ▓█████░      $packagehandlerText $packagehandler"
+print "      ░███▒               ▒ ███░       $cpuText $cpu"
+print "       ▒██▒               ░████        $memoryText $ram"
+print "        ░██▒              ░███         $diskText $disk"
+print "          ░█▓             ██         "
+print "           ██            ▓█ ${normal}"
+print ""
+print ""

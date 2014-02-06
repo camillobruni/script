@@ -20,7 +20,7 @@ ZSH_THEME_LAST_PRINT_DATE=0
 # ============================================================================
 # display system information on startup
 
-archey
+(archey -c &) 2> /dev/null 
 
 # ============================================================================
 
@@ -236,3 +236,7 @@ function _jump {
 	# first try `jump` with all the options then autojump
 	jump $* 2&>> /dev/null || cd `autojump $*` || ( echo "'$*' not found" && exit 1)
 }
+
+# =============================================================================
+# wait for any background processes launched in the setup file
+wait
