@@ -9,6 +9,7 @@ require 'net/http'
 require 'uri'
 require 'nokogiri'
 require 'pp'
+require 'term/ansicolor'
 require 'pry'
 require 'pry-nav'
 require 'pry-stack_explorer'
@@ -20,6 +21,8 @@ EncodeMap = "ä-Ä-ö-Ö-ü-Ü-è-à-é-â-ê- ".split("-").zip(
       "%E4-%C4-%F6-%D6-%FC-%DC-%E8-%E0-%E9-%E2-%EA-%20".split('-'))
 
 class String
+    include Term::ANSIColor
+    
     def urlencode()
         self.split(//).map{|f|
             a = EncodeMap.assoc(f)
@@ -97,12 +100,11 @@ end
 
 
 def sbb_parse_html_results(html)
-  File.open('foo.html','w+'){|f| f.write(html)}
     doc = Nokogiri::HTML(html)
     entries = doc.xpath('//tr[@class="overview "]') # NOTE: the space is on purpose
     
     table = TextTable.new
-    table.add_row(['Station', '',     'Time', '', 'Dur.', 'Chng.', 'Type'])
+    table.add_row(['Station', '',     'Time', '', 'Dur.', 'Chng.'.yellow, 'Type'])
     entries.each_slice(2) { |el|
         row = el[0].elements.collect {|node|
           node.text.strip
@@ -169,8 +171,10 @@ if __FILE__ == $0
     if $*.size == 1
         if $*[0] == "--hack"
             exec("sudo vim #{__FILE__}")
+            exit
         end
-    elsif $*.size == 0
+    end
+    if $*.size == 0
         puts <<DOC
 This is a simple script to query the timetable of http://sbb.ch/
 
