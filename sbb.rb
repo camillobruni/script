@@ -97,16 +97,17 @@ end
 
 
 def sbb_parse_html_results(html)
+  File.open('foo.html','w+'){|f| f.write(html)}
     doc = Nokogiri::HTML(html)
     entries = doc.xpath('//tr[@class="overview "]') # NOTE: the space is on purpose
     
     table = TextTable.new
-    table.add_row(['Station', '', 'Time', '', 'Dur.', 'Chng.', 'Type'])
+    table.add_row(['Station', '',     'Time', '', 'Dur.', 'Chng.', 'Type'])
     entries.each_slice(2) { |el|
         row = el[0].elements.collect {|node|
           node.text.strip
         }
-        table.add_row([row[2], row[4], row[5], '', row[8], row[9], row[10]])
+        table.add_row([row[2], row[4], row[5], '', row[7], ' '+row[8], row[9]])
         
         row = el[1].elements.collect {|node|
           node.text.strip
