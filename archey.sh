@@ -9,6 +9,7 @@ uptime=$(uptime | sed 's/.*up \([^,]*\), .*/\1/')
 shell="$SHELL"
 terminal="$TERM"
 cpu=$(sysctl -n machdep.cpu.brand_string)
+load=$(uptime | sed 's/.*\: \(.*\)/\1/')
 packagehandler=""
 
 # removes (R) and (TM) from the CPU name so it fits in a standard 80 window
@@ -48,7 +49,7 @@ if [[ $1 == "-m" ]] || [[ $1 == "--macports" ]] || [[ $2 == "-m" ]] || [[ $2 == 
 then
   packagehandler="`port installed | wc -l | awk '{print $1 }'`"
 else
-  packagehandler="`brew list -l | wc -l | awk '{print $1 }'`"
+  packagehandler="`brew list -l | wc -l | awk '{print $1 }'` formulas"
 fi
 
 userText="${textColor}User:${normal}"
@@ -58,6 +59,7 @@ hostnameText="${textColor}Hostname:${normal}"
 distroText="${textColor}Distro:${normal}"
 kernelText="${textColor}Kernel:${normal}"
 uptimeText="${textColor}Uptime:${normal}"
+loadText="${textColor}Load:${normal}"
 shellText="${textColor}Shell:${normal}"
 terminalText="${textColor}Terminal:${normal}"
 packagehandlerText="${textColor}Packages:${normal}"
@@ -68,7 +70,7 @@ diskText="${textColor}Disk:${normal}"
 
 print() {
 	echo -e "$ORANGE$1"
-	sleep 0.03
+	sleep 0.035
 }
 
 
@@ -85,7 +87,7 @@ print "      ████░               ▓█████░      $packageha
 print "      ░███▒               ▒ ███░       $cpuText $cpu"
 print "       ▒██▒               ░████        $memoryText $ram"
 print "        ░██▒              ░███         $diskText $disk"
-print "          ░█▓             ██         "
+print "          ░█▓             ██           $loadText $load"
 print "           ██            ▓█ ${normal}"
 print ""
 print ""
