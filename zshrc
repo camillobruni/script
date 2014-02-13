@@ -113,6 +113,7 @@ export PATH=$M2:$PATH
 
 export BROWSER=open
 export EDITOR=mvim
+export GIT_EDITOR="vim -c 'startinsert'"
 export VISUAL=mvim
 export SVN_EDITOR=mvim
 export H2_EDITOR=mvim
@@ -134,54 +135,48 @@ export IRBRC='~/.irbrc'
 
 
 # ============================================================================
+# better output
+#alias grep='grep -n --color=auto'
+#alias irb='irb1.9 -r "irb/completion"'
+#alias prox='export http_proxy=http://proxy:80/'
+#alias unprox='unset http_proxy'
+alias 3='tree | less'
+alias calendar='icalBuddy'
+alias cdp='cd "`path`"'
+alias cdup='cd ..'
+alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+alias contact='contacts'
+alias contacts="contacts -lHf '%n %p %mp %e %a'"
+alias du='du -h'
+alias f='find . -name '
+alias find-name="find . -name "
+alias fname="find-name"
 alias g='git'
+alias irb='irb -rubygems'
+alias l='ls -l'
+alias ll='ls -Aflhp'
+alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
 alias oo='open "`path`"'
-alias f='find . -name '
 alias p1='_ping1'
-alias l='ls -l'
-alias ll='ls -Aflhp'
-alias du='du -h'
-alias cdup='cd ..'
-alias ping1='ping -c 1'
-alias scn='svn'
-alias irb='irb -rubygems'
-alias path='/Applications/path.app/Contents/MacOS/path'
-alias cdp='cd "`path`"'
-alias tre='tree | less'
-alias 3='tree | less'
-alias t='trex'
-alias fname="find-name"
-alias find-name="find . -name "
-function git(){ hub $@ }
 alias password='apg -a1 -m80 -n10'
-
-alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
-
+alias path='/Applications/path.app/Contents/MacOS/path'
+alias ping1='ping -c 1'
+alias rgrep='grep -r -n --color=auto'
+alias scn='svn'
 alias ssh='ssh -C'
 alias sshprox='ssh -CND 8888 '
-
-alias x11='DISPLAY = :0.0;export DISPLAY;'
-
-#alias grep='grep -n --color=auto'
-alias rgrep='grep -r -n --color=auto'
-
-alias tvim='vim -c "NERDTree" -c "wincmd p"'
-alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
-
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
+alias rm='trash'
+alias rrm='rm'
+alias t='trex'
+alias tre='tree | less'
+alias tvim='vim -c "NERDTree" -c "wincmd p"'
+alias x11='DISPLAY = :0.0;export DISPLAY;'
 
-#alias irb='irb1.9 -r "irb/completion"'
-
-# better output
-alias contacts="contacts -lHf '%n %p %mp %e %a'"
-alias contact='contacts'
-alias calendar='icalBuddy'
-
-#alias prox='export http_proxy=http://proxy:80/'
-#alias unprox='unset http_proxy'
+function git(){ hub $@ }
 
 
 # pman opens man pages in preview / skim ====================================
