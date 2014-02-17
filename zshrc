@@ -153,6 +153,7 @@ alias find-name="find . -name "
 alias fname="find-name"
 alias g='git'
 alias irb='irb -rubygems'
+alias imdb='web_search duckduckgo \!imdb'
 alias l='ls -l'
 alias ll='ls -Aflhp'
 alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
@@ -212,12 +213,11 @@ rruby()
 alias c=rruby
 
 # open google search results from the command line ==========================
-google()
+ggl()
 {
     QUERY=`echo "$*" | perl -MURI::Escape -ne 'print uri_escape($_)'`
     open "https://encrypted.google.com/search?q=$QUERY"
 }
-alias ggl=google
 
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
