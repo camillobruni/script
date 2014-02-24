@@ -1,7 +1,9 @@
+"Put this in ~/Library/Preferences/pharo/ "
+
 Smalltalk isHeadless ifFalse: [
 StartupLoader default executeAtomicItems: {
 StartupAction name: 'Image Setup' code: [
-| color red green yellow white |
+| color red green yellow white isIssueImage |
 
 "============================================================================="
 "some helper blocks for error printing"
@@ -18,41 +20,68 @@ red    := [:text| color value: 31 value: text ].
 green  := [:text| color value: 32 value: text ].
 yellow := [:text| color value: 33 value: text ].
 white  := [:text| FileStream stderr nextPutAll: text; crlf ].
+
+"Check whether we use an image for issue reporting"
+isIssueImage := Smalltalk imageFile basename first isDigit.
+
 "============================================================================="
 
 Author fullName: 'Camillo Bruni'.
 
 "============================================================================="
 
-yellow value: 'Loading custom preferences'.
+[
+	yellow value: 'Loading custom preferences'.
 
-Debugger 
-	alwaysOpenFullDebugger: true;
-	filterCommonMessageSends: true.
+	Smalltalk at: #Debugger ifPresent: [ :debugger|
+		debugger
+			alwaysOpenFullDebugger: true;
+			filterCommonMessageSends: false ].
+		
+	SpecDebugger
+		alwaysOpenFullDebugger: true.
+
+	white value: '- set default fonts'.
+	StandardFonts defaultFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
+	GraphicFontSettings resetAllFontToDefault.
+
+	white value: '- preparing tools'.
+	PolymorphSystemSettings 
+		desktopColor: Color gray;
+		showDesktopLogo: false.
+
+	"UITheme currentSettings fastDragging: true."
+
+	TextEditorDialogWindow autoAccept: true.
+
+	SHPreferences setStyleTableNamed: 'Tango'.
+		
+	NECPreferences
+		popupShowAutomatic: false;
+		popupShowWithShortcut: Character tab asKeyCombination.
+		
+	NNavNavigation
+		useArrowsShortcuts: true.
+
+	isIssueImage ifFalse: [
+			
+	].
+			
+	"Do not load anything special in an issue image due to possible side effects"
+	(isIssueImage and: [ Smalltalk isInteractive ])
+		ifTrue: [ | slice |
+			"open a slice inspector"
+			slice := (Smalltalk imageFile basename copyUpTo: $-).
+			(MCFileRepositoryInspector repository: (MCHttpRepository inboxRepository) workingCopy: nil)
+				versionSearchAccept: slice;
+				show.
+		].
+] fork.
 
 white value: '- enabling TrueType fonts'.
-FreeTypeSystemSettings loadFt2Library: true.
-
-white value: '- set default fonts'.
-StandardFonts defaultFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
-GraphicFontSettings resetAllFontToDefault.
-
-white value: '- preparing tools'.
-PolymorphSystemSettings 
-	desktopColor: Color gray;
-	showDesktopLogo: false.
-
-"UITheme currentSettings fastDragging: true."
-
-TextEditorDialogWindow autoAccept: true.
-
-SHPreferences setStyleTableNamed: 'Tango'.
-
-UITheme currentSettings
-	preferGradientFill: false;
-	preferRoundCorner: true;
-	menuColor: Color white.
-
+FreeTypeSystemSettings 
+	loadFt2Library: false;
+	loadFt2Library: true.
 "============================================================================="
 
 (Workspace new contents: '';

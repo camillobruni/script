@@ -5,9 +5,11 @@
 	man hosts
 	flush the cache db by typing 
 	lookupd -flushcache 
-		or on 10.5+
+	# in 10.5+
 	dscacheutil -flushcache
-	
+    # in 10.8+
+    dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+
 - How to check for incoming Bills in cxg:
 	http://bills.cxg.ch/cms/modules/Bill/esr.php
 	
@@ -58,16 +60,16 @@
     git reset --hard HEAD
     git clean -f
 
-- How to play custom animated MovieClip importes from Flash in Flex? 
+- How to play custom animated MovieClip imports from Flash in Flex? 
     [flex flash import export swc animation]
-    - make sure to explicitely add every custom subclassed element to the 
+    - make sure to explicitly add every custom subclassed element to the 
         stage e.g. in a hidden or of timeline layer. Otherwise the 
-        sublcassing gets stolen by the flex compiler!
+        subclassing gets stolen by the flex compiler!
     - make sure that the MovieClip name and the Class name are distinct
         otherwise the Class is not importable
 
 - How to update an easy_install package? [python easy_install update]
-    easy_isntall --update Trac
+    easy_install --update Trac
 
 - What different kinds of bash variables are there? 
     [bash variable argument param]
@@ -80,6 +82,11 @@
     test $1 $op $2
     
     if [[ $1 $op $2 ]]; then
+        
+    elif: [[ ... ]]; then
+        
+    else
+        
     fi
 
 - What are the possible conditions for testing in bash? 
@@ -270,10 +277,21 @@
     os.popen("ls").readlines()
 
 - How to get the current script location? [bash dir]
+    # resolve all the symlinks to this file until we en up in the real directory
+    DIR="${BASH_SOURCE[0]}"
+    while [ -h "$SOURCE" ] ; do 
+        DIR=`readlink "$DIR"`;
+        cd `dirname $DIR`
+        DIR=`basename $DIR`
+    done
+    DIR=`pwd -P`
+
+    # a simpler version for single dereferencing
     DIR=`readlink "$0"` || DIR="$0";
     DIR=`dirname "$DIR"`;
     cd "$DIR"
-    DIR=`pwd`
+    DIR=`pwd -P`
+
 
 - How to get the current scripts location? [ruby dir]
     def dir
@@ -367,7 +385,8 @@
     # 2. multiple files by name using git-rm
     git filter-branch -f --prune-empty  \
         --index-filter 'git rm -rf --cached --ignore-unmatch **/FILENAME.EXT' \
-       --tag-name-filter cat -- --all
+       --tag-name-filter cat \
+       -- --all
 
     # then push the changes (force them since you will overwrite the main refs)
     git push --force --verbose --dry-run
@@ -824,7 +843,7 @@
     # test locally using ruby
     ruby -I$PATH_TO/lib $PATH_TO/bin/GEM_BIN 
 
-- How to structure a gem?
+- How to structure a gem and its gemspec?
     ├─ bin
     │   └─ hola_bin
     ├─ hola.gemspec
@@ -846,7 +865,8 @@
     end
     
 - How to build and deploy / upload / push a gem?
-    # create a new gem
+    # first create a properly formatted gemspec
+    # create a new gem version from its spec
     gem build hola.gemspec
 
     # locally install the gem
@@ -855,7 +875,7 @@
     # upload the gem
     gem push hola-0.0.0.gem
     
-    # check if the gem is avail
+    # check if the gem is available
     gem list -r hola
 
 - How to use python with virtualenvwrapper?
@@ -1023,6 +1043,73 @@
 - How to add new parents to an existing git commit?
 
     echo ""$COMMIT_SHA $PARENT_1_SHA $PARENT_2_SHA..." > .git/info/grafts
-    git filter-branch
+    git filter-branch --tag-name-filter cat -- --all
     git gc
     rm .git/info/grafts
+
+- How to enable a revers tunnel on the public network interface?
+    # /etc/ssh/sshd_config
+    GatewayPorts yes
+
+- How to run more than 1 command with sudo? [root]
+    sudo -s -- 'whoami; whoami;'
+
+- How to track a remote branch with git?
+  git branch -a
+  git branch --track $LOCAL_BRANCH_NAME origin/$REMOTE_BRANCH_NAME
+
+- How to switch line ending mode in VIM?
+    CR    :e ++ff=mac
+    CRLF  :e ++ff=dos
+    LF    :e ++ff=unix
+
+- What are the line end characters in display in VIM?
+    ^J = \n  = Line Feed    
+    ^M = \r = Carriage Return
+
+- How to manipulate strings with bash? [bash string]
+    # see http://tldp.org/LDP/abs/html/string-manipulation.html
+    STRING='123'
+    # length
+    ${#STRING}
+    # Substring Extraction
+    ${STRING:start}
+    A
+    ${STRING:start:length}
+
+- How to pause Crashplan?
+    1. open crashplan
+    2. double click on the crash plan icon
+    3. Enter "pause XXX" in the shell, with XXX the number of minutes to paus
+
+- How to scale a figure / image to the width of the text / column in Latex?
+    \includegraphics[width=0.5\textwidth]{file}
+    % \textwidth  = the global width of the text part 
+    % \linewidth  = local text width (changes depending on the current context)
+    % \columnwidth
+
+- How to create a bib file with only the cited references.
+    bibexport -o filtered.bib paper.aux
+
+- How to use different font sizes in latex?
+    Command             10pt    11pt    12pt
+    ------------------------------------------
+    \tiny               5       6       6
+    \scriptsize         7       8       8
+    \footnotesize       8       9       10
+    \small              9       10      10.95
+    \normalsize         10      10.95   12
+    \large              12      12      14.4
+    \Large              14.4    14.4    17.28
+    \LARGE              17.28   17.28   20.74
+    \huge               20.74   20.74   24.88
+    \Huge               24.88   24.88   24.88
+
+- How to to cat the contents of an MS Word file?
+    catdoc
+
+- How to cat the contents of a PowerPoint file?
+    catppt
+
+- How to add a link / href to a label in a latex document?
+    \hyperref{label}{text}

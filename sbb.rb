@@ -2,12 +2,17 @@
 
 # ----------------------------------------------------------------------------
 
-$KCODE = 'UTF-8'
+$KCODE = 'UTF-8' if RUBY_VERSION < '1.9.0'
 
 require 'rubygems'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
+require 'pp'
+require 'term/ansicolor'
+require 'pry'
+require 'pry-nav'
+require 'pry-stack_explorer'
 
 # ----------------------------------------------------------------------------
 # Emulating javascript's escape behaviour
@@ -16,6 +21,8 @@ EncodeMap = "ä-Ä-ö-Ö-ü-Ü-è-à-é-â-ê- ".split("-").zip(
       "%E4-%C4-%F6-%D6-%FC-%DC-%E8-%E0-%E9-%E2-%EA-%20".split('-'))
 
 class String
+    include Term::ANSIColor
+    
     def urlencode()
         self.split(//).map{|f|
             a = EncodeMap.assoc(f)
@@ -24,7 +31,7 @@ class String
             else
                 f
             end
-        }.to_s
+        }.join('')
     end
 end
 
@@ -46,9 +53,9 @@ class TextTable
         (0..row.size-1).each { |i|
             row[i] = '' if row[i].nil?
             if @row_widths[i].nil?
-                @row_widths[i] = row[i].to_a.size
+                @row_widths[i] = row[i].size
             else
-                @row_widths[i] = [@row_widths[i], row[i].to_a.size].max
+                @row_widths[i] = [@row_widths[i], row[i].size].max
             end
             @row_widths[i] = 0 if @row_widths.nil? 
         }
@@ -73,25 +80,15 @@ end
 def open_sbb(from, to, time=nil, isDepartureTime=true, date=nil)
     time = sbb_get_time(time)
     date = sbb_get_date(date)
-    departure = isDepartureTime ? '1' : '0'
+    departure = isDepartureTime ? 'depart' : 'arrive'
     url = URI.parse("http://fahrplan.sbb.ch/bin/query.exe/dn?" +
-        "queryPageDisplayed=yes&R" +
-        "EQ0JourneyStopsS0G=#{from.urlencode}&R" +
-        "EQ0JourneyStopsS0ID=&" +
-        "REQ0JourneyStopsS0A=7&" +
-        "REQ0JourneyStopsZ0G=#{to.urlencode}&" +
-        "REQ0JourneyStopsZ0ID=&" +
-        "REQ0JourneyStopsZ0A=7&" +
-        "REQ0JourneyStops1.0G=&" +
-        "REQ0JourneyStops1.0A=1&" +
-        "REQ0HafasOptimize1=1%3A1&" +
-        "existOptimizePrice=0&" +
-        "REQ0JourneyDate=#{date.urlencode}&" +
-        "REQ0JourneyTime=#{time.urlencode}&" +
-        "REQ0HafasSearchForw=#{departure.urlencode}&" +
-        "REQ0HafasSkipLongChanges=1&" +
-        "REQ0HafasMaxChangeTime=200&" +
-        "start=%BB%A0Verbindung+suchen#focus")
+        "_charset_=UTF-8&" +
+        "start=1&" +
+        "S=#{from.urlencode}&" +
+        "Z=#{to.urlencode}&" +
+        "date=#{date.urlencode}&" +
+        "time=#{time.urlencode}&" +
+        "timesel=#{departure.urlencode}")
     if ENV['http_proxy']
         proxy = URI.parse(ENV['http_proxy'])
         res = Net::HTTP::Proxy(proxy.host, proxy.port).get(url)
@@ -104,20 +101,20 @@ end
 
 def sbb_parse_html_results(html)
     doc = Nokogiri::HTML(html)
-    entries = doc.xpath('//tr[@class="zebra-row-0"]', '//tr[@class="zebra-row-1"]')
+    entries = doc.xpath('//tr[@class="overview "]') # NOTE: the space is on purpose
     
     table = TextTable.new
-    table.add_row(['Station', '', 'Time', '', 'Dur.', 'Chng.', 'Type'])
+    table.add_row(['Station', '',     'Time', '', 'Dur.', 'Chng.'.yellow, 'Type'])
     entries.each_slice(2) { |el|
-        first_row = el[0].text.sub("\302\240", '').split(/[\n\n]+/)
-        first_row[0].gsub!(/^[0-9]/, '')
-        first_row.delete_at 1
-        table.add_row(first_row)
+        row = el[0].elements.collect {|node|
+          node.text.strip
+        }
+        table.add_row([row[2], row[4], row[5], '', row[7], ' '+row[8], row[9]])
         
-        second_row = el[1].text.sub("\302\240", '').split(/[\n\n]+(\302\240)?/)
-        second_row.delete_at 1
-        second_row.delete_at 1
-        table.add_row(second_row)
+        row = el[1].elements.collect {|node|
+          node.text.strip
+        }
+        table.add_row([row[1], row[3], row[4], '', '', '', ''])
         table.add_row()
     }
     puts table.to_s
@@ -174,8 +171,10 @@ if __FILE__ == $0
     if $*.size == 1
         if $*[0] == "--hack"
             exec("sudo vim #{__FILE__}")
+            exit
         end
-    elsif $*.size == 0
+    end
+    if $*.size == 0
         puts <<DOC
 This is a simple script to query the timetable of http://sbb.ch/
 

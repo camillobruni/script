@@ -14,7 +14,6 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdtree'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'scrooloose/syntastic'
 
 " Bundle 'altercation/vim-colors-solarized'
 Bundle 'cdlm/vim-colors-solarized'
@@ -46,15 +45,12 @@ Bundle 'Align'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'garbas/vim-snipmate'
-Bundle 'honza/snipmate-snippets'
 Bundle 'rbonvall/snipmate-snippets-bib'
 
 " External tools
-Bundle 'easytags.vim'
 Bundle 'hallettj/jslint.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'DamienCassou/textlint'
-Bundle 'vim-peepopen'
 
 filetype plugin indent on

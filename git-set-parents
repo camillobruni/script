@@ -1,15 +1,13 @@
 #!/bin/bash
-#
-# vim: set tabstop=4 shiftwidth=4 expandtab autoindent:
-#
 
+set -e
 help=$(cat << 'EOF'
 
 Change parent to a specific commit.
 
 Usage:
 
-    git-chparent.sh [-b <branch>]  <target revision> <parent revision>... 
+    git-set-parent.sh [-b <branch>] [-c <commit SHA>] <parent SHA>... 
 
 Options:
 
@@ -19,10 +17,13 @@ EOF
 
 # ============================================================================
 all=True
-while getopts :b:h opt
+custom_commit=FALSE
+while getopts :b:c:h opt
 do
     case $opt in
     'b')    branch=$OPTARG; all=FALSE
+            ;;
+    'c')    commit=$OPTARG; custom_commit=True
             ;;
     'h')    echo "$help"
             exit 0
@@ -34,14 +35,19 @@ do
     esac
 done
 
+# remove the processed options
+shift $(($OPTIND - 1))
+
 # ============================================================================
 
 grafts="$(git rev-parse --show-toplevel)/.git/info/grafts" \
 	|| (echo "Could not find Git repository"; exit 1)
 
-shift $((OPTIND - 1))
-target_commit=$(git rev-parse $1)
-shift 
+if [ -n "$custom_commit" ]; then
+	target_commit=$(git rev-parse $commit)
+else
+	target_commit=$(git rev-parse HEAD)
+fi
 
 parent_commits=`for parent_commit in $*; do echo -n " $(git rev-parse $parent_commit)"; done`
 
@@ -56,8 +62,7 @@ echo "$target_commit$parent_commits" > $grafts
 # ============================================================================
 git filter-branch \
     --force \
+	--tag-name-filter "cat" \
     $range
-
-git gc
 
 rm $grafts

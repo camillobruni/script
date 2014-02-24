@@ -8,7 +8,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git brew textmate osx rsync zsh-syntax-highlighting oi)
+plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -16,6 +16,11 @@ fpath=( `brew --prefix`/share/zsh-completions $fpath)
 ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion dir
 
 ZSH_THEME_LAST_PRINT_DATE=0
+
+# ============================================================================
+# display system information on startup
+
+(archey -c &) 2> /dev/null 
 
 # ============================================================================
 
@@ -61,8 +66,8 @@ BMAGENTA='\e[45m'
 
 # ============================================================================
 
-export HISTFILESIZE=10000 # the bash history should save 3000 commands
-export HISTCONTROL=ignorespace:erasedups
+export HISTFILESIZE=10000 # the bash history should save 10000 commands
+export HISTCONTROL=ignorespace
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
@@ -88,7 +93,7 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 # ============================================================================
 
 export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
-export PAHT=$PARH:/usr/local/mysql/bin
+export PATH=$PATH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
 # homebrew ruby gem path, cannot use fixed path as it would include a changing
 # version number
@@ -108,6 +113,7 @@ export PATH=$M2:$PATH
 
 export BROWSER=open
 export EDITOR=mvim
+export GIT_EDITOR="vim -c 'startinsert'"
 export VISUAL=mvim
 export SVN_EDITOR=mvim
 export H2_EDITOR=mvim
@@ -115,7 +121,7 @@ export H2_EDITOR=mvim
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export PYTHON_VERSION=2.7
-export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+#export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
 
 export IRBRC='~/.irbrc'
 
@@ -129,26 +135,39 @@ export IRBRC='~/.irbrc'
 
 
 # ============================================================================
+# better output
+#alias grep='grep -n --color=auto'
+#alias irb='irb1.9 -r "irb/completion"'
+#alias prox='export http_proxy=http://proxy:80/'
+#alias unprox='unset http_proxy'
+alias 3='tree | less'
+alias calendar='icalBuddy'
+alias cdp='cd "`path`"'
+alias cdup='cd ..'
+alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+alias contact='contacts'
+alias contacts="contacts -lHf '%n %p %mp %e %a'"
+alias du='du -h'
+alias f='find . -name '
+alias find-name="find . -name "
+alias fname="find-name"
 alias g='git'
+alias imdb='web_search duckduckgo \!imdb'
+alias irb='irb -rubygems'
+alias l='ls -l'
+alias ll='ls -Aflhp'
+alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
 alias oo='open "`path`"'
-alias f='find . -name '
 alias p1='_ping1'
-alias l='ls -l'
-alias ll='ls -Aflhp'
-alias du='du -h'
-alias cdup='cd ..'
-alias ping1='ping -c 1'
-alias scn='svn'
-alias irb='irb -rubygems'
+alias password='apg -a1 -m80 -n10'
 alias path='/Applications/path.app/Contents/MacOS/path'
-alias cdp='cd "`path`"'
-alias tre='tree | less'
-alias 3='tree | less'
+alias ping1='ping -c 1'
+alias rgrep='grep -r -n --color=auto'
+alias scn='svn'
 alias t='trex'
-alias fname="find-name"
-alias find-name="find . -name "
+alias tre='tree | less'
 function git(){ hub $@ }
 
 
@@ -156,27 +175,16 @@ alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 
 alias ssh='ssh -C'
 alias sshprox='ssh -CND 8888 '
-
-alias x11='DISPLAY = :0.0;export DISPLAY;'
-
-#alias grep='grep -n --color=auto'
-alias rgrep='grep -r -n --color=auto'
-
-alias tvim='vim -c "NERDTree" -c "wincmd p"'
-alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
-
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
+alias rm='trash'
+alias rrm='rm'
+alias t='trex'
+alias tre='tree | less'
+alias tvim='vim -c "NERDTree" -c "wincmd p"'
+alias x11='DISPLAY = :0.0;export DISPLAY;'
 
-#alias irb='irb1.9 -r "irb/completion"'
-
-# better output
-alias contacts="contacts -lHf '%n %p %mp %e %a'"
-alias contact='contacts'
-alias calendar='icalBuddy'
-
-#alias prox='export http_proxy=http://proxy:80/'
-#alias unprox='unset http_proxy'
+function git(){ hub $@ }
 
 
 # pman opens man pages in preview / skim ====================================
@@ -212,12 +220,11 @@ rruby()
 alias c=rruby
 
 # open google search results from the command line ==========================
-google()
+ggl()
 {
     QUERY=`echo "$*" | perl -MURI::Escape -ne 'print uri_escape($_)'`
     open "https://encrypted.google.com/search?q=$QUERY"
 }
-alias ggl=google
 
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
@@ -231,3 +238,7 @@ function _jump {
 	# first try `jump` with all the options then autojump
 	jump $* 2&>> /dev/null || cd `autojump $*` || ( echo "'$*' not found" && exit 1)
 }
+
+# =============================================================================
+# wait for any background processes launched in the setup file
+wait
