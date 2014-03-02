@@ -12,7 +12,9 @@ plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlight
 
 source $ZSH/oh-my-zsh.sh
 
-fpath=( `brew --prefix`/share/zsh-completions $fpath)
+if hash brew 2>&-; then
+	fpath=( `brew --prefix`/share/zsh-completions $fpath)
+fi
 ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion dir
 
 ZSH_THEME_LAST_PRINT_DATE=0
@@ -224,13 +226,15 @@ ggl()
 export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
-[[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
-alias j=_jump
+if hash bew 2>&-; then
+	[[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
+fi
 
 function _jump {
 	# first try `jump` with all the options then autojump
 	jump $* 2&>> /dev/null || cd `autojump $*` || ( echo "'$*' not found" && exit 1)
 }
+alias j=_jump
 
 # =============================================================================
 # wait for any background processes launched in the setup file

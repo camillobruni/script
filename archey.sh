@@ -70,7 +70,7 @@ diskText="${textColor}Disk:${normal}"
 
 print() {
 	echo -e "$ORANGE$1"
-	sleep 0.035
+	sleep 0.03
 }
 
 
