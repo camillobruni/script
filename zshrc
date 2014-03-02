@@ -154,8 +154,8 @@ alias f='find . -name '
 alias find-name="find . -name "
 alias fname="find-name"
 alias g='git'
-alias irb='irb -rubygems'
 alias imdb='web_search duckduckgo \!imdb'
+alias irb='irb -rubygems'
 alias l='ls -l'
 alias ll='ls -Aflhp'
 alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
@@ -168,6 +168,13 @@ alias path='/Applications/path.app/Contents/MacOS/path'
 alias ping1='ping -c 1'
 alias rgrep='grep -r -n --color=auto'
 alias scn='svn'
+alias t='trex'
+alias tre='tree | less'
+function git(){ hub $@ }
+
+
+alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+
 alias ssh='ssh -C'
 alias sshprox='ssh -CND 8888 '
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
