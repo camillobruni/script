@@ -46,10 +46,14 @@ fi
 
 # Add a -m command to switch to macports or default to brew
 if [[ $1 == "-m" ]] || [[ $1 == "--macports" ]] || [[ $2 == "-m" ]] || [[ $2 == "--macports" ]]
-then
-  packagehandler="`port installed | wc -l | awk '{print $1 }'`"
+then	
+	packagehandler="`port installed | wc -l | awk '{print $1 }'`"
 else
-  packagehandler="`brew list -l | wc -l | awk '{print $1 }'` formulas"
+	if hash brew 2>&-; then
+		packagehandler="`brew list -l | wc -l | awk '{print $1 }'` formulas"
+	else
+		packagehandler="`dpkg -l | wc -l`"
+	fi
 fi
 
 userText="${textColor}User:${normal}"
