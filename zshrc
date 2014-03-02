@@ -233,7 +233,7 @@ ggl()
 export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
-if hash brew 2>&- ; then
+if hash brew 2>&-; then
 	[[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
 fi
 
