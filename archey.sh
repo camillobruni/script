@@ -3,7 +3,11 @@
 # System Variables
 user=$(whoami)
 hostname=$(hostname | sed 's/.local//g')
-distro="OS X $(sw_vers -productVersion)"
+if hash sw_vers 2>&-; then
+	distro="OS X $(sw_vers -productVersion)"
+else
+	distro="`cat /etc/issue`"
+fi
 kernel=$(uname)
 uptime=$(uptime | sed 's/.*up \([^,]*\), .*/\1/')
 shell="$SHELL"
