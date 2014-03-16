@@ -6,13 +6,13 @@ hostname=$(hostname | sed 's/.local//g')
 if hash sw_vers 2>&-; then
 	distro="OS X $(sw_vers -productVersion)"
 else
-	distro=`cat /etc/issue`
+	distro=`lsb_release -a 2>&- | grep Description`
 fi
 kernel=$(uname)
 uptime=$(uptime | sed 's/.*up \([^,]*\), .*/\1/')
 shell="$SHELL"
 terminal="$TERM"
-cpu=$(sysctl -n machdep.cpu.brand_string)
+cpu=$(sysctl -n machdep.cpu.brand_string 2>&-) 
 load=$(uptime | sed 's/.*\: \(.*\)/\1/')
 packagehandler=""
 
@@ -20,7 +20,7 @@ packagehandler=""
 
 cpu=$(echo "$cpu" | awk '$1=$1' | sed 's/([A-Z]\{1,2\})//g')
 
-mem=$(sysctl -n hw.memsize)
+mem=$(sysctl -n hw.memsize 2&>-)
 ram="$((mem/1073741824)) GB"
 disk=`df | head -2 | tail -1 | awk '{print $5}'`
 
@@ -56,7 +56,7 @@ else
 	if hash brew 2>&-; then
 		packagehandler="`brew list -l | wc -l | awk '{print $1 }'` formulas"
 	else
-		packagehandler="`dpkg -l | wc -l`"
+		packagehandler=`dpkg -l | wc -l | awk '{print $1 }'`
 	fi
 fi
 
