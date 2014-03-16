@@ -100,7 +100,10 @@ export PATH=$PATH:/usr/local/mysql/bin
 export PATH=$PATH:/opt/git-svn-clone-externals
 # homebrew ruby gem path, cannot use fixed path as it would include a changing
 # version number
-export PATH=$PATH:$(cd $(which gem)/..; pwd)
+
+if hash brew 2>/dev/null; then
+    export PATH=$PATH:$(cd $(which gem)/..; pwd)
+fi
 
 # ============================================================================
 export M2_HOME=/opt/mvn/
