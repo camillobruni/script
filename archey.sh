@@ -12,7 +12,7 @@ kernel=$(uname)
 uptime=$(uptime | sed 's/.*up \([^,]*\), .*/\1/')
 shell="$SHELL"
 terminal="$TERM"
-cpu=$(sysctl -n machdep.cpu.brand_string 2>&-) 
+cpu=$(sysctl -n machdep.cpu.brand_string 2>/dev/null) 
 load=$(uptime | sed 's/.*\: \(.*\)/\1/')
 packagehandler=""
 
@@ -20,7 +20,7 @@ packagehandler=""
 
 cpu=$(echo "$cpu" | awk '$1=$1' | sed 's/([A-Z]\{1,2\})//g')
 
-mem=$(sysctl -n hw.memsize 2&>-)
+mem=$(sysctl -n hw.memsize 2>/dev/null)
 ram="$((mem/1073741824)) GB"
 disk=`df | head -2 | tail -1 | awk '{print $5}'`
 
