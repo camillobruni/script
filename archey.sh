@@ -6,7 +6,7 @@ hostname=$(hostname | sed 's/.local//g')
 if hash sw_vers 2>&-; then
 	distro="OS X $(sw_vers -productVersion)"
 else
-	distro="`cat /etc/issue`"
+	distro=`cat /etc/issue`
 fi
 kernel=$(uname)
 uptime=$(uptime | sed 's/.*up \([^,]*\), .*/\1/')
