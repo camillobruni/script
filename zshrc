@@ -1,4 +1,4 @@
-# System-wide .bashrc file for interactive bash(1) shells.
+# System-wide .zshrc file for interactive zsh(1) shells.
 if [ -z "$PS1" ]; then
    return
 fi
@@ -12,9 +12,10 @@ plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlight
 
 source $ZSH/oh-my-zsh.sh
 
-if hash brew 2>&-; then
-	fpath=( `brew --prefix`/share/zsh-completions $fpath)
+if hash brew 2>/dev/null; then
+	fpath=(`brew --prefix`/share/zsh-completions $fpath);
 fi
+
 ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion dir
 
 ZSH_THEME_LAST_PRINT_DATE=0
@@ -233,7 +234,7 @@ ggl()
 export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
-if hash brew 2>&-; then
+if hash brew 2>/dev/null; then
 	[[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
 fi
 
