@@ -38,9 +38,9 @@
     set-commit-date = !git-set-commit-date
     set-parents = !git-set-parents
     spu = !git svn fetch && git svn dcommit #!git-ext-svn-fetch && git-ext-svn-dcommit
-    st = !git status && git diff --stat --submodule
+    st = !git status && git --no-pager diff --stat --submodule
     sta = !git stash
-    staged = diff --staged
+    staged = !git --no-pager diff --staged
     sup = !git svn fetch && git svn rebase #!git-ext-svn-rebase && git-ext-svn-fetch
     super-gc = !git-super-ghc
     svnbr = !git-ext-branch
