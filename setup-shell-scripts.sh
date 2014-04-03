@@ -9,22 +9,15 @@ SOURCE_DIR=`pwd -P`
 
 # =============================================================================
 if { [ "$1" = "-h" ] || [ "$1" = "--help" ]; }; then
-    echo "   Sets up git preferences from from  this repository:
-    $SOURCE_DIR/.gitalias -> ~/.gitalias
-    $SOURC_DIR/git-*.sh -> /usr/bin/local/ "
+    echo "   Install shell scripts from from  this repository"
     exit 0
 fi
 
 # =============================================================================
 
-ln -vs $SOURCE_DIR/.gitalias $HOME/
-echo "Add the following to your ~/.gitconfig file to include .gitalias"
-echo "[include]"
-echo "    path = .gitalias"
-echo ""
-echo "Installing git helper scripts:"
-
-for SCRIPT in "$SOURCE_DIR"/git*.sh; do
-    SCRIPT_NAME=`basename -s .sh "$SCRIPT"`
-    ln -sv $SCRIPT /usr/local/bin/"$SCRIPT_NAME"
-done
+ln -sv $SOURCE_DIR/ack.pl /usr/local/bin/ack
+ln -sv $SOURCE_DIR/archey.sh /usr/local/bin/archey
+ln -sv $SOURCE_DIR/cd_func.sh /usr/local/bin/cd_func
+ln -sv $SOURCE_DIR/todo.rb /usr/local/bin/todo
+ln -sv $SOURCE_DIR/sbb.rb /usr/local/bin/sbb
+ln -sv $SOURCE_DIR/translate.rb /usr/local/bin/translate
