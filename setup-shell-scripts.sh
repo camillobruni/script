@@ -21,3 +21,4 @@ ln -sv $SOURCE_DIR/cd_func.sh /usr/local/bin/cd_func
 ln -sv $SOURCE_DIR/todo.rb /usr/local/bin/todo
 ln -sv $SOURCE_DIR/sbb.rb /usr/local/bin/sbb
 ln -sv $SOURCE_DIR/translate.rb /usr/local/bin/translate
+ln -sv $SOURCE_DIR/h2Source.txt ~/.h2
