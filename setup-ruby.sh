@@ -20,4 +20,4 @@ ln -vs $SOURCE_DIR/.irbrc $HOME/
 echo ""
 echo "Installing default ruby gems:"
 
-gem install jump wirble what_methods map_by_methods
+gem install jump wirble what_methods map_by_method

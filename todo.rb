@@ -26,7 +26,6 @@ class App
         
         # Set defaults
         @options = OpenStruct.new
-        @options.send_message = true
         @options.verbose      = false
         @options.quiet        = false
     end
@@ -38,8 +37,9 @@ class App
             opts.version = '0.1'
             opts.banner = 'todo [options] comment'
 
-            opts.on("--[no-]send", "Send the message") do |v|
-                @options.send_message = v
+            opts.on("--list", "List all the pending TODOs") do |v|
+                self.list_todos
+                exit
             end
             
             opts.separator ""
@@ -64,18 +64,35 @@ class App
         end
 
         @opts.parse!(@arguments)
-        self.process_command
+        self.create_todo
     end
     
     protected
-    def process_command
-        IO.popen('osascript', 'w') { |f|
-        f.puts <<EOF
-tell app "Reminders"
-make new reminder with properties {name: "#{ARGV.join(' ')}"}
-end
+    def create_todo
+      self.osascript { |stream|
+            stream.puts "make new reminder with properties {name: \"#{ARGV.join(' ')}\"}" 
+        }
+    end
+
+    def list_todos
+        self.osascript { |stream| 
+            stream.puts <<EOF
+  set todoList to reminders whose completed is false
+  set output to ""
+  repeat with itemNum from 1 to (count of todoList)
+      set output to output & (name of (item itemNum of todoList)) & return
+  end repeat
+  return output
 EOF
-    }
+        }
+    end
+
+    def osascript
+        IO.popen('osascript', 'w') { |stream| 
+            stream.puts 'tell app "Reminders"'
+            yield stream
+            stream.puts "end"
+        }
     end
 
 

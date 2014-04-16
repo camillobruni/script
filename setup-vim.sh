@@ -1,9 +1,5 @@
 #/usr/bin/bash
 
-set -e 
-
-# =============================================================================
-
 SOURCE_DIR=`readlink "$0"` || SOURCE_DIR="$0";
 SOURCE_DIR=`dirname "$DIR"`;
 cd "$DIR"
@@ -23,4 +19,4 @@ fi
 ln -vs $SOURCE_DIR/.vim $HOME/
 ln -vs $HOME/.vim/.vimrc $HOME/
 
-$HOME/vundle-install.sh
+$HOME/.vim/vundle-install.sh
