@@ -1,6 +1,6 @@
 #env bash
 
-set -ex
+set -e
 
 # =============================================================================
 if { [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ "$#" -ne 1 ]; }; then
@@ -17,17 +17,17 @@ fi
 
 # =============================================================================
 
-TARGET_DIR=`dirname "$1"`
-TARGET=`basename "$1"`
-SOURCE=`readlink "$1"`
+TARGET_DIR=`dirname "$1"`;
+TARGET=`basename "$1"`;
+SOURCE=`readlink "$1"`;
 
 # =============================================================================
 
-cd $TARGET_DIR
+cd "$TARGET_DIR";
 
 RELATIVE_SOURCE=`python -c "\
 from os.path import *;\
-print relpath(\\"$SOURCE\\", abspath(dirname(\\"$TARGET\\")))"`
+print relpath(\\"$SOURCE\\", abspath(dirname(\\"$TARGET\\")))"`;
 
-
+env echo -n "$TARGET_DIR/"
 ln -snvf "$RELATIVE_SOURCE" "$TARGET"
