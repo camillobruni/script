@@ -1113,3 +1113,6 @@
 
 - How to add a link / href to a label in a latex document?
     \hyperref{label}{text}
+
+- How to find all symlinks in a directory?
+    find ./ -type l 

@@ -1,5 +1,7 @@
 #env bash
 
+set -ex
+
 # =============================================================================
 if { [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ "$#" -ne 1 ]; }; then
     echo "Convert absolute symlinks to relative ones";
@@ -15,12 +17,17 @@ fi
 
 # =============================================================================
 
-TARGET=$1
-SOURCE=`readlink "$TARGET"`
+TARGET_DIR=`dirname "$1"`
+TARGET=`basename "$1"`
+SOURCE=`readlink "$1"`
+
+# =============================================================================
+
+cd $TARGET_DIR
 
 RELATIVE_SOURCE=`python -c "\
 from os.path import *;\
-print relpath(\\"$SOURCE\\", dirname(\\"$TARGET\\"))"`
+print relpath(\\"$SOURCE\\", abspath(dirname(\\"$TARGET\\")))"`
 
 
 ln -snvf "$RELATIVE_SOURCE" "$TARGET"
