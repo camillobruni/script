@@ -151,6 +151,7 @@ COMMENT
 
     def basic_rename_file(file)
         date = self.extract_picture_date(file)
+        return if date.nil?
         custom_filename = self.extract_custom_filename(file)
         filename = "#{date}#{custom_filename}#{File.extname(file)}"
         if self.dry_run?
@@ -163,7 +164,8 @@ COMMENT
     def extract_picture_date(file)
         date = `exiftool -S -dateFormat "%Y-%m-%dT%H:%M:%S" -CreateDate "#{file}"`.chomp
         if date.empty?
-            raise "Unsupported picture file detected: #{file}"
+            @options.warn("Unsupported picture file detected: #{file}")
+            return nil
         end
         date = date.split(': ')[1]
         date = DateTime.parse(date)
