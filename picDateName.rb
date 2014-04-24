@@ -26,10 +26,11 @@ class App
         @stdin     = stdin
         
         # Set defaults
-        @verbose   = false
-        @quiet     = false
-        @dry_run   = false
-        @recursive = false
+        @verbose            = false
+        @quiet              = false
+        @dry_run            = false
+        @recursive          = false
+        @skip_unknown_files = false
     end
 
     # ========================================================================
@@ -73,6 +74,10 @@ COMMENT
                 @dry_run = true
             end
             
+            opts.on("--skip", "Skip unknown file types") do
+                @skip_unknown_files = true
+            end
+            
             opts.on("-R", "--recursive", "Rename image files recursively") do
                 @recursive = true
             end
@@ -110,6 +115,10 @@ COMMENT
 
     def dry_run?
         @dry_run
+    end
+
+    def skip_unknown_files?
+        @skip_unknown_files
     end
 
     # ========================================================================
@@ -164,7 +173,10 @@ COMMENT
     def extract_picture_date(file)
         date = `exiftool -S -dateFormat "%Y-%m-%dT%H:%M:%S" -CreateDate "#{file}"`.chomp
         if date.empty?
-            @options.warn("Unsupported picture file detected: #{file}")
+            message = "Unsupported picture file detected: #{file}"
+            raise message unless self.skip_unknown_files?
+            
+            @options.warn(message)
             return nil
         end
         date = date.split(': ')[1]
