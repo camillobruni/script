@@ -161,12 +161,19 @@ COMMENT
     def basic_rename_file(file)
         date = self.extract_picture_date(file)
         return if date.nil?
+        
         custom_filename = self.extract_custom_filename(file)
         filename = "#{date}#{custom_filename}#{File.extname(file)}"
+        new_file = File.join(File.dirname(file), filename) 
+        
+        destination_exists = File.exists?(new_file) && File.basename(file) != filename            
+
         if self.dry_run?
             puts "#{file} => #{filename}"
+            puts "    Destination file exists #{filename}".red if destination_exists
         else
-            File.rename(file, File.join(File.dirname(file), filename))
+            raise "Destination file exists #{filename}" if destination_exists
+            File.rename(file, new_file)
         end
     end
 
