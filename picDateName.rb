@@ -12,7 +12,9 @@
 require 'optparse' 
 require 'ostruct'
 require 'logger'  
-
+require 'find'
+require 'colorize'
+require 'date'
 
 class App
     VERSION = '0.0.1'
@@ -24,22 +26,56 @@ class App
         @stdin     = stdin
         
         # Set defaults
-        @options = OpenStruct.new
-        @options.verbose = false
-        @options.quiet   = false
+        @verbose   = false
+        @quiet     = false
+        @dry_run   = false
+        @recursive = false
     end
 
-    def run
+    # ========================================================================
+    
+    def run()
+        begin
+            self.parse
+            self.rename_files(@arguments)
+        rescue SystemExit
+            return
+        rescue Exception => error
+            puts error.to_s.red
+            puts ""
+            if @debug
+                puts error.backtrace
+                puts
+            end
+            puts @options
+            exit 1
+        end
+    end
+    
+    def parse()
         # Specify options
-        opts = OptionParser.new do |opts|
-            opts.program_name = 'todo'
+        @options = OptionParser.new do |opts|
+            opts.program_name = 'picDateName'
             opts.version = VERSION
-            opts.banner = 'todo [options] comment'
-            
+            opts.banner = <<COMMENT
+Prefix image files with their creation date
+
+Usage: picDateName [--dry|--recursive] FILE...
+COMMENT
             opts.separator ""
             opts.separator "Specific options:"
             
-            #ADD CUSTOM OPTIONS HERE
+            opts.on("--debug", "Print debugging information") do
+                @debug = true
+            end
+
+            opts.on("--dry", "Dry run showing the changes") do
+                @dry_run = true
+            end
+            
+            opts.on("-R", "--recursive", "Rename image files recursively") do
+                @recursive = true
+            end
 
             opts.separator ""
             opts.separator "Common options:"
@@ -57,26 +93,97 @@ class App
             opts.on_tail('--hack', "Edit the programs source") do
                 self.hack
             end
-            # TODO - add additional options
                   
         end
-        
-        # print the help if we get no arguments
-        if ARGV.empty?
-            puts opts
-            exit
+        @options.parse!(@arguments)
+        if @arguments.empty?
+            raise "No picture files provided"
         end
-
-        opts.parse!(@arguments)
-        self.process_command
     end
+
+     
+    # ========================================================================
     
-    protected
-    def process_command
-        # implement your custom command action here
+    def recursive?
+        @recursive
+    end
+
+    def dry_run?
+        @dry_run
     end
 
     # ========================================================================
+    protected
+    def rename_files(files)
+        files = self.collect_pictures(files)
+        self.basic_rename_files(files)
+    end
+
+    
+    def collect_pictures(files)
+        if self.recursive?
+            return self.collect_pictures_recursive(files)
+        end
+        # find all files
+        return files if files.all?{|path| FileTest.file? path}
+        raise "Folders detected, use --recursive: #{ files.select{|path| FileTest.directory? path}}"
+    end
+
+    def collect_pictures_recursive(files)
+        pictures = []
+        files.each{ |file|
+            Find.find(file) do |path|
+                if File.basename(path).start_with?(".")
+                    # Don't look any further into this directory
+                    Find.prune       
+                else
+                    pictures << path if FileTest.file?(path)
+                    next
+                end                
+            end
+        }
+        pictures
+    end
+
+    def basic_rename_files(files)
+        files.each { |file| self.basic_rename_file(file) }
+    end
+
+    def basic_rename_file(file)
+        date = self.extract_picture_date(file)
+        custom_filename = self.extract_custom_filename(file)
+        filename = "#{date}#{custom_filename}#{File.extname(file)}"
+        if self.dry_run?
+            puts "#{file} => #{filename}"
+        else
+            File.rename(file, File.join(File.dirname(file), filename))
+        end
+    end
+
+    def extract_picture_date(file)
+        date = `exiftool -S -dateFormat "%Y-%m-%dT%H:%M:%S" -CreateDate "#{file}"`.chomp
+        if date.empty?
+            raise "Unsupported picture file detected: #{file}"
+        end
+        date = date.split(': ')[1]
+        date = DateTime.parse(date)
+        date.strftime("%Y-%m-%d_%H%M%S")
+    end
+    
+    def extract_custom_filename(file)
+        basename = File.basename(file, ".*")
+        parts = basename.split(' ', 2)
+        return '' if parts.size == 1
+        # return only the second part if the first part corresponds to an
+        # autogenerated file (typically IMG_12345 or DSC_1234)
+        return " #{parts[1]}" if parts[0] =~ /_?[A-Z]+_[0-9]+/
+        return " #{parts[1]}" if parts[0] =~ /[0-9_-]+/
+        return " " + parts.join(' ')
+    end
+
+
+    # ========================================================================
+    
     def editor()
         if ENV['EDITOR']
             return ENV['EDITOR']
@@ -95,17 +202,6 @@ end
 # ============================================================================
 
 if __FILE__ == $0
-    # preamble to change to the current scripts dir
-    def dir
-        begin 
-            return File.readlink $0
-        rescue
-            return $0
-        end
-    end
-    DIR = Dir.chdir File.dirname dir
-    
-    # Create and run the application
     app = App.new(ARGV, STDIN)
     app.run
 end

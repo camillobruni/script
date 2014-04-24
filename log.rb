@@ -1,1 +1,0 @@
-/Users/cami-data/education/phd/log/log.rb

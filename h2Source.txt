@@ -168,7 +168,7 @@
 - How to puts in ruby without newline? [ruby puts out]
     print "asd"
 
-- How to use Ruby HereDoc? 
+- How to use Ruby HereDoc? [EOF]
     text = <<IDENTIFIER IDENTIFIER
 
 - How to acces Command line Arguments in ruby? [args ruby]
@@ -1116,3 +1116,14 @@
 
 - How to find all symlinks in a directory?
     find ./ -type l 
+
+- How do I raise an Exception/Error in ruby?
+
+    # reraise the current exception or a RuntimeError if there is no current exception
+    raise 
+    
+    # create a new RuntimeError exception, setting its message to the given string
+    raise "Error Message" 
+    
+    # create a specific Exception with the given message
+    raise ExceptionType, "Error Message"
