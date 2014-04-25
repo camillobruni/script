@@ -173,7 +173,9 @@ COMMENT
             puts "#{file} => #{filename}"
             puts "    Destination file exists #{new_file}".red if destination_exists
         else
-            raise "Destination file exists #{new_file}" if destination_exists
+            if destination_exists
+                raise "Destination file exists #{new_file} for #{File.basename(file)}" 
+            end
             File.rename(file, new_file)
         end
     end
