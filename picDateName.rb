@@ -17,7 +17,7 @@ require 'colorize'
 require 'date'
 
 class App
-    VERSION = '0.0.1'
+    VERSION = '0.1.0'
     
     attr_reader :options
 
@@ -135,7 +135,8 @@ COMMENT
         end
         # find all files
         return files if files.all?{|path| FileTest.file? path}
-        raise "Folders detected, use --recursive: #{ files.select{|path| FileTest.directory? path}}"
+        folders = files.select{|path| FileTest.directory? path} 
+        raise "Folders detected, use --recursive: #{folders}"
     end
 
     def collect_pictures_recursive(files)
@@ -170,9 +171,9 @@ COMMENT
 
         if self.dry_run?
             puts "#{file} => #{filename}"
-            puts "    Destination file exists #{filename}".red if destination_exists
+            puts "    Destination file exists #{new_file}".red if destination_exists
         else
-            raise "Destination file exists #{filename}" if destination_exists
+            raise "Destination file exists #{new_file}" if destination_exists
             File.rename(file, new_file)
         end
     end
