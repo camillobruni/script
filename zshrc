@@ -8,7 +8,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle)
+plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -136,6 +136,8 @@ export IRBRC='~/.irbrc'
 # manually add DYLD path for python mysql gagu
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 #export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+#export WORKON_HOME=~/.virtualenv
+#source /usr/local/bin/virtualenvwrapper.sh
 #export PIP_REQUIRE_VIRTUALENV=true
 #export PIP_VIRTUALENV_BASE=$WORKON_HOME
 
@@ -174,6 +176,16 @@ alias rgrep='grep -r -n --color=auto'
 alias scn='svn'
 alias t='trex'
 alias tre='tree | less'
+alias v.add2virtualenv='add2virtualenv'
+alias v.cd='cdvirtualenv'
+alias v.cdsitepackages='cdsitepackages'
+alias v.deactivate='deactivate'
+alias v.lssitepackages='lssitepackages'
+alias v.mk='mkvirtualenv'
+alias v.rm='rmvirtualenv'
+alias v.switch='workon'
+alias v='workon'
+
 function git(){ hub $@ }
 
 

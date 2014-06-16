@@ -18,5 +18,6 @@ fi
 
 ln -vs $SOURCE_DIR/.vim $HOME/
 ln -vs $HOME/.vim/.vimrc $HOME/
+mkdir $HOME/.vim-undo
 
 $HOME/.vim/vundle-install.sh
