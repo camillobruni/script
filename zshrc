@@ -140,7 +140,7 @@ export IRBRC='~/.irbrc'
 #source /usr/local/bin/virtualenvwrapper.sh
 #export PIP_REQUIRE_VIRTUALENV=true
 #export PIP_VIRTUALENV_BASE=$WORKON_HOME
-
+export VIRTUAL_ENV_DISABLE_PROMPT=true
 
 # ============================================================================
 # better output
