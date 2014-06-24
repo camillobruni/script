@@ -75,9 +75,9 @@ export HISTCONTROL=ignorespace
 # ENCODING SHIZZLE --------------------------------------------------------------
 
 # swiss format 
-export LC_MONETARY="de_CH.utf-8"
-export LC_NUMERIC="de_CH.utf-8"
-export LC_TIME="de_CH.utf-8"
+export LC_MONETARY="de_CH.UTF-8"
+export LC_NUMERIC="de_CH.UTF-8"
+export LC_TIME="de_CH.UTF-8"
 export LC_PAPER="de_CH.UTF-8"
 export LC_TELEPHONE="de_CH.UTF-8"
 export LC_MEASUREMENT="de_CH.UTF-8"
@@ -178,6 +178,7 @@ alias t='trex'
 alias tre='tree | less'
 alias v.add2virtualenv='add2virtualenv'
 alias v.cd='cdvirtualenv'
+alias v.project='cdproject'
 alias v.cdsitepackages='cdsitepackages'
 alias v.deactivate='deactivate'
 alias v.lssitepackages='lssitepackages'
