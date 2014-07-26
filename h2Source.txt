@@ -661,7 +661,8 @@
 
 - How to download a complete website using wget?
     wget --mirror --page-requisites --convert-links --no-parent --html-extension $URL
-    
+    # use --reject-regex='' to exclude certain urls/subdirectories
+
 - Where do I find the Flash debugger Player? [actionscript]
     http://www.adobe.com/support/flashplayer/downloads.html
 
@@ -1127,3 +1128,27 @@
     
     # create a specific Exception with the given message
     raise ExceptionType, "Error Message"
+
+- How to convert images on OSX?
+    # use sips
+    sips -s format png $IMAGE.pdf --out $IMAGE.png
+
+- How to use gitflow and the github extension?
+    # Example workflow for contributing to a project:
+    git clone github/hub
+    cd hub
+    git fork
+   
+    # checkout the necessary branches for git-flow
+    git checkout master origin/master
+    # initialize git-flow
+    git flow init
+    
+    # create a topic branch
+    git feature start 'my-feature'
+    git commit -m "done with feature"
+
+    # push the changes to your own remote
+    git push YOUR_USER feature
+    # open a pull request for the topic branch you've just pushed
+    git pull-request
