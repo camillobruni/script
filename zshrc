@@ -8,7 +8,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper)
+plugins=(fabric git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -136,7 +136,7 @@ export IRBRC='~/.irbrc'
 # manually add DYLD path for python mysql gagu
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 #export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-#export WORKON_HOME=~/.virtualenv
+export WORKON_HOME=~/.virtualenv
 #source /usr/local/bin/virtualenvwrapper.sh
 #export PIP_REQUIRE_VIRTUALENV=true
 #export PIP_VIRTUALENV_BASE=$WORKON_HOME
