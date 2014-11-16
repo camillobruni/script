@@ -7,7 +7,7 @@ Change parent to a specific commit.
 
 Usage:
 
-    git-set-parent.sh [-b <branch>] [-c <commit SHA>] <parent SHA>... 
+    git-set-parent.sh [-c <commit SHA>] <parent SHA>... 
 
 Options:
 
@@ -21,8 +21,8 @@ custom_commit=FALSE
 while getopts :b:c:h opt
 do
     case $opt in
-    'b')    branch=$OPTARG; all=FALSE
-            ;;
+#    'b')    branch=$OPTARG; all=FALSE
+#            ;;
     'c')    commit=$OPTARG; custom_commit=True
             ;;
     'h')    echo "$help"

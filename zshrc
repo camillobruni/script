@@ -124,6 +124,8 @@ export VISUAL=mvim
 export SVN_EDITOR=mvim
 export H2_EDITOR=mvim
 
+export FOO=$FOO:'1'
+
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export PYTHON_VERSION=2.7
@@ -153,6 +155,7 @@ alias calendar='icalBuddy'
 alias cdp='cd "`path`"'
 alias cdup='cd ..'
 alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 alias contact='contacts'
 alias contacts="contacts -lHf '%n %p %mp %e %a'"
 alias du='du -h'
@@ -164,6 +167,8 @@ alias imdb='web_search duckduckgo \!imdb'
 alias irb='irb -rubygems'
 alias l='ls -l'
 alias ll='ls -Aflhp'
+alias log='/Users/Shared/log/log.rb'
+alias m='v.project && ./manage.py '
 alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
@@ -173,36 +178,29 @@ alias password='apg -a1 -m80 -n10'
 alias path='/Applications/path.app/Contents/MacOS/path'
 alias ping1='ping -c 1'
 alias rgrep='grep -r -n --color=auto'
+alias rm='trash'
+alias rrm='rm'
 alias scn='svn'
-alias t='trex'
-alias tre='tree | less'
-alias v.add2virtualenv='add2virtualenv'
-alias v.cd='cdvirtualenv'
-alias v.project='cdproject'
 alias sp='v.project && ./manage.py shell_plus'
-alias m='v.project && ./manage.py '
-alias v.cdsitepackages='cdsitepackages'
-alias v.deactivate='deactivate'
-alias v.lssitepackages='lssitepackages'
-alias v.mk='mkvirtualenv'
-alias v.rm='rmvirtualenv'
-alias v.switch='workon'
-alias v='workon'
-
-function git(){ hub $@ }
-
-
-alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
-
 alias ssh='ssh -C'
 alias sshprox='ssh -CND 8888 '
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
-alias rm='trash'
-alias rrm='rm'
+alias t='trex'
 alias t='trex'
 alias tre='tree | less'
+alias tre='tree | less'
 alias tvim='vim -c "NERDTree" -c "wincmd p"'
+alias v.add2virtualenv='add2virtualenv'
+alias v.cd='cdvirtualenv'
+alias v.cdsitepackages='cdsitepackages'
+alias v.deactivate='deactivate'
+alias v.lssitepackages='lssitepackages'
+alias v.mk='mkvirtualenv'
+alias v.project='cdproject'
+alias v.rm='rmvirtualenv'
+alias v.switch='workon'
+alias v='workon'
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
 function git(){ hub $@ }
