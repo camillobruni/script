@@ -1159,3 +1159,8 @@
     cd $NAME
     mkvirtualenv $NAME
     setvirtualenvproject $WORKON/$NAME $PWD
+
+- How to evaluate mathematical expressions in bash?
+     myvar=$((myvar + 3))
+
+
