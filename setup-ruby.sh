@@ -20,4 +20,7 @@ ln -vs $SOURCE_DIR/.irbrc $HOME/
 echo ""
 echo "Installing default ruby gems:"
 
-gem install jump wirble what_methods map_by_method
+for gem in hub colorize lolcat jump wirble what_methods map_by_method; do
+	echo 'Installing: ' $gem;
+	gem install -V $gem;
+done
