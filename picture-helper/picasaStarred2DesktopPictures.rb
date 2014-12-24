@@ -106,9 +106,7 @@ class App
     def image_list_starred()
       images = []
       picasa_file = ENV['HOME']+'/Library/Application Support/Google/Picasa3/db3/starlist.txt'
-      File.open(picasa_file, 'r') {|starlist|
-        return starlist.to_a
-      }
+      return File.read(picasa_file).split("\n")
     end
     
     def image_list_by_tags()
@@ -121,7 +119,7 @@ class App
         return self.link_dry_run(file)
       end
       return if self.destination_exists?(file)
-      File.symlink(file, self.destination + File.basename(file))
+      File.symlink(file, self.destination + '/' + File.basename(file))
     end
     
     def link_dry_run(file)
@@ -129,7 +127,7 @@ class App
         puts '~ '+File.basename(file).yellow 
         return
       end
-      puts '+ '+File.basename(file).green
+      puts '+ '+file.green
     end
 
     def destination_exists?(file)

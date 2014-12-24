@@ -163,6 +163,7 @@ alias f='find . -name '
 alias find-name="find . -name "
 alias fname="find-name"
 alias g='git'
+alias htop='sudo htop'
 alias imdb='web_search duckduckgo \!imdb'
 alias irb='irb -rubygems'
 alias l='ls -l'
