@@ -322,4 +322,4 @@ export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s
 # ============================================================================
 
 # enable this if virtualenvs are used
-# source /usr/local/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper.sh
