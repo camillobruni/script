@@ -1,7 +1,8 @@
 # System-wide .bashrc file for interactive bash(1) shells.
-if [ -z "$PS1" ]; then
-   return
-fi
+#set -x
+#if [ -z "$PS1" ]; then
+#   return
+#fi
 
 # use this for profiling the bashrc..
 #PS4='+ $(date "+%s.%N")\011 '
@@ -122,9 +123,13 @@ fi
 
 # manually add DYLD path for python mysql gagu
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
-export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-export PIP_REQUIRE_VIRTUALENV=true
-export PIP_VIRTUALENV_BASE=$WORKON_HOME
+#export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
+export WORKON_HOME=~/.virtualenv
+#export PIP_REQUIRE_VIRTUALENV=true
+#export PIP_VIRTUALENV_BASE=$WORKON_HOME
+
+# enable this if virtualenvs are used
+source /usr/local/bin/virtualenvwrapper.sh
 
 # ============================================================================
 # colorize ls ouputs
@@ -320,6 +325,3 @@ export PS1="\$(__git_ps1)\[$YELLOW\]\W\[$NO_COLOR\]: "
 export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`;$PROMPT_COMMAND"
 
 # ============================================================================
-
-# enable this if virtualenvs are used
-source /usr/local/bin/virtualenvwrapper.sh

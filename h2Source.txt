@@ -75,8 +75,8 @@
 - What different kinds of bash variables are there? 
     [bash variable argument param]
     0, ...  Param 0: name of the current shell script
-    *       All params starting with $1, 
-    @       All params starting with $1, 
+    *       All params (expanded) starting with $1, 
+    @       All params (unexpanded) starting with $1, 
     #       The number of parameters, not including parameter 0    
 
 - How to test in bash? [bash testing if else condition]

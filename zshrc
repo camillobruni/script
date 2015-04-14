@@ -1,14 +1,14 @@
 # System-wide .zshrc file for interactive zsh(1) shells.
-if [ -z "$PS1" ]; then
-   return
-fi
+#if [ -z "$PS1" ]; then
+#   return
+#fi
 
 skip_global_compinit=1
 
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(fabric django git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper)
+plugins=(fabric django git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper autojump)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -128,8 +128,8 @@ export FOO=$FOO:'1'
 
 export MANPATH=/opt/local/share/man:$MANPATH
 
-export PYTHON_VERSION=2.7
-#export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+export PYTHON_VERSION=3.4
+export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
 
 export IRBRC='~/.irbrc'
 
@@ -252,14 +252,14 @@ export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
 if hash brew 2>/dev/null; then
-	[[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 fi
 
-function _jump {
+function _autojump_jump {
 	# first try `jump` with all the options then autojump
-	jump $* 2&>> /dev/null || cd `autojump $*` || ( echo "'$*' not found" && exit 1)
+	jump $* 2&>> /dev/null || cd "`autojump $*`" || ( echo "'$*' not found" && exit 1)
 }
-alias j=_jump
+alias j=_autojump_jump
 
 # =============================================================================
 # wait for any background processes launched in the setup file
