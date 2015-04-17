@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 # OSX Noise
 .DS_Store
 **/.DS_Store
-=======
 *.gem
 *.rbc
 .bundle
@@ -20,4 +18,3 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
->>>>>>> 31fed2fa16c1d35ddf538be24908b97a45b38475
