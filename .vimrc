@@ -317,6 +317,11 @@ if has('mouse')
     set mouse=a
 endif
 
+" switch cursors on insert mode
+let &t_SI = "\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+let &t_EI = "\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+"inoremap <special> <Esc> <Esc>hl
+
 " Color scheme and tweaks
 set background=dark
 "let g:solarized_menu=0
