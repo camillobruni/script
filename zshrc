@@ -20,6 +20,9 @@ ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion d
 
 ZSH_THEME_LAST_PRINT_DATE=0
 
+# enable comments on the REPL
+setopt interactivecomments
+
 # ============================================================================
 # display system information on startup
 

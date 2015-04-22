@@ -1163,4 +1163,9 @@
 - How to evaluate mathematical expressions in bash?
      myvar=$((myvar + 3))
 
+- How to connect to the pycharm debugger
+    export PYTHONPATH=/Applications/PyCharm.app/Contents/debug-eggs/pycharm-debug.egg
+    
+    import pydevd
+    pydevd.settrace('localhost', port=56123, stdoutToServer=True, stderrToServer=True)
 
