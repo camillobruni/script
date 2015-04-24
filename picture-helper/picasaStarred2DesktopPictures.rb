@@ -26,6 +26,7 @@ class App
         @stdin     = stdin
         @use_tags  = false
         @dry_run   = false
+        @list_existing = false
         
         # Set defaults
         @options = OpenStruct.new
@@ -38,7 +39,7 @@ class App
         opts = OptionParser.new do |opts|
             opts.program_name = 'picasa2DesktopPictures'
             opts.version = VERSION
-            opts.banner = 'picasa2DesktopPictures [-h|--dry-run|--use-tags]'
+            opts.banner = 'picasa2DesktopPictures [-h|--dry-run|--use-tags|--list-existing]'
             
             opts.separator ""
             opts.separator "Specific options:"
@@ -60,6 +61,10 @@ class App
 
             opts.on_tail('--hack', "Edit the programs source") do
                 self.hack
+            end
+            
+            opts.on("--list-existing", "List existing files during dry-run") do
+                @list_existing = true
             end
 
             opts.on("--dry", "Dry run showing the changes only") do
@@ -110,8 +115,8 @@ class App
     end
     
     def image_list_by_tags()
-      tags = ['DESKTOP']
-      return `mdfind -onlyin #{ENV['HOME']}/Pictures kind:image #{tags.join(' ')}`.split("\n")
+      tags = ['desktop']
+      return `mdfind -interpret -onlyin #{ENV['HOME']}/Pictures kind:image #{tags.join(' ')}`.split("\n")
     end
     
     def link_image_file(file)
@@ -124,7 +129,7 @@ class App
     
     def link_dry_run(file)
       if self.destination_exists?(file)
-        puts '~ '+File.basename(file).yellow 
+        puts '~ '+File.basename(file).yellow if @list_existing
         return
       end
       puts '+ '+file.green
