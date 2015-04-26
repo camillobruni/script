@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # toggle proper error propagation, fail if one command fails
 set -e

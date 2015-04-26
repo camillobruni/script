@@ -250,6 +250,21 @@ ggl()
 }
 
 # ============================================================================
+# Directory stack extensions
+setopt autopushd pushdminus pushdsilent pushdtohome
+DIRSTACKSIZE=16
+DIRSTACKFILE=~/.zdirs
+if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
+  dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
+  [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
+fi
+chpwd() {
+  print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
+}
+
+
+
+# ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
 export _Z_DATA="$HOME/.z/"
 

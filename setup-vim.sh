@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/usr/bin/env bash
 
 SOURCE_DIR=`readlink "$0"` || SOURCE_DIR="$0";
 SOURCE_DIR=`dirname "$DIR"`;

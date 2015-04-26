@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 echo "What should the Application be called (no spaces allowed e.g. GCal)?"
 read inputline

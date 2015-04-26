@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # vim: set tabstop=4 shiftwidth=4 expandtab autoindent:
 #
