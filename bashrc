@@ -108,6 +108,7 @@ export H2_EDITOR=mvim
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export PYTHON_VERSION=2.7
+export PYTHONIOENCODING=UTF-8
 export PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
 
 export IRBRC='~/.irbrc'

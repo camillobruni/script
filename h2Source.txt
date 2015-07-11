@@ -1169,3 +1169,29 @@
     import pydevd
     pydevd.settrace('localhost', port=56123, stdoutToServer=True, stderrToServer=True)
 
+- How to remove all pip packages? [python]
+    pip freeze | grep -v "^-e" | xargs pip uninstall -y
+    # and then deal manually with the packages installed directly from VCS
+    pip freeze | grep -v "-e"
+
+- How to parse arguments in bash
+for i in "$@"
+do
+    case $i in
+        -h|--help)
+            echo 'Help text'
+            exit 0
+        ;;
+        --n=*|--name=*)
+            NAME="${i#*=}"
+            ...
+            shift
+        ;;
+        *)
+            # ignoring unknown options here
+        ;;
+    esac
+done
+
+- How to embed all fonts in PDF document?
+gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf

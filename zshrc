@@ -96,6 +96,8 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 # override all previous LC_* settings
 # export LC_ALL="en_US.UTF-8"
 
+export PYTHONIOENCODING=UTF-8
+
 # ============================================================================
 
 export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
@@ -162,7 +164,7 @@ alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 alias contact='contacts'
 alias contacts="contacts -lHf '%n %p %mp %e %a'"
 alias du='du -h'
-alias f='find . -name '
+alias f='fab'
 alias find-name="find . -name "
 alias fname="find-name"
 alias g='git'
@@ -177,6 +179,7 @@ alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
 alias oo='open "`path`"'
+alias p='pip'
 alias p1='_ping1'
 alias password='apg -a1 -m80 -n10'
 alias path='/Applications/path.app/Contents/MacOS/path'
@@ -191,8 +194,7 @@ alias sshprox='ssh -CND 8888 '
 alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
 alias t='trex'
-alias t='trex'
-alias tre='tree | less'
+alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
 alias tre='tree | less'
 alias tvim='vim -c "NERDTree" -c "wincmd p"'
 alias v.add2virtualenv='add2virtualenv'
