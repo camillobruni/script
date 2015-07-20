@@ -2,13 +2,24 @@
 #if [ -z "$PS1" ]; then
 #   return
 #fi
+TMP_OS=`uname | tr "[:upper:]" "[:lower:]"`
+if [[ "{$TMP_OS}" = *darwin* ]]; then
+    OS="mac";
+elif [[ "{$TMP_OS}" = *linux* ]]; then
+    OS="linux";
+elif [[ "{$TMP_OS}" = *win* ]]; then
+    OS="win";
+elif [[ "{$TMP_OS}" = *mingw* ]]; then
+    OS="win";
+fi
+
 
 skip_global_compinit=1
 
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(fabric django git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper autojump)
+plugins=(fabric django git git-hubflow web-search brew rsync zsh-syntax-highlighting oi gem dircycle autojump)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -99,42 +110,35 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 export PYTHONIOENCODING=UTF-8
 
 # ============================================================================
-
-export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
-export PATH=$PATH:/usr/local/mysql/bin
-export PATH=$PATH:/opt/git-svn-clone-externals
-# homebrew ruby gem path, cannot use fixed path as it would include a changing
-# version number
-
-if hash brew 2>/dev/null; then
-    export PATH=$PATH:$(cd $(which gem)/..; pwd)
+if [ "$OS" == "mac" ]; then
+    export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
+    # homebrew ruby gem path, cannot use fixed path as it would include a changing
+    # version number
+    
+    if hash brew 2>/dev/null; then
+        export PATH=$PATH:$(cd $(which gem)/..; pwd)
+    fi
 fi
 
 # ============================================================================
-export M2_HOME=/opt/mvn/
-export M2=$M2_HOME/bin
-export PATH=$M2:$PATH
-
-# ============================================================================
-
-#export RUBYLIB=$RUBYLIB:/Library/Ruby/Gems/1.8/:/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8/
-#export RSENSE_HOME=/opt/rsense-0.3/
 
 #export PYTHONSTARTUP=/usr/local/bin/ipythonShell
+if [ "$OS" == "mac" ]; then
+    export BROWSER=open
+    export EDITOR=mvim
+    export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
+    export MANPATH=/opt/local/share/man:$MANPATH
+else
+    echo EDITOR=vim
+    echo BROWSER=gnome-open
+fi
 
-export BROWSER=open
-export EDITOR=mvim
 export GIT_EDITOR="vim -c 'startinsert'"
-export VISUAL=mvim
-export SVN_EDITOR=mvim
-export H2_EDITOR=mvim
-
-export FOO=$FOO:'1'
-
-export MANPATH=/opt/local/share/man:$MANPATH
+export VISUAL=$EDITOR
+export SVN_EDITOR=$EDITOR
+export H2_EDITOR=$EDITOR
 
 export PYTHON_VERSION=3.4
-export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
 
 export IRBRC='~/.irbrc'
 
@@ -159,7 +163,6 @@ alias 3='tree | less'
 alias calendar='icalBuddy'
 alias cdp='cd "`path`"'
 alias cdup='cd ..'
-alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 alias contact='contacts'
 alias contacts="contacts -lHf '%n %p %mp %e %a'"
