@@ -2,55 +2,59 @@ set nocompatible
 filetype off " required
 
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+call vundle#begin()
 
-command! BundleUpdate BundleInstall!
+command! PluginUpdate PluginInstall!
 
 " let Vundle manage Vundle
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
 " UI improvements
-Bundle 'Lokaltog/vim-powerline'
-Bundle 'majutsushi/tagbar'
-Bundle 'scrooloose/nerdtree'
-Bundle 'nathanaelkane/vim-indent-guides'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'majutsushi/tagbar'
+Plugin 'scrooloose/nerdtree'
+Plugin 'nathanaelkane/vim-indent-guides'
 
-" Bundle 'altercation/vim-colors-solarized'
-Bundle 'cdlm/vim-colors-solarized'
+" Plugin 'altercation/vim-colors-solarized'
+Plugin 'cdlm/vim-colors-solarized'
 
 " Language modes
-Bundle 'vim-pandoc/vim-pandoc'
-Bundle 'hallison/vim-markdown'
-Bundle 'vim-pandoc/vim-markdownfootnotes'
-Bundle 'skammer/vim-css-color'
-Bundle 'tpope/vim-haml'
-Bundle 'tpope/vim-rake'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'postmodern/vim-yard'
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'hallison/vim-markdown'
+Plugin 'vim-pandoc/vim-markdownfootnotes'
+Plugin 'skammer/vim-css-color'
+Plugin 'tpope/vim-haml'
+Plugin 'tpope/vim-rake'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'postmodern/vim-yard'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'Valloric/YouCompleteMe' 
 
 " Editing
-Bundle 'matchit.zip'
-Bundle 'ervandew/supertab'
-Bundle 'sickill/vim-pasta'
-Bundle 'godlygeek/tabular'
-Bundle 'Raimondi/delimitMate'
-Bundle 'tpope/vim-commentary'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'Gundo'
-Bundle 'Align'
+Plugin 'matchit.zip'
+Plugin 'ervandew/supertab'
+Plugin 'sickill/vim-pasta'
+Plugin 'godlygeek/tabular'
+Plugin 'Raimondi/delimitMate'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'Gundo'
+Plugin 'Align'
 '
 " snipmate & deps
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'garbas/vim-snipmate'
-Bundle 'rbonvall/snipmate-snippets-bib'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+Plugin 'rbonvall/snipmate-snippets-bib'
 
 " External tools
-Bundle 'hallettj/jslint.vim'
-Bundle 'mileszs/ack.vim'
-Bundle 'tpope/vim-fugitive'
-Bundle 'DamienCassou/textlint'
+Plugin 'hallettj/jslint.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'tpope/vim-fugitive'
+
+
+call vundle#end()
 
 filetype plugin indent on

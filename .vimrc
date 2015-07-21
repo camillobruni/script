@@ -22,8 +22,10 @@ let g:indent_guides_indent_levels = 12
 let g:indent_guides_start_level = 3
 " let g:indent_guides_guide_size = 0
 let g:indent_guides_auto_colors = 0
+
 autocmd VimEnter,Colorscheme * :highlight link IndentGuidesOdd CursorLine
 autocmd VimEnter,Colorscheme * :highlight clear IndentGuidesEven
+
 let g:CommandTMaxHeight=7
 let g:CommandTMatchWindowReverse=1
 nnoremap <leader>nt :NERDTreeToggle<cr>
@@ -58,53 +60,47 @@ endfunction
 command! DoIt call DoIt()
 map <leader>d :DoIt<cr>
 
-" Quick modeline insertion
-function! AppendModeline()
-    let l:modeline = printf(" vim: set ts=%d sw=%d ts=%d :", &tabstop, &shiftwidth, &softtabstop)
-    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
-    call append(line("$"), l:modeline)
-endfunction
-nnoremap <silent> <Leader>ml :call AppendModeline()<cr>
-
 " Remap 'quit' keys
 if ! exists('vimpager')
     nnoremap q :q
 endif
 CommandAlias qw wq
 CommandAlias W w
-" macros can still be nice sometimes, so put them on € (option-@)
-nnoremap € q
 
 syntax on
 " Syntax coloring lines that are too long just slows down the world
 set synmaxcol=2048
 filetype plugin indent on
-let g:tex_flavor='latex'
 set omnifunc=syntaxcomplete#Complete
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$', '\.aux$', '\.out$', '\..*\.orig$', '\.synctex.gz$', '\.toc$', '\.blg$', '\.bbl', '\.lof', '\.lot']
 
+" enable status line always
 set laststatus=2
 " let &statusline=' %f%( %y%m%r%)%=L%l C%v '
 " set statusline+=%(%{fugitive#statusline()}\ %)
 let Powerline_symbols='unicode'
 
-if version >= 700
-    " set the status line to flashy colors in insert mode
-    autocmd InsertEnter * highlight ModeMsg    term=reverse ctermfg=15 ctermbg=9
-    autocmd InsertLeave * highlight ModeMsg    term=NONE    ctermfg=4  ctermbg=NONE
-    " autocmd InsertEnter * highlight StatusLine term=reverse ctermfg=15 ctermbg=9
-    " autocmd InsertLeave * highlight StatusLine term=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
-    " unfortunately impossible to reuse the variables from solarized.vim
-    "autocmd InsertEnter * exe "highlight! StatusLine" . s:fmt_none . s:fg_base3 . :bg_orange . s:fmt_revbb
-    "autocmd InsertLeave * exe "highlight! StatusLine" . s:fmt_none . s:fg_base1 . s:bg_base01 . s:fmt_revbb
-	" FileTypes ==================================================================
-	" autowrap for .txt and .tex files
-	autocmd FileType tex setlocal wrap spell
-	autocmd BufRead,BufNewFile *.txt setlocal wrap spell
-	autocmd BufRead,BufNewFile *.md setlocal wrap spell
-	
+" set the status line to flashy colors in insert mode
+au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
+au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
+" switch cursors on insert mode
+if exists('$TMUX')
+    let &t_SI = "\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    inoremap <special> <Esc> <Esc>hl
+else
+    au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
+    au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
+    au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
 endif
+
+" FileTypes ==================================================================
+" autowrap for .txt and .tex files
+autocmd FileType tex setlocal wrap spell
+autocmd BufRead,BufNewFile *.txt setlocal wrap spell
+autocmd BufRead,BufNewFile *.md setlocal wrap spell
+
 
 set ignorecase
 set smartcase
@@ -180,23 +176,6 @@ cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
 " mark character exceeding the 80 limit as errors
 " match Error /\%>80v/
 
-" latex suite settings =======================================================
-let g:Tex_DefaultTargetFormat = 'pdf'
- 
-let g:Tex_CompileRule_dvi         = 'latex --interaction=nonstopmode $*'
-let g:Tex_CompileRule_ps          = 'dvips -Pwww -o $*.ps $*.dvi'
-let g:Tex_CompileRule_pspdf       = 'ps2pdf $*.ps'
-let g:Tex_CompileRule_dvipdf      = 'dvipdfm $*.dvi'
-let g:Tex_CompileRule_pdf         = 'trex $* || pdflatex -synctex=1 -interaction=nonstopmode $*'
- 
-let g:Tex_ViewRule_dvi            = 'texniscope'
-let g:Tex_ViewRule_ps             = 'Preview'
-let g:Tex_ViewRule_pdf            = 'Skim'
- 
-let g:Tex_FormatDependency_ps     = 'dvi,ps'
-let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
-let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
-
 " arrow mapping ===============================================================
 " arrows shouldn't jump over wrapped lines
 nnoremap <Down> gj
@@ -215,14 +194,14 @@ inoremap <buffer> <silent> <Home> <C-o>g<Home>
 inoremap <buffer> <silent> <End> <C-o>g<End>
 
 "" key mappings ===============================================================
-command Q q " Bind :Q to :q
+"command Q q " Bind :Q to :q
 
 " directly jump to edit mode from visual mode
 vmap i <ESC>i
 vmap o <ESC>o
 vmap a <ESC>a
 vmap A <ESC>A
-" eclipse whuwhu style autocompletion
+" eclipse style autocompletion
 imap <C-SPACE> <C-p>
 map <C-SPACE> i<C-p>
 "imap <C-]> <ESC><C-]>i
@@ -317,17 +296,12 @@ if has('mouse')
     set mouse=a
 endif
 
-" switch cursors on insert mode
-let &t_SI = "\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_EI = "\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-"inoremap <special> <Esc> <Esc>hl
 
 " Color scheme and tweaks
 set background=dark
 "let g:solarized_menu=0
 colorscheme solarized
-highlight Cursor guibg=#ecff55 
-                       " was #eabf50
+highlight Cursor guibg=#ecff55 " was #eabf50
 highlight NonText term=NONE ctermfg=2 ctermbg=NONE guifg=#4a4a59
 highlight SpecialKey guifg=#4a4a59
 highlight clear Conceal
@@ -353,4 +327,21 @@ if has("gui_macvim")
    map <D-t> <Plug>PeepOpen
 end
 
+" latex suite settings =======================================================
+let g:tex_flavor='latex'
+let g:Tex_DefaultTargetFormat = 'pdf'
+ 
+let g:Tex_CompileRule_dvi         = 'latex --interaction=nonstopmode $*'
+let g:Tex_CompileRule_ps          = 'dvips -Pwww -o $*.ps $*.dvi'
+let g:Tex_CompileRule_pspdf       = 'ps2pdf $*.ps'
+let g:Tex_CompileRule_dvipdf      = 'dvipdfm $*.dvi'
+let g:Tex_CompileRule_pdf         = 'trex $* || pdflatex -synctex=1 -interaction=nonstopmode $*'
+ 
+let g:Tex_ViewRule_dvi            = 'texniscope'
+let g:Tex_ViewRule_ps             = 'Preview'
+let g:Tex_ViewRule_pdf            = 'Skim'
+let g:Tex_FormatDependency_ps     = 'dvi,ps'
+ 
+let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
+let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
 " vim: set ts=4 sw=4 ts=4 :
