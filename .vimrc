@@ -23,8 +23,6 @@ let g:indent_guides_start_level = 3
 " let g:indent_guides_guide_size = 0
 let g:indent_guides_auto_colors = 0
 
-autocmd VimEnter,Colorscheme * :highlight link IndentGuidesOdd CursorLine
-autocmd VimEnter,Colorscheme * :highlight clear IndentGuidesEven
 
 let g:CommandTMaxHeight=7
 let g:CommandTMatchWindowReverse=1
@@ -81,19 +79,12 @@ set laststatus=2
 " set statusline+=%(%{fugitive#statusline()}\ %)
 let Powerline_symbols='unicode'
 
+autocmd VimEnter,Colorscheme * :highlight link IndentGuidesOdd CursorLine
+autocmd VimEnter,Colorscheme * :highlight clear IndentGuidesEven
+
 " set the status line to flashy colors in insert mode
 au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
 au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
-" switch cursors on insert mode
-if exists('$TMUX')
-    let &t_SI = "\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_EI = "\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-    inoremap <special> <Esc> <Esc>hl
-else
-    au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
-    au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
-    au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
-endif
 
 " FileTypes ==================================================================
 " autowrap for .txt and .tex files
@@ -121,10 +112,6 @@ set fillchars=""
 set cursorline
 set nofoldenable
 set history=1000
-
-" Integrate copy/paste with Mac OS
-set clipboard=unnamed
-"set mouse=a
 
 " Sane indentation defaults
 set expandtab
@@ -176,6 +163,12 @@ cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
 " mark character exceeding the 80 limit as errors
 " match Error /\%>80v/
 
+" Use Ctrl-[ and Ctrl-] to navigate tags
+"inoremap <C-]> <ESC><C-]>i
+"inoremap <C-[> <ESC><C-t>i
+"noremap  <M-[> <ESC><C-t>
+"inoremap <D-.> <ESC>:
+
 " arrow mapping ===============================================================
 " arrows shouldn't jump over wrapped lines
 nnoremap <Down> gj
@@ -204,25 +197,8 @@ vmap A <ESC>A
 " eclipse style autocompletion
 imap <C-SPACE> <C-p>
 map <C-SPACE> i<C-p>
-"imap <C-]> <ESC><C-]>i
-"map  <C-[> <C-t>
-"imap <C-[> <ESC><C-t>i
-imap <D-.> <ESC>:
 
-
-"" Code folding
-"set foldmethod=syntax
-"set nofoldenable
-"let g:Tex_FoldedSections=""
-"let g:Tex_FoldedEnvironments=""
-"let g:Tex_FoldedMisc=""
-"map  <C-LEFT>  <ESC>zc
-"imap <C-LEFT>  <ESC>zci
-"map  <C-RIGHT> <ESC>zo
-"imap <C-RIGHT> <ESC>zoi
-
-
-" enable terminal like per line jumping
+" enable emacs-style line navigation and editing
 map  <C-e> <ESC>$
 imap <C-e> <ESC>A
 map  <C-a> <ESC>^
@@ -244,24 +220,6 @@ vmap <C-up> [egv
 vmap <C-down> ]egv
 vnoremap < <gv
 vnoremap > >gv
-
-" Emacs-style jump to end of line
-imap <C-e> <C-o>A
-imap <C-a> <C-o>I
-" move around according to visual lines
-if exists('vimpager')
-    nnoremap <silent> <home>      gg
-    nnoremap <silent> <end>       G
-else
-    nnoremap <silent> <up>        gk
-    nnoremap <silent> <down>      gj
-    nnoremap <silent> <home>      g<home>
-    nnoremap <silent> <end>       g<end>
-    inoremap <silent> <up>   <C-o>gk
-    inoremap <silent> <down> <C-o>gj
-    inoremap <silent> <home> <C-o>g<home>
-    inoremap <silent> <end>  <C-o>g<end>
-endif
 
 " Open line above (ctrl-shift-o much easier than ctrl-o shift-O)
 "imap <C-Enter> <C-o>o
@@ -292,10 +250,7 @@ set guifont=Consolas:h11,Menlo:h11
 map <D-S-]> gt
 map <D-S-[> gT
 
-if has('mouse')
-    set mouse=a
-endif
-
+set mouse=a
 
 " Color scheme and tweaks
 set background=dark
@@ -327,21 +282,4 @@ if has("gui_macvim")
    map <D-t> <Plug>PeepOpen
 end
 
-" latex suite settings =======================================================
-let g:tex_flavor='latex'
-let g:Tex_DefaultTargetFormat = 'pdf'
- 
-let g:Tex_CompileRule_dvi         = 'latex --interaction=nonstopmode $*'
-let g:Tex_CompileRule_ps          = 'dvips -Pwww -o $*.ps $*.dvi'
-let g:Tex_CompileRule_pspdf       = 'ps2pdf $*.ps'
-let g:Tex_CompileRule_dvipdf      = 'dvipdfm $*.dvi'
-let g:Tex_CompileRule_pdf         = 'trex $* || pdflatex -synctex=1 -interaction=nonstopmode $*'
- 
-let g:Tex_ViewRule_dvi            = 'texniscope'
-let g:Tex_ViewRule_ps             = 'Preview'
-let g:Tex_ViewRule_pdf            = 'Skim'
-let g:Tex_FormatDependency_ps     = 'dvi,ps'
- 
-let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
-let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
 " vim: set ts=4 sw=4 ts=4 :
