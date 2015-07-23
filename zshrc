@@ -110,29 +110,23 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 export PYTHONIOENCODING=UTF-8
 
 # ============================================================================
-if [ "$OS" == "mac" ]; then
+if [[ "$OS" == "mac" ]]; then
+    export EDITOR=mvim
+    export MANPATH=/opt/local/share/man:$MANPATH
+    export OPEN_CMD=open
+    export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
     export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
     # homebrew ruby gem path, cannot use fixed path as it would include a changing
     # version number
-    
     if hash brew 2>/dev/null; then
         export PATH=$PATH:$(cd $(which gem)/..; pwd)
     fi
-fi
-
-# ============================================================================
-
-#export PYTHONSTARTUP=/usr/local/bin/ipythonShell
-if [ "$OS" == "mac" ]; then
-    export BROWSER=open
-    export EDITOR=mvim
-    export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
-    export MANPATH=/opt/local/share/man:$MANPATH
 else
-    echo EDITOR=vim
-    echo BROWSER=gnome-open
+    export EDITOR=vim
+    export OPEN_CMD=gnome-open
 fi
 
+export BROWSER=$OPEN_CMD
 export GIT_EDITOR="vim -c 'startinsert'"
 export VISUAL=$EDITOR
 export SVN_EDITOR=$EDITOR
@@ -179,9 +173,10 @@ alias ll='ls -Aflhp'
 alias log='/Users/Shared/log/log.rb'
 alias m='v.project && ./manage.py '
 alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
+alias make_targets="make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'"
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
-alias oo='open "`path`"'
+alias oo='$OPEN_CMD "`path`"'
 alias p='pip'
 alias p1='_ping1'
 alias password='apg -a1 -m80 -n10'
@@ -224,10 +219,10 @@ pman() {
 _open()
 {
     if [[ $# -eq 0 ]]; then
-        open .;
+         $OPEN_CMD .;
         return $?;
     fi    
-    open "$*";
+    $OPEN_CMD "$*";
 }
 
 # ping google or the provided argument once =================================

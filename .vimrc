@@ -227,6 +227,14 @@ vnoremap > >gv
 "imap <C-S-Enter> <C-o>O
 "nmap <C-S-Enter> O
 
+"make <space> and <enter> work directly from normal mode
+nnoremap <space> i<space><esc>
+nnoremap <enter> i<enter><esc>
+
+" Mac-like tab navigation
+map <D-S-]> gt
+map <D-S-[> gT
+
 " Show highlighting group for current word
 function! <SID>SyntaxStack()
     if !exists("*synstack")
@@ -246,9 +254,6 @@ augroup END
 set guioptions-=T
 "set guioptions-=m
 set guifont=Consolas:h11,Menlo:h11
-" Mac-like tab navigation
-map <D-S-]> gt
-map <D-S-[> gT
 
 set mouse=a
 
