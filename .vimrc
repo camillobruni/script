@@ -1,16 +1,16 @@
 set nocompatible " be iMproved
 set encoding=utf-8
+" force 256 colors (for instance for powerline)
+"set term=xterm-256color
 
-" Prefix/namespace for user commands
+" Prefix/namespace for user commands, set <leader> to ;
 let mapleader=";"
 
 " Configure & load bundles
-let g:easytags_cmd = '/usr/local/bin/ctags'
-let g:tagbar_ctags_bin = g:easytags_cmd
+runtime bundles.vim
+
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
 let $JS_CMD = 'node'
-
-runtime bundles.vim
 
 " Setup bundles
 let g:acp_behaviorKeywordLength = 3
@@ -23,7 +23,6 @@ let g:indent_guides_start_level = 3
 " let g:indent_guides_guide_size = 0
 let g:indent_guides_auto_colors = 0
 
-
 let g:CommandTMaxHeight=7
 let g:CommandTMatchWindowReverse=1
 nnoremap <leader>nt :NERDTreeToggle<cr>
@@ -31,43 +30,12 @@ nnoremap <leader>tb :TagbarToggle<cr>
 nnoremap <leader>e  :CommandT<cr>
 nnoremap <leader>TF :CommandTFlush<cr>
 
-" 
-function! TexSpell()
-    cexp system('trex check ')
-    copen
-endfunction
-command! TexSpell call TexSpell()
-
-" Load project-local settings if any
-set exrc secure
-
-" Anticipating some common typos
-function! CommandAlias(abbreviation, expansion)
-    execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
-endfunction
-command! -nargs=+ CommandAlias call CommandAlias(<f-args>)
-" Use it on itself to define a simpler abbreviation for itself.
-CommandAlias alias CommandAlias
-
-" Quick (re)sourcing to .vimrc & testing vimscript code
-nmap <leader>src :source $MYVIMRC<cr>
-function! DoIt() range
-    let lines = join(getline(a:firstline, a:lastline), "\n")
-    execute lines
-endfunction
-command! DoIt call DoIt()
-map <leader>d :DoIt<cr>
-
-" Remap 'quit' keys
-if ! exists('vimpager')
-    nnoremap q :q
-endif
-CommandAlias qw wq
-CommandAlias W w
+let g:miniBufExplForceSyntaxEnable = 1
 
 syntax on
 " Syntax coloring lines that are too long just slows down the world
 set synmaxcol=2048
+
 filetype plugin indent on
 set omnifunc=syntaxcomplete#Complete
 
@@ -75,23 +43,12 @@ let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$', '\.aux$', '\.out$', '\..*
 
 " enable status line always
 set laststatus=2
-" let &statusline=' %f%( %y%m%r%)%=L%l C%v '
-" set statusline+=%(%{fugitive#statusline()}\ %)
-let Powerline_symbols='unicode'
-
-autocmd VimEnter,Colorscheme * :highlight link IndentGuidesOdd CursorLine
-autocmd VimEnter,Colorscheme * :highlight clear IndentGuidesEven
-
-" set the status line to flashy colors in insert mode
-au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
-au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 
 " FileTypes ==================================================================
-" autowrap for .txt and .tex files
+" autowrap for .txt, .tex  and .md files
 autocmd FileType tex setlocal wrap spell
 autocmd BufRead,BufNewFile *.txt setlocal wrap spell
 autocmd BufRead,BufNewFile *.md setlocal wrap spell
-
 
 set ignorecase
 set smartcase
@@ -106,7 +63,6 @@ set number
 set hidden
 set wrap
 set scrolloff=2
-nmap <leader>w :set wrap!<cr>
 set visualbell
 set fillchars=""
 set cursorline
@@ -118,10 +74,13 @@ set expandtab
 set smartindent
 set autoindent
 
-" undoing even after closing the file
+" enable global undoing even after closing the file
 set undofile
 set undodir=~/.vim-undo
 set undoreload=10000 "maximum number lines to save for undo on a buffer reload
+
+" mark character exceeding the 80 limit as errors
+match Error /\%>80v/
 
 function! SetIndent(...)
     let size = (a:0 == 0) ? 4 : a:1
@@ -143,6 +102,7 @@ set whichwrap=b,s,h,l,<,>,[,]
 
 nmap <leader>qf :botright copen<cr>
 nmap <leader>spell :setlocal spell!<cr>
+nmap <leader>w :set wrap!<cr>
 
 " Sudo write that file!
 command! SudoWrite write !sudo tee % > /dev/null
@@ -157,9 +117,6 @@ nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>
 
 " Opening files relative to current one, e.g. :e %/bar.txt
 cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
-
-" mark character exceeding the 80 limit as errors
-" match Error /\%>80v/
 
 " Use Ctrl-[ and Ctrl-] to navigate tags
 "inoremap <C-]> <ESC><C-]>i
@@ -225,10 +182,6 @@ vnoremap > >gv
 "imap <C-S-Enter> <C-o>O
 "nmap <C-S-Enter> O
 
-"make <space> and <enter> work directly from normal mode
-nnoremap <space> i<space><esc>
-nnoremap <enter> i<enter><esc>
-
 " Mac-like tab navigation
 map <D-S-]> gt
 map <D-S-[> gT
@@ -237,11 +190,10 @@ map <D-S-[> gT
 map <bs> X
 
 " ctr-delete and ctr-backspace delete the current word
-inoremap <C-BS> <ESC>dWi
-inoremap <C-DEL> <ESC>dwi
-nnoremap <C-BS> <ESC>dWi
-nnoremap <C-DEL> <ESC>dwi
-
+imap <C-BS> <ESC>dWi
+imap <C-Del> <ESC>dwi
+nmap <C-BS> dW
+nmap <C-Del> dw
 
 " Show highlighting group for current word
 function! <SID>SyntaxStack()
@@ -257,6 +209,10 @@ augroup BWCCreateDir
     autocmd!
     autocmd BufWritePre * if expand("<afile>")!~#'^\w\+:/' && !isdirectory(expand("%:h")) | execute "silent! !mkdir -p %:h" | redraw! | endif
 augroup END
+
+" change line the number backgrounds in insert mode
+autocmd InsertEnter * highlight LineNr ctermbg=DarkBlue ctermfg=white
+autocmd InsertLeave * highlight LineNr ctermbg=NONE ctermfg=None
 
 " Remove GUI menu and toolbar
 set guioptions-=T

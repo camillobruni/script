@@ -10,7 +10,8 @@ command! PluginUpdate PluginInstall!
 Plugin 'gmarik/vundle'
 
 " UI improvements
-Plugin 'Lokaltog/vim-powerline'
+Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}  
+Plugin 'jszakmeister/vim-togglecursor'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
 Plugin 'nathanaelkane/vim-indent-guides'
