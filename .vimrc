@@ -3,6 +3,10 @@ set encoding=utf-8
 " force 256 colors (for instance for powerline)
 "set term=xterm-256color
 
+" secure non-default vimrc files
+set exrc
+set secure
+
 " Prefix/namespace for user commands, set <leader> to ;
 let mapleader=";"
 

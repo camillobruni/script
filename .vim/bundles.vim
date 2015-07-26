@@ -25,14 +25,12 @@ Plugin 'hallison/vim-markdown'
 Plugin 'vim-pandoc/vim-markdownfootnotes'
 Plugin 'skammer/vim-css-color'
 Plugin 'tpope/vim-haml'
-Plugin 'tpope/vim-rake'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'postmodern/vim-yard'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'Valloric/YouCompleteMe' 
 
 " Editing
-Plugin 'matchit.zip'
 Plugin 'ervandew/supertab'
 Plugin 'sickill/vim-pasta'
 Plugin 'godlygeek/tabular'
@@ -53,7 +51,6 @@ Plugin 'rbonvall/snipmate-snippets-bib'
 " External tools
 Plugin 'hallettj/jslint.vim'
 Plugin 'mileszs/ack.vim'
-Plugin 'tpope/vim-fugitive'
 Plugin 'hari-rangarajan/CCTree' 
 
 call vundle#end()
