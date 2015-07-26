@@ -16,10 +16,19 @@ runtime bundles.vim
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
 let $JS_CMD = 'node'
 
+" Make sure ultiSnip and YCM Completion get along by using supertab
+"let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+"let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+"let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<c-n>"
+let g:UltiSnipsJumpForwardTrigger = "<c-n>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+
 " Setup bundles
 let g:acp_behaviorKeywordLength = 3
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabContextDefaultCompletionType = "<c-n>"
 let g:cssColorVimDoNotMessMyUpdatetime = 'kthxbye'
 " indent guides
 let g:indent_guides_indent_levels = 12

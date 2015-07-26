@@ -30,8 +30,9 @@ Plugin 'postmodern/vim-yard'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'Valloric/YouCompleteMe' 
 
-" Editing
+" Use Supertab for ycm and snipmate compatibility
 Plugin 'ervandew/supertab'
+" Editing
 Plugin 'sickill/vim-pasta'
 Plugin 'godlygeek/tabular'
 Plugin 'Raimondi/delimitMate'
@@ -41,13 +42,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Gundo'
 Plugin 'Align'
-'
-" snipmate & deps
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
-Plugin 'rbonvall/snipmate-snippets-bib'
-
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 " External tools
 Plugin 'hallettj/jslint.vim'
 Plugin 'mileszs/ack.vim'
