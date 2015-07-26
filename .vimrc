@@ -140,8 +140,6 @@ set fileformats=unix,dos,mac
 set backspace=indent,eol,start
 "set cpoptions+=$ " mark changed area
 set whichwrap=b,s,h,l,<,>,[,]
-" <Del> works, I don't see why <BS> shouldn't
-map <bs> X
 
 nmap <leader>qf :botright copen<cr>
 nmap <leader>spell :setlocal spell!<cr>
@@ -234,6 +232,16 @@ nnoremap <enter> i<enter><esc>
 " Mac-like tab navigation
 map <D-S-]> gt
 map <D-S-[> gT
+
+" <Del> works, I don't see why <BS> shouldn't
+map <bs> X
+
+" ctr-delete and ctr-backspace delete the current word
+inoremap <C-BS> <ESC>dWi
+inoremap <C-DEL> <ESC>dwi
+nnoremap <C-BS> <ESC>dWi
+nnoremap <C-DEL> <ESC>dwi
+
 
 " Show highlighting group for current word
 function! <SID>SyntaxStack()

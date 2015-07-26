@@ -53,7 +53,7 @@ Plugin 'rbonvall/snipmate-snippets-bib'
 Plugin 'hallettj/jslint.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'tpope/vim-fugitive'
-
+Plugin 'hari-rangarajan/CCTree' 
 
 call vundle#end()
 

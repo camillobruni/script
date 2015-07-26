@@ -183,8 +183,10 @@ alias password='apg -a1 -m80 -n10'
 alias path='/Applications/path.app/Contents/MacOS/path'
 alias ping1='ping -c 1'
 alias rgrep='grep -r -n --color=auto'
-alias rm='trash'
-alias rrm='rm'
+if [[ "$OS" == 'mac' ]]; then
+    alias rm='trash'
+    alias rrm='rm'
+fi
 alias scn='svn'
 alias sp='v.project && ./manage.py shell_plus'
 alias ssh='ssh -C'
