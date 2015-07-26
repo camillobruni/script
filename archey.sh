@@ -45,7 +45,7 @@ if hash sw_vers 2>&-; then
         versionString="Cheetah"
         ;;
     esac
-    distro="OS X $(sw_vers -productVersion) $(versionString)"
+    distro="OS X $(sw_vers -productVersion) $versionString"
 else
     distro=`lsb_release -a 2>&- | grep Description | awk '{$1=""; print $0}'`
 fi
@@ -144,7 +144,7 @@ print ""
 print ""
 print "              ░▓███████▒░              $userText $user"
 print "          ░▒█████████████▓▒░           $hostnameText $hostname"
-print "        ░▒███████████████████░         $distroText$distro"
+print "        ░▒███████████████████░         $distroText $distro"
 print "       ████████████████████████░       $kernelText $kernel"
 print "      ▓████▓▒░░        ░▒▓██████       $uptimeText $uptime"
 print "     ░████░              ▒█████▒       $shellText $shell"
