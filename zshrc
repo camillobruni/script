@@ -165,6 +165,7 @@ alias f='fab'
 alias find-name="find . -name "
 alias fname="find-name"
 alias g='git'
+alias gitk='gitk &'
 alias htop='sudo htop'
 alias imdb='web_search duckduckgo \!imdb'
 alias irb='irb -rubygems'
@@ -173,7 +174,7 @@ alias ll='ls -Aflhp'
 alias log='/Users/Shared/log/log.rb'
 alias m='v.project && ./manage.py '
 alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
-alias make_targets="make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'"
+alias make_targets="make -qp | awk -F':' '/^[a-zA-Z0-9][^\$#\/\t=]*:([^=]|$)/ {split(\$1,A,/ /); for(i in A) print A[i]}'"
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
 alias oo='$OPEN_CMD "`path`"'
@@ -251,6 +252,10 @@ ggl()
     open "https://encrypted.google.com/search?q=$QUERY"
 }
 
+# only open a single instance of gvim by default
+gvim () {
+    command gvim --remote-silent "$@" || command gvim "$@"; 
+}
 # ============================================================================
 # Directory stack extensions
 setopt autopushd pushdminus pushdsilent pushdtohome

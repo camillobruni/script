@@ -14,6 +14,7 @@ Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'jszakmeister/vim-togglecursor'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'nathanaelkane/vim-indent-guides'
 
 " Plugin 'altercation/vim-colors-solarized'
@@ -29,6 +30,8 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'postmodern/vim-yard'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'Valloric/YouCompleteMe' 
+" fast file opening
+Plugin 'wincent/command-t'
 
 " Use Supertab for ycm and snipmate compatibility
 Plugin 'ervandew/supertab'

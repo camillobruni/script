@@ -17,15 +17,14 @@ runtime bundles.vim
 let $JS_CMD = 'node'
 
 " Make sure ultiSnip and YCM Completion get along by using supertab
-"let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-"let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-"let g:SuperTabDefaultCompletionType = '<C-n>'
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger = "<c-n>"
-let g:UltiSnipsJumpForwardTrigger = "<c-n>"
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
 
 " Setup bundles
 let g:acp_behaviorKeywordLength = 3
@@ -38,9 +37,12 @@ let g:indent_guides_auto_colors = 0
 
 let g:CommandTMaxHeight=7
 let g:CommandTMatchWindowReverse=1
+let g:CommandTFileScanner = 'find'
+
+" <leader> commands
 nnoremap <leader>nt :NERDTreeToggle<cr>
 nnoremap <leader>tb :TagbarToggle<cr>
-nnoremap <leader>e  :CommandT<cr>
+nnoremap <leader>t  :CommandT<cr>
 nnoremap <leader>TF :CommandTFlush<cr>
 
 let g:miniBufExplForceSyntaxEnable = 1
@@ -68,7 +70,7 @@ set smartcase
 set incsearch
 set hlsearch
 set showmatch
-set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git
+set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git,*.o,*.obj
 set ruler
 set showcmd
 set showmode
@@ -131,6 +133,9 @@ nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>
 " Opening files relative to current one, e.g. :e %/bar.txt
 cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
 
+" search for the currently selected text
+vnoremap // y/<C-R>"<CR>
+
 " Use Ctrl-[ and Ctrl-] to navigate tags
 "inoremap <C-]> <ESC><C-]>i
 "inoremap <C-[> <ESC><C-t>i
@@ -154,8 +159,14 @@ inoremap <Up> <C-o>gk
 inoremap <buffer> <silent> <Home> <C-o>g<Home>
 inoremap <buffer> <silent> <End> <C-o>g<End>
 
+nnoremap <C-S-Down> gjzz
+nnoremap <C-S-Up> gkzz
 "" key mappings ===============================================================
-"command Q q " Bind :Q to :q
+"command Q q " Bind :Q to :qt
+" stamp over yanked text over current word
+nnoremap S diw"0P
+" stamp over visual selected text
+vnoremap S "_d"0P
 
 " directly jump to edit mode from visual mode
 vmap i <ESC>i
@@ -205,8 +216,6 @@ map <bs> X
 " ctr-delete and ctr-backspace delete the current word
 imap <C-BS> <ESC>dWi
 imap <C-Del> <ESC>dwi
-nmap <C-BS> dW
-nmap <C-Del> dw
 
 " Show highlighting group for current word
 function! <SID>SyntaxStack()
@@ -230,8 +239,7 @@ autocmd InsertLeave * highlight LineNr ctermbg=NONE ctermfg=None
 " Remove GUI menu and toolbar
 set guioptions-=T
 "set guioptions-=m
-set guifont=Consolas:h11,Menlo:h11
-
+set anti guifont=Ubuntu\ Mono\ for\ Powerline\ 10   
 set mouse=a
 
 " Color scheme and tweaks
