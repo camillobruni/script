@@ -14,7 +14,7 @@ let mapleader=";"
 runtime bundles.vim
 
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
-let $JS_CMD = 'node'
+let $JS_CMD = 'nodejs'
 
 " Make sure ultiSnip and YCM Completion get along by using supertab
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']

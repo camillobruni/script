@@ -29,6 +29,7 @@ Plugin 'tpope/vim-haml'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'postmodern/vim-yard'
 Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'ntpeters/vim-better-whitespace' 
 Plugin 'Valloric/YouCompleteMe' 
 " fast file opening
 Plugin 'wincent/command-t'
