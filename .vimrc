@@ -59,6 +59,10 @@ let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$', '\.aux$', '\.out$', '\..*
 " enable status line always
 set laststatus=2
 
+" Session Handling https://github.com/xolox/vim-session
+let g:session_autosave = 'yes'
+let g:session_autoload = 'yes'
+"
 " FileTypes ==================================================================
 " autowrap for .txt, .tex  and .md files
 autocmd FileType tex setlocal wrap spell

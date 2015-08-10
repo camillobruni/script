@@ -185,8 +185,8 @@ alias path='/Applications/path.app/Contents/MacOS/path'
 alias ping1='ping -c 1'
 alias rgrep='grep -r -n --color=auto'
 if [[ "$OS" == 'mac' ]]; then
-    alias rm='trash'
     alias rrm='rm'
+    alias rm='trash'
 fi
 alias scn='svn'
 alias sp='v.project && ./manage.py shell_plus'

@@ -48,6 +48,11 @@ Plugin 'Gundo'
 Plugin 'Align'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+
+" Vim session and dependencies
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+
 " External tools
 Plugin 'hallettj/jslint.vim'
 Plugin 'mileszs/ack.vim'
