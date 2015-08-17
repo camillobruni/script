@@ -19,7 +19,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git git-hubflow web-search brew rsync zsh-syntax-highlighting oi gem dircycle autojump)
+plugins=(git git-hubflow rsync zsh-syntax-highlighting oi gem dircycle autojump)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -37,7 +37,7 @@ setopt interactivecomments
 # ============================================================================
 # display system information on startup
 
-(archey -c &) 2> /dev/null 
+(archey -c &) 2> /dev/null
 
 # ============================================================================
 
@@ -88,7 +88,7 @@ export HISTCONTROL=ignorespace
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
-# swiss format 
+# swiss format
 export LC_MONETARY="de_CH.UTF-8"
 export LC_NUMERIC="de_CH.UTF-8"
 export LC_TIME="de_CH.UTF-8"
@@ -224,7 +224,7 @@ _open()
     if [[ $# -eq 0 ]]; then
          $OPEN_CMD .;
         return $?;
-    fi    
+    fi
     $OPEN_CMD "$*";
 }
 
@@ -234,7 +234,7 @@ _ping1()
     if [[ $# -eq 0 ]]; then
         ping -c 1 www.google.com
         return $?;
-    fi    
+    fi
     ping -c 1 "$*";
 }
 
@@ -254,7 +254,7 @@ ggl()
 
 # only open a single instance of gvim by default
 gvim () {
-    command gvim --remote-silent "$@" || command gvim "$@"; 
+    command gvim --remote-silent "$@" || command gvim "$@";
 }
 # ============================================================================
 # Directory stack extensions
