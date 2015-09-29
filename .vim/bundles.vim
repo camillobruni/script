@@ -10,7 +10,7 @@ command! PluginUpdate PluginInstall!
 Plugin 'gmarik/vundle'
 
 " UI improvements
-Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}  
+Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'jszakmeister/vim-togglecursor'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
@@ -29,17 +29,18 @@ Plugin 'tpope/vim-haml'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'postmodern/vim-yard'
 Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'ntpeters/vim-better-whitespace' 
-Plugin 'Valloric/YouCompleteMe' 
 " fast file opening
-Plugin 'wincent/command-t'
+Plugin 'kien/ctrlp.vim'
 
+" COMPLETION
+Plugin 'Valloric/YouCompleteMe'
 " Use Supertab for ycm and snipmate compatibility
 Plugin 'ervandew/supertab'
+
 " Editing
 Plugin 'sickill/vim-pasta'
 Plugin 'godlygeek/tabular'
-Plugin 'Raimondi/delimitMate'
+" Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
@@ -56,7 +57,8 @@ Plugin 'xolox/vim-session'
 " External tools
 Plugin 'hallettj/jslint.vim'
 Plugin 'mileszs/ack.vim'
-Plugin 'hari-rangarajan/CCTree' 
+Plugin 'hari-rangarajan/CCTree'
+Plugin 'tpope/vim-fugitive'
 
 call vundle#end()
 

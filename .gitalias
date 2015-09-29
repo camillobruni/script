@@ -3,19 +3,20 @@
     big-files = large-files
     br = branch
     bra = branch --all
-	  ci = commit -a
+    ci = commit -a
     cim = commit -am
-    co = checkout
+    co = !git-checkout-custom
     d = diff --color-words
     di = diff --color-words
     diff = diff --color-words
     dt = difftool
-	  f = fetch
-	  fa = fetch --all
+    f = fetch
+    fa = fetch --all
     find = !git-find-blob
-	  filelog = log -u
-	  fl = log -u
+    filelog = log -u
+    fl = log -u
     forest = !git-forest
+    graph = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
     history = whatchanged -p --follow
     history-rm = !git-history-rm
     i = info
@@ -27,6 +28,7 @@
     ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%ar\\ %Cblue[%cn]\\ %Cred%d%Creset%n%s" --decorate --color --numstat
     m = merge
     mt = mergetool
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
     open = browse
     ours = checkout --ours
     out = outgoing

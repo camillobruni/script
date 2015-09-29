@@ -33,7 +33,8 @@ ZSH_THEME_LAST_PRINT_DATE=0
 
 # enable comments on the REPL
 setopt interactivecomments
-
+# don't directly jump to dirs in order to prevent completion of all usernames
+unsetopt cdablevars
 # ============================================================================
 # display system information on startup
 
@@ -208,6 +209,7 @@ alias v.project='cdproject'
 alias v.rm='rmvirtualenv'
 alias v.switch='workon'
 alias v='workon'
+alias vless='vim -u /usr/share/vim/vim71/macros/less.vim'
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
 function git(){ hub $@ }
@@ -277,15 +279,23 @@ export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
 if hash brew 2>/dev/null; then
-    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && \
+        . $(brew --prefix)/etc/profile.d/autojump.sh
 fi
 
 function _autojump_jump {
 	# first try `jump` with all the options then autojump
-	jump $* 2&>> /dev/null || cd "`autojump $*`" || ( echo "'$*' not found" && exit 1)
+	jump $* 2&>> /dev/null || \
+        cd "`autojump $*`" || \
+        (echo "'$*' not found" && exit 1)
 }
 alias j=_autojump_jump
 
 # =============================================================================
+# helper
+function rel_path() {
+    python -c "import os.path; print os.path.relpath('${1}', '${2}')"
+}
+
 # wait for any background processes launched in the setup file
 wait

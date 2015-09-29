@@ -3,6 +3,9 @@ set encoding=utf-8
 " force 256 colors (for instance for powerline)
 "set term=xterm-256color
 
+" buffer redraws for big files
+set lazyredraw
+
 " secure non-default vimrc files
 set exrc
 set secure
@@ -20,11 +23,18 @@ let $JS_CMD = 'nodejs'
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-n>'
+let g:SuperTabDefaultCompletionType = 'context'
 
 " better key bindings for UltiSnipsExpandTrigger
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" Use vims omni completion for eclim
+let g:EclimCompletionMethod = 'omnifunc'
+
+" NERDCommenter settings
+let g:NERDSpaceDelims = 1
 
 " Setup bundles
 let g:acp_behaviorKeywordLength = 3
@@ -35,14 +45,10 @@ let g:indent_guides_start_level = 3
 " let g:indent_guides_guide_size = 0
 let g:indent_guides_auto_colors = 0
 
-let g:CommandTMaxHeight=7
-let g:CommandTMatchWindowReverse=1
-let g:CommandTFileScanner = 'find'
-
 " <leader> commands
 nnoremap <leader>nt :NERDTreeToggle<cr>
 nnoremap <leader>tb :TagbarToggle<cr>
-nnoremap <leader>t  :CommandT<cr>
+nnoremap <leader>t  :CtrlP<cr>
 nnoremap <leader>TF :CommandTFlush<cr>
 
 let g:miniBufExplForceSyntaxEnable = 1
@@ -62,6 +68,9 @@ set laststatus=2
 " Session Handling https://github.com/xolox/vim-session
 let g:session_autosave = 'yes'
 let g:session_autoload = 'yes'
+
+" make sure vim finds the tags file (not sure why and how...)
+set tags=./tags;
 "
 " FileTypes ==================================================================
 " autowrap for .txt, .tex  and .md files
@@ -138,7 +147,7 @@ nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>
 cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
 
 " search for the currently selected text
-vnoremap // y/<C-R>"<CR>
+vnoremap * y/<C-R>"<CR>
 
 " Use Ctrl-[ and Ctrl-] to navigate tags
 "inoremap <C-]> <ESC><C-]>i
@@ -242,6 +251,9 @@ autocmd InsertLeave * highlight LineNr ctermbg=NONE ctermfg=None
 
 " Remove GUI menu and toolbar
 set guioptions-=T
+set guioptions-=m
+" share the system clipboard
+set clipboard=unnamed
 "set guioptions-=m
 set anti guifont=Ubuntu\ Mono\ for\ Powerline\ 10   
 set mouse=a
