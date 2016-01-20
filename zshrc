@@ -158,7 +158,7 @@ alias 3='tree | less'
 alias calendar='icalBuddy'
 alias cdp='cd "`path`"'
 alias cdup='cd ..'
-alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+# alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 alias contact='contacts'
 alias contacts="contacts -lHf '%n %p %mp %e %a'"
 alias du='du -h'
@@ -246,6 +246,12 @@ rruby()
     ruby -e "puts $*"
 }
 alias c=rruby
+
+# print the average of a file containing a number per line ==================
+
+file_avg() {
+    ruby -e "arr=File.readlines('$1').map{|l|l.chomp.to_f};puts(arr.inject(0.0) { |sum, el| sum + el } / arr.size)"
+}
 
 # open google search results from the command line ==========================
 ggl()

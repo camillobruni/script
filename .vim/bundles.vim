@@ -11,24 +11,25 @@ Plugin 'gmarik/vundle'
 
 " UI improvements
 Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
-Plugin 'jszakmeister/vim-togglecursor'
+" allow insert vs. block cursor
+" Plugin 'jszakmeister/vim-togglecursor'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
+" Plugin 'scrooloose/nerdcommenter'
 Plugin 'nathanaelkane/vim-indent-guides'
 
 " Plugin 'altercation/vim-colors-solarized'
 Plugin 'cdlm/vim-colors-solarized'
 
 " Language modes
-Plugin 'vim-pandoc/vim-pandoc'
+" Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'hallison/vim-markdown'
-Plugin 'vim-pandoc/vim-markdownfootnotes'
-Plugin 'skammer/vim-css-color'
-Plugin 'tpope/vim-haml'
+" Plugin 'vim-pandoc/vim-markdownfootnotes'
+" Plugin 'skammer/vim-css-color'
+" Plugin 'tpope/vim-haml'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'postmodern/vim-yard'
-Plugin 'octol/vim-cpp-enhanced-highlight'
+" Plugin 'postmodern/vim-yard'
+" Plugin 'octol/vim-cpp-enhanced-highlight'
 " fast file opening
 Plugin 'kien/ctrlp.vim'
 
@@ -44,20 +45,19 @@ Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
+" symmetric commands that make sense
 Plugin 'tpope/vim-unimpaired'
+" file/project navigation
+Plugin 'tpope/vim-vinegar'
 Plugin 'Gundo'
 Plugin 'Align'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 
-" Vim session and dependencies
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-session'
-
 " External tools
-Plugin 'hallettj/jslint.vim'
 Plugin 'mileszs/ack.vim'
-Plugin 'hari-rangarajan/CCTree'
+" same but for ag instead ack
+Plugin 'rking/ag.vim'
 Plugin 'tpope/vim-fugitive'
 
 call vundle#end()

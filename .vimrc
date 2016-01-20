@@ -69,14 +69,19 @@ set laststatus=2
 let g:session_autosave = 'yes'
 let g:session_autoload = 'yes'
 
+" autoread files that changed outside vim
+set autoread
+
 " make sure vim finds the tags file (not sure why and how...)
 set tags=./tags;
 "
 " FileTypes ==================================================================
 " autowrap for .txt, .tex  and .md files
-autocmd FileType tex setlocal wrap spell
-autocmd BufRead,BufNewFile *.txt setlocal wrap spell
-autocmd BufRead,BufNewFile *.md setlocal wrap spell
+" autocmd FileType tex setlocal wrap spell
+" autocmd BufRead,BufNewFile *.txt setlocal wrap spell
+" autocmd BufRead,BufNewFile *.md setlocal wrap spell
+" do not auto-hardwrap text
+set formatoptions-=t
 
 set ignorecase
 set smartcase
@@ -96,6 +101,10 @@ set fillchars=""
 set cursorline
 set nofoldenable
 set history=1000
+
+" more convenient splitting behavior for me
+set splitbelow
+set splitright
 
 " Sane indentation defaults
 set expandtab
@@ -172,8 +181,12 @@ inoremap <Up> <C-o>gk
 inoremap <buffer> <silent> <Home> <C-o>g<Home>
 inoremap <buffer> <silent> <End> <C-o>g<End>
 
-nnoremap <C-S-Down> gjzz
-nnoremap <C-S-Up> gkzz
+" Shift+Arrow srcoll and center
+inoremap <S-Down> <ESC>gjzzi
+inoremap <S-Up> <ESC>gkzzi
+nnoremap <S-Down> gjzz
+nnoremap <S-Up> gkzz
+
 "" key mappings ===============================================================
 "command Q q " Bind :Q to :qt
 " stamp over yanked text over current word
@@ -245,6 +258,7 @@ augroup BWCCreateDir
     autocmd BufWritePre * if expand("<afile>")!~#'^\w\+:/' && !isdirectory(expand("%:h")) | execute "silent! !mkdir -p %:h" | redraw! | endif
 augroup END
 
+" UI / FONT ===============================================================
 " change line the number backgrounds in insert mode
 autocmd InsertEnter * highlight LineNr ctermbg=DarkBlue ctermfg=white
 autocmd InsertLeave * highlight LineNr ctermbg=NONE ctermfg=None
@@ -259,7 +273,7 @@ set anti guifont=Ubuntu\ Mono\ for\ Powerline\ 10
 set mouse=a
 
 " Color scheme and tweaks
-set background=dark
+set background=light
 "let g:solarized_menu=0
 colorscheme solarized
 highlight Cursor guibg=#ecff55 " was #eabf50
@@ -269,7 +283,8 @@ highlight clear Conceal
 highlight default link Conceal Statement
 highlight default link qfSeparator Conceal
 
-
+" =======================================================================
+"
 " Close all open buffers on entering a window if the only
 " buffer that's left is the NERDTree buffer
 function! s:CloseIfOnlyNerdTreeLeft()
@@ -282,6 +297,31 @@ function! s:CloseIfOnlyNerdTreeLeft()
   endif
 endfunction
 autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+
+
+" Highlight all instances of word under cursor, when idle.
+" Useful when studying strange source code.
+" Type z/ to toggle highlighting on/off.
+nnoremap z/ :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
+function! AutoHighlightToggle()
+    let @/ = ''
+    if exists('#auto_highlight')
+        au! auto_highlight
+        augroup! auto_highlight
+        setl updatetime=4000
+        echo 'Highlight current word: off'
+        return 0
+    else
+        augroup auto_highlight
+            au!
+            au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+        augroup end
+        setl updatetime=500
+        echo 'Highlight current word: ON'
+        return 1
+    endif
+endfunction
+
 
 if has("gui_macvim")
    macmenu &File.New\ Tab key=<nop>
