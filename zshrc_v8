@@ -1,0 +1,326 @@
+export CODE=/work
+export V8_BASE=$CODE/v8
+export V8_CODE=$V8_BASE/src
+export V8_TEST_FLAGS=''
+export CHROMIUM_BASE=$CODE/chromium
+export CHROMIUM_CODE=$CHROMIUM_BASE/src
+export PATH=$CHROMIUM_BASE/depot_tools:$PATH
+# google3 PYTHONPATH kills Python performance.
+export PYTHONPATH=
+export CHROME_DEVEL_SANDBOX="/usr/local/sbin/chrome-devel-sandbox"
+export GOLDPATH="$CHROMIUM_CODE/third_party/binutils/Linux_x64/Release/bin/"
+export PATH=$GOLDPATH:$PATH
+
+# This banishes some bad interaction between gdb and goobuntu kernels.
+# Perhaps it is a bug in mixed-32/64 kernel handling of 32 bit ptrace.
+if [ -d /usr/lib/debug ]; then
+    LD_LIBRARY_PATH=/usr/lib/debug
+    export LD_LIBRARY_PATH
+fi
+
+[[ -r "$CODE/v8/v8/tools/bash-completion.sh" ]] && \
+  source "$CODE/v8/v8/tools/bash-completion.sh"
+
+export GOMA_DIR=~/goma
+export GYP_GENERATORS=ninja
+
+alias f='ag'
+alias format="git cl format; g ci -m 'formatting'"
+alias goma_prep="unset CC; unset CXX; $CODE/goma/goma_ctl.py update; $CODE/goma/goma_ctl.py ensure_start"
+sync() {
+    show_cmd echo \$GYP_DEFINES
+    show_cmd gclient sync
+}
+
+gyp_gen() {
+    ROOT=`git rev-parse --show-toplevel`
+    $ROOT/build/gyp_v8
+}
+
+
+alias debug='ninja_d8_or_chromium Debug'
+alias release='ninja_d8_or_chromium Release'
+alias optdebug='ninja_d8_or_chromium Optdebug'
+alias deb='debug'
+alias rel='release'
+alias opt='optdebug'
+
+ninja_d8_or_chromium() {
+    ROOT=`git rev-parse --show-toplevel`
+    if [[ $ROOT == *"chromium"* ]]; then
+        ninja_chromium $@
+    else
+        ninja_d8 $@
+    fi
+}
+
+NINJA_SUBTOOLS=(browse clean commands deps graph query targets comdb recompact)
+ninja_d8() {
+    local ROOT=`git rev-parse --show-toplevel`
+    local VERSION=`git rev-parse HEAD | cut -c1-7`
+    local CONFIG=$1
+    local CONFIG_LOWERCASE=$CONFIG:l
+    shift
+    # check if first arg is in subtool
+    if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
+        show_cmd ninja -j 1000 -C $ROOT/out/$CONFIG -t $@
+    
+    elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
+        shift
+        cd $ROOT && \
+        show_cmd tools/run-tests.py --mode $CONFIG --arch x64 --buildbot \
+            --no-sorting -j 40 $V8_TEST_FLAGS $@
+
+    elif [[ "$1" == "cctest" || "$1" == "ct" ]]; then
+        shift
+        if [[ -z "$@" ]]; then
+            echo "Please provide a grep pattern for the cctests"
+        else
+            for TEST in `$ROOT/out/$CONFIG/cctest --list | grep $@`; do
+                #clean the < from --list output
+                TEST=${TEST%"<"}
+                cd $ROOT && \
+                show_cmd out/$CONFIG/cctest $TEST
+            done
+        fi
+
+    elif [[ "$1" == "test" || "$1" == "t" ]]; then
+        shift
+        if [[ -z "$@" ]]; then
+            cd $ROOT && \
+            show_cmd tools/run-tests.py --mode $CONFIG --arch x64 --buildbot i
+                -j 40 $V8_TEST_FLAGS
+        else
+            cd $ROOT && \
+            show_cmd out/$CONFIG/d8 --predictable --allow-natives-syntax --test \
+                test/mjsunit/mjsunit.js $V8_TEST_FLAGS $@
+        fi
+    
+    elif [[ "$1" == "debug-test" || "$1" == "dt" ]]; then
+        shift
+        cd $ROOT && \
+        show_cmd gdb --args out/$CONFIG/d8 --code-comments --predictable \
+            --allow-natives-syntax --test \
+            test/mjsunit/mjsunit.js $V8_TEST_FLAGS $@
+    
+    elif [[ "$1" == "bench" || "$1" == "b" ]]; then
+        shift
+        if [[ -z "$@" ]]; then
+            echo "${RED}No Benchmark given. Choices are:$NO_COLOR"
+            show_cmd ls $ROOT/_bench/
+            echo "Or choose one of the run files in v8-perf/benchmarks:"
+            show_cmd ls ~/v8-perf/benchmarks
+            return 1
+        elif [[ "$@" == *"v8-perf/benchmarks"* ]]; then
+            show_cmd run_v8_perf out/$CONFIG/d8 $@
+        else
+            cd $ROOT && \
+            show_cmd out/$CONFIG/d8 _bench/$@
+        fi
+   
+    elif [[ "$1" == "bsuite" ]]; then
+        shift
+        BASELINE_DIR="_baselines"
+        BASELINE="$BASELINE_DIR/$VERSION"
+        if [[ "$1" == "baseline" || "$1" == "base" ]]; then
+            # don't overwrite existing baselines without asking
+            cd $ROOT 
+            if [[ -f "$BASELINE" ]]; then
+                echo "Baseline for $VERSION exists already, overwrite?[yn]"
+                read $REPLY
+                if [[ ! $REPLY =~ ^[Yy]$ ]]
+                then
+                    return 1
+                fi
+            fi
+            cd $ROOT && \
+            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh out/$CONFIG/d8\" -fv -r20 > $BASELINE"
+        elif [[ "$1" == "compare" || "$1" == "cmp" ]]; then
+            shift
+            CMP_VERSION=`echo $1 | cut -c1-7`
+            BASELINE="$BASELINE_DIR/$CMP_VERSION"
+            cd $ROOT && \
+            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh out/$CONFIG/d8\" -fv -r5 | bsuite/compare-baseline.py -b $BASELINE_DIR"
+        else
+            ARGS="$@"
+            if [[ -z "$@" ]]; then
+                ARGS="-fv -r5"
+            fi
+            cd "$ROOT" && \
+            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh out/$CONFIG/d8\" $ARGS"
+        fi
+       
+    elif [[ "$1" == "ticks" ]]; then
+        shift
+        if [[ -z "$@" ]]; then
+            echo "${RED}No Benchmark given. Choices are:$NO_COLOR"
+            show_cmd ls $ROOT/_bench/
+            return 1
+        else
+            cd $ROOT && \
+            show_cmd out/$CONFIG/d8 --prof _bench/$@ && \
+            tools/linux-tick-processor | less
+        fi
+    
+    elif [[ "$1" == "archive" ]]; then
+        ARCHIVE_NAME="_$CONFIG"
+        if [[ "$CONFIG" == "Release" ]]; then
+            ARCHIVE_NAME="";
+        fi
+        VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
+        VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE} && \
+        mkdir $VERSION_DIR && \
+        cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
+        echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
+
+    elif [[ "$1" == "shell" ]]; then
+        shift
+        show_cmd rlwrap out/$CONFIG/d8 --allow-natives-syntax $@
+
+    elif [[ "$1" == "flags" ]]; then
+        shift
+        show_cmd grep "'GYPFLAGS += -D'" $ROOT/Makefile
+
+    else
+        # default action is compile
+        if [[ "$1" == 'compile' || "$1" == "c" ]]; then
+            shift
+        fi
+        local ARGS=$@
+        if [[ -z "$ARGS" ]]; then
+            ARGS="d8 unittests cctest"
+        fi
+        show_cmd ninja -l 42 -j 1000 -C $ROOT/out/$CONFIG $ARGS && \
+        notify-send "Compilation Result                            " "Finished V8 $CONFIG $ARGS" || \
+        notify-send "Compilation Result                            " "FAILED V8 $CONFIG $ARGS"
+    fi
+}
+
+run_v8_perf() {
+    local ROOT=`git rev-parse --show-toplevel`
+    V8=$ROOT/$1
+    shift
+    BENCH_DIR=`dirname $@`
+    BENCH=`basename $@`
+    cd $BENCH_DIR && $V8 --expose-gc $BENCH;
+    cd - > /dev/null
+}
+
+ninja_chromium() {
+    local ROOT=`git rev-parse --show-toplevel`
+    local CONFIG=$1
+    local CONFIG_LOWERCASE=$CONFIG:l
+    shift
+    # check if first arg is in subtool
+    if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
+        show_cmd ninja -j 1000 -C $ROOT/out/$CONFIG -t $@
+    elif [[ "$1" == "blink" ]]; then
+        shift
+        if [[ -z "$@" ]]; then
+            echo "${RED}No blink subcommand given:$NO_COLOR"
+            return 1
+        fi
+        local WEBKIT_SCRIPTS=third_party/WebKit/Tools/Scripts/
+        local SUB_CMD=$1
+        shift
+        if [[ "$SUB_CMD" == "webkit-tests" || "$SUB_CMD" == "test" ]]; then
+            # layout tests only work in debug configuration
+            cd $ROOT && \
+            show_cmd $WEBKIT_SCRIPTS/run-webkit-tests --no-build --$CONFIG_LOWERCASE $@
+        elif [[ "$SUB_CMD" == "debug-test" ]]; then
+            # layout tests only work in debug configuration
+            cd $ROOT && \
+            show_cmd gdb --args out/Debug/content_shell --run-layout-test --single-process --no-timeout $ROOT/third_party/WebKit/LayoutTests/$@
+        elif [[ "$SUB_CMD" == "perf-tests" || "$SUB_CMD" == "perf" ]]; then
+            cd $ROOT && \
+            show_cmd $WEBKIT_SCRIPTS/run-perf-tests --$CONFIG_LOWERCASE $@
+        elif [[ "$SUB_CMD" == "layout-test-server" || "$SUB_CMD" == "test-server" ]]; then
+            cd $ROOT && \
+            show_cmd $WEBKIT_SCRIPTS/webkit-patch layout-test-server $@
+        fi
+    elif [[ "$1" == "gdb-index" ]]; then
+        echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
+        build/gdb-add-index out/$CONFIG/chrome > /dev/null
+    else
+        local ARGS=$@
+        if [[ -z "$ARGS" ]]; then
+            ARGS="chrome content_shell blink_tests"
+        fi
+        show_cmd ninja -l 40 -j 1000 -C $ROOT/out/$CONFIG $ARGS && \
+        notify-send "Finished Chromium $CONFIG $ARGS" || \
+        notify-send "FAILED Chromium $CONFIG $ARGS"
+    fi
+}
+
+show_cmd() {
+    # printout the arguments in color
+    echo ${YELLOW}${@}${NO_COLOR};
+    eval $@;
+}
+
+
+V8_GYP_DEFINES="use_goma=1 v8_enable_disassembler=1 v8_use_snapshot='true' v8_enable_slow_dchecks=0";
+export GYP_DEFINES="$V8_GYP_DEFINES"
+
+V8_GYP_DEFINES_ia32="$GYP_DEFINES target_arch=ia32 v8_target_arch=ia32";
+V8_GYP_DEFINE_x64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=x64";
+V8_GYP_DEFINES_arm="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=arm";
+V8_GYP_DEFINES_arm64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=arm64";
+V8_GYP_DEFINES_mips="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=mipsel";
+V8_GYP_DEFINES_mips64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=mips64el";
+V8_GYP_DEFINES_ppc="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=ppc";
+
+alias v8_prep="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES\"; sync"
+alias v8_prep_no_snapshot="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES v8_use_snapshot='false'\"; sync"
+alias v8_prep_ia32="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_ia32\"; sync"
+alias v8_prep_x64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_x64\"; sync"
+alias v8_prep_arm="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_arm\"; sync"
+alias v8_prep_arm64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_arm64\"; sync"
+alias v8_prep_mips="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_mips\"; sync"
+alias v8_prep_mips64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_mips64\"; sync"
+alias v8_prep_ppc="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_ppc\"; sync"
+
+CHROME_GYP_DEFINES="\
+component=shared_library \
+v8_optimized_debug=0 \
+v8_enable_disassembler=1 \
+v8_object_print=1 \
+target_arch=x64 v8_target_arch=x64 \
+debug_extra_cflags=\\\"-fno-omit-frame-pointer -fno-builtin -g\\\" \
+release_extra_cflags=\\\"-g\\\" \
+use_goma=1 \
+gomadir=$CODE/goma"
+# linux_use_debug_fission=0"
+# linux_use_debug_fission + clang + gdb-add-index is currently broken (2014-07).
+
+chrome_prep() {
+    goma_prep;
+    show_cmd export GYP_DEFINES=\"$CHROME_GYP_DEFINES\"
+    show_cmd gclient sync
+}
+alias chrome_gdb="gdb --args out/Debug/chrome --no-sandbox --disable-hang-monitor --renderer-cmd-prefix=\"konsole -e gdb -ex run -ex quit -args\""
+chrome_debug() {
+    ninja -j1000 -l44 -C out/Debug chrome content_shell $@ && \
+    build/gdb-add-index out/Debug/chrome && \
+    notify-send "Finished Chromium Debug Build"
+}
+chrome_release() {
+  ninja -j1000 -l44 -C out/Release chrome content_shell $@ && \
+notify-send "Finished Chromium Release Build"
+}
+
+run_10_times() {
+  awk '{print ">",$0; for (i = 1; i <= NF; i++) {if ($i+0==$i) {sums[i]+=$i} else {sums[i]=$i}}} END {for (i = 1; i <= NF; i++) { if (sums[i]+0==sums[i]) {printf "%.2f ", sums[i]/NR} else {printf "%s ", sums[i]}}; printf "\n" }' \
+    <(for i in {1..10}; do $@ ; done)
+}
+
+coverage() {
+    export GYP_DEFINES="v8_target_arch=x64 target_arch=x64 coverage=1 use_goma=1 clang=0"
+    tools/gyp_v8
+    ninja -C out/Release -j1000
+    tools/run-tests.py --mode Release --arch x64 --buildbot
+    lcov --directory out/Release --capture --output-file coverage.info
+    genhtml --output-directory _coverage coverage.info
+    gnome-open _coverage/index.html
+}
+
