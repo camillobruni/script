@@ -29,14 +29,17 @@ alias format="git cl format; g ci -m 'formatting'"
 alias goma_prep="unset CC; unset CXX; $CODE/goma/goma_ctl.py update; $CODE/goma/goma_ctl.py ensure_start"
 sync() {
     show_cmd echo \$GYP_DEFINES
-    show_cmd gclient sync
+    show_cmd gclient sync $@
 }
 
 gyp_gen() {
     ROOT=`git rev-parse --show-toplevel`
-    $ROOT/build/gyp_v8
+    if [[ $ROOT == *"chromium"* ]]; then
+        $ROOT/build/gyp_chromium
+    else
+        $ROOT/build/gyp_v8
+    fi
 }
-
 
 alias debug='ninja_d8_or_chromium Debug'
 alias release='ninja_d8_or_chromium Release'
