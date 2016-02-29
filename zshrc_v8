@@ -211,6 +211,7 @@ run_v8_perf() {
 
 ninja_chromium() {
     local ROOT=`git rev-parse --show-toplevel`
+    local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
     shift
@@ -241,6 +242,16 @@ ninja_chromium() {
             cd $ROOT && \
             show_cmd $WEBKIT_SCRIPTS/webkit-patch layout-test-server $@
         fi
+    elif [[ "$1" == "archive" ]]; then
+        ARCHIVE_NAME="_$CONFIG"
+        if [[ "$CONFIG" == "Release" ]]; then
+            ARCHIVE_NAME="";
+        fi
+        VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
+        VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE} && \
+        mkdir $VERSION_DIR && \
+        cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
+        echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
     elif [[ "$1" == "gdb-index" ]]; then
         echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
         build/gdb-add-index out/$CONFIG/chrome > /dev/null

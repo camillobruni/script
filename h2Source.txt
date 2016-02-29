@@ -1121,7 +1121,6 @@
     find ./ -type l 
 
 - How do I raise an Exception/Error in ruby?
-
     # reraise the current exception or a RuntimeError if there is no current exception
     raise 
     
@@ -1175,23 +1174,30 @@
     pip freeze | grep -v "-e"
 
 - How to parse arguments in bash
-for i in "$@"
-do
-    case $i in
-        -h|--help)
-            echo 'Help text'
-            exit 0
-        ;;
-        --n=*|--name=*)
-            NAME="${i#*=}"
-            ...
-            shift
-        ;;
-        *)
-            # ignoring unknown options here
-        ;;
-    esac
-done
+    for i in "$@"
+    do
+        case $i in
+            -h|--help)
+                echo 'Help text'
+                exit 0
+            ;;
+            --n=*|--name=*)
+                NAME="${i#*=}"
+                ...
+                shift
+            ;;
+            *)
+                # ignoring unknown options here
+            ;;
+        esac
+    done
 
 - How to embed all fonts in PDF document?
-gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf
+    gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf
+
+- How to checkout a different chromium branch? [chrome]
+    git fetch --tags
+    git checkout -b $BRANCH_NAME tags/$VERSION
+    gclient sync --with_branch_heads --reset --upstream --force
+
+
