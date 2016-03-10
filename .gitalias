@@ -25,8 +25,8 @@
     incoming = !git-incoming
     info = !git-info
     large-files = !git-large-files
-    ls = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%ar%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --color
-    ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%ar\\ %Cblue[%cn]\\ %Cred%d%Creset%n%s" --decorate --color --numstat
+    ls = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%ar%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --all --color
+    ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%ar\\ %Cblue[%cn]\\ %Cred%d%Creset%n%ae%n%s" --decorate --all --color --numstat
     m = merge
     mt = mergetool
     oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
@@ -50,6 +50,7 @@
     svnci = !git-ext-commit -a
     svnco = !git-ext-checkout
     svnsta = !git-ext-stash
+    tags = tag -l
     theirs = checkout --theirs
     up = pull
     wtf = !git-wtf

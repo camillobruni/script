@@ -66,7 +66,7 @@ ninja_d8() {
     shift
     # check if first arg is in subtool
     if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
-        show_cmd ninja -j 1000 -C $ROOT/out/$CONFIG -t $@
+        show_cmd ninja -j 10000 -C $ROOT/out/$CONFIG -t $@
     
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
         shift
@@ -120,6 +120,9 @@ ninja_d8() {
             cd $ROOT && \
             show_cmd out/$CONFIG/d8 _bench/$@
         fi
+    elif [[ "$1" == "llprof" ]]; then
+        shift
+        show_cmd "$ROOT/tools/run-llprof.sh $ROOT/out/$CONFIG/d8 $@; $ROOT/tools/ll_prof.py | less"
    
     elif [[ "$1" == "bsuite" ]]; then
         shift
@@ -166,12 +169,17 @@ ninja_d8() {
         fi
     
     elif [[ "$1" == "archive" ]]; then
+        shift
         ARCHIVE_NAME="_$CONFIG"
         if [[ "$CONFIG" == "Release" ]]; then
             ARCHIVE_NAME="";
         fi
+        SUFFIX="_$1"
+        if [[ -z "$1" ]] then;
+            SUFFIX=""
+        fi
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
-        VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE} && \
+        VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
         cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
         echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
@@ -193,7 +201,7 @@ ninja_d8() {
         if [[ -z "$ARGS" ]]; then
             ARGS="d8 unittests cctest"
         fi
-        show_cmd ninja -l 42 -j 1000 -C $ROOT/out/$CONFIG $ARGS && \
+        show_cmd ninja -l 42 -j 10000 -C $ROOT/out/$CONFIG $ARGS && \
         notify-send "Compilation Result                            " "Finished V8 $CONFIG $ARGS" || \
         notify-send "Compilation Result                            " "FAILED V8 $CONFIG $ARGS"
     fi
@@ -217,7 +225,7 @@ ninja_chromium() {
     shift
     # check if first arg is in subtool
     if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
-        show_cmd ninja -j 1000 -C $ROOT/out/$CONFIG -t $@
+        show_cmd ninja -j 10000 -C $ROOT/out/$CONFIG -t $@
     elif [[ "$1" == "blink" ]]; then
         shift
         if [[ -z "$@" ]]; then
@@ -243,12 +251,17 @@ ninja_chromium() {
             show_cmd $WEBKIT_SCRIPTS/webkit-patch layout-test-server $@
         fi
     elif [[ "$1" == "archive" ]]; then
+        shift
         ARCHIVE_NAME="_$CONFIG"
         if [[ "$CONFIG" == "Release" ]]; then
             ARCHIVE_NAME="";
         fi
+        SUFFIX="_$1"
+        if [[ -z "$1" ]] then;
+            SUFFIX=""
+        fi
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
-        VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE} && \
+        VERSION_DIR=$ROOT/../builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
         cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
         echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
@@ -260,7 +273,7 @@ ninja_chromium() {
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"
         fi
-        show_cmd ninja -l 40 -j 1000 -C $ROOT/out/$CONFIG $ARGS && \
+        show_cmd ninja -l 40 -j 10000 -C $ROOT/out/$CONFIG $ARGS && \
         notify-send "Finished Chromium $CONFIG $ARGS" || \
         notify-send "FAILED Chromium $CONFIG $ARGS"
     fi
@@ -295,6 +308,7 @@ alias v8_prep_mips64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_mips64\"; 
 alias v8_prep_ppc="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_ppc\"; sync"
 
 CHROME_GYP_DEFINES="\
+profiling=0 \
 component=shared_library \
 v8_optimized_debug=0 \
 v8_enable_disassembler=1 \

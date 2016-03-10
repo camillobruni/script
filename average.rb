@@ -3,6 +3,7 @@
 $results = []
 def shut_down
     avg = $results.inject{ |sum, el| sum + el }.to_f / $results.size
+    puts("=" * 50)
     puts("avg = #{avg}")
 end
 
