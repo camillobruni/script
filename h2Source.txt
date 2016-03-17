@@ -1200,4 +1200,5 @@
     git checkout -b $BRANCH_NAME tags/$VERSION
     gclient sync --with_branch_heads --reset --upstream --force
 
-
+- How to display memory in gdb?
+   x/20w 
