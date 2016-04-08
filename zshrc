@@ -210,6 +210,7 @@ alias v.rm='rmvirtualenv'
 alias v.switch='workon'
 alias v='workon'
 alias vless='vim -u /usr/share/vim/vim71/macros/less.vim'
+alias webserver="python -m SimpleHTTPServer"
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
 function git(){ hub $@ }

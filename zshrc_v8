@@ -10,6 +10,7 @@ export PYTHONPATH=
 export CHROME_DEVEL_SANDBOX="/usr/local/sbin/chrome-devel-sandbox"
 export GOLDPATH="$CHROMIUM_CODE/third_party/binutils/Linux_x64/Release/bin/"
 export PATH=$GOLDPATH:$PATH
+export NINJA_STATUS="[%f/%r/%u] "
 
 # This banishes some bad interaction between gdb and goobuntu kernels.
 # Perhaps it is a bug in mixed-32/64 kernel handling of 32 bit ptrace.
@@ -290,7 +291,7 @@ V8_GYP_DEFINES="use_goma=1 v8_enable_disassembler=1 v8_use_snapshot='true' v8_en
 export GYP_DEFINES="$V8_GYP_DEFINES"
 
 V8_GYP_DEFINES_ia32="$GYP_DEFINES target_arch=ia32 v8_target_arch=ia32";
-V8_GYP_DEFINE_x64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=x64";
+V8_GYP_DEFINES_x64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=x64";
 V8_GYP_DEFINES_arm="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=arm";
 V8_GYP_DEFINES_arm64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=arm64";
 V8_GYP_DEFINES_mips="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=mipsel";
