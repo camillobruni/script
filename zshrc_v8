@@ -10,6 +10,7 @@ export PYTHONPATH=
 export CHROME_DEVEL_SANDBOX="/usr/local/sbin/chrome-devel-sandbox"
 export GOLDPATH="$CHROMIUM_CODE/third_party/binutils/Linux_x64/Release/bin/"
 export PATH=$GOLDPATH:$PATH
+export NINJA_STATUS="[%f/%r/%u] "
 
 # This banishes some bad interaction between gdb and goobuntu kernels.
 # Perhaps it is a bug in mixed-32/64 kernel handling of 32 bit ptrace.
@@ -226,6 +227,8 @@ ninja_chromium() {
     # check if first arg is in subtool
     if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
         show_cmd ninja -j 10000 -C $ROOT/out/$CONFIG -t $@
+    elif [[ "$1" == "help" ]]; then
+        echo "Subcomands are: blink | archive | gdb-index | compile | c"
     elif [[ "$1" == "blink" ]]; then
         shift
         if [[ -z "$@" ]]; then
@@ -235,7 +238,9 @@ ninja_chromium() {
         local WEBKIT_SCRIPTS=third_party/WebKit/Tools/Scripts/
         local SUB_CMD=$1
         shift
-        if [[ "$SUB_CMD" == "webkit-tests" || "$SUB_CMD" == "test" ]]; then
+        if [[ "$SUB_CMD" == "help" ]]; then
+            echo "Subcommands are: webkit-test | test | debug-test | perf-tests | perf | layout-test-server | test-server"
+        elif [[ "$SUB_CMD" == "webkit-tests" || "$SUB_CMD" == "test" ]]; then
             # layout tests only work in debug configuration
             cd $ROOT && \
             show_cmd $WEBKIT_SCRIPTS/run-webkit-tests --no-build --$CONFIG_LOWERCASE $@
@@ -267,8 +272,12 @@ ninja_chromium() {
         echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
     elif [[ "$1" == "gdb-index" ]]; then
         echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
-        build/gdb-add-index out/$CONFIG/chrome > /dev/null
+        build/gdb-add-index out/$CONFIG/chrome out/$CONFIG/content_shell > /dev/null
     else
+        # default action is compile
+        if [[ "$1" == 'compile' || "$1" == "c" ]]; then
+            shift
+        fi
         local ARGS=$@
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"
@@ -290,7 +299,7 @@ V8_GYP_DEFINES="use_goma=1 v8_enable_disassembler=1 v8_use_snapshot='true' v8_en
 export GYP_DEFINES="$V8_GYP_DEFINES"
 
 V8_GYP_DEFINES_ia32="$GYP_DEFINES target_arch=ia32 v8_target_arch=ia32";
-V8_GYP_DEFINE_x64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=x64";
+V8_GYP_DEFINES_x64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=x64";
 V8_GYP_DEFINES_arm="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=arm";
 V8_GYP_DEFINES_arm64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=arm64";
 V8_GYP_DEFINES_mips="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=mipsel";

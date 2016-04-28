@@ -54,3 +54,4 @@
     theirs = checkout --theirs
     up = pull
     wtf = !git-wtf
+    #lost-and-found = !git fsck --full --no-reflogs --unreachable --lost-found | grep commit | cut -d\  -f3 | xargs -n 1 git log -n1
