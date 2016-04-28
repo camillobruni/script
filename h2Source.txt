@@ -1201,4 +1201,17 @@
     gclient sync --with_branch_heads --reset --upstream --force
 
 - How to display memory in gdb?
-   x/20w 
+    x/20w
+
+- How to replace spaces with tabs?
+    sed -e 's/[[:blank:]]\+/\t/g'
+
+- How to create and apply a patch in git?
+    # Create a formatted single-file with separate patches for each file
+    git format-patch $COMMIT --stdout > out.patch
+    # Create a single patch for all commits
+    g diff $COMMIT > out.patch
+    git apply --stat $PATCH 
+    git apply --check $PATCH 
+    # Apply hunks and put rejected ones in *.rej
+    git apply --reject $PATCH
