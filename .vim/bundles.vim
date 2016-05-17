@@ -16,18 +16,18 @@ Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
 " Plugin 'scrooloose/nerdcommenter'
-Plugin 'nathanaelkane/vim-indent-guides'
+" Plugin 'nathanaelkane/vim-indent-guides'
 
 " Plugin 'altercation/vim-colors-solarized'
 Plugin 'cdlm/vim-colors-solarized'
 
 " Language modes
 " Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'hallison/vim-markdown'
+" Plugin 'hallison/vim-markdown'
 " Plugin 'vim-pandoc/vim-markdownfootnotes'
 " Plugin 'skammer/vim-css-color'
 " Plugin 'tpope/vim-haml'
-Plugin 'vim-ruby/vim-ruby'
+" Plugin 'vim-ruby/vim-ruby'
 " Plugin 'postmodern/vim-yard'
 " Plugin 'octol/vim-cpp-enhanced-highlight'
 " fast file opening

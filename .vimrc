@@ -243,15 +243,6 @@ map <bs> X
 imap <C-BS> <ESC>dWi
 imap <C-Del> <ESC>dwi
 
-" Show highlighting group for current word
-function! <SID>SyntaxStack()
-    if !exists("*synstack")
-        return
-    endif
-    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunction
-nmap <leader>P :call <SID>SyntaxStack()<Enter>
-
 " Create directories when saving
 augroup BWCCreateDir
     autocmd!
@@ -297,31 +288,6 @@ function! s:CloseIfOnlyNerdTreeLeft()
   endif
 endfunction
 autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
-
-
-" Highlight all instances of word under cursor, when idle.
-" Useful when studying strange source code.
-" Type z/ to toggle highlighting on/off.
-nnoremap z/ :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
-function! AutoHighlightToggle()
-    let @/ = ''
-    if exists('#auto_highlight')
-        au! auto_highlight
-        augroup! auto_highlight
-        setl updatetime=4000
-        echo 'Highlight current word: off'
-        return 0
-    else
-        augroup auto_highlight
-            au!
-            au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
-        augroup end
-        setl updatetime=500
-        echo 'Highlight current word: ON'
-        return 1
-    endif
-endfunction
-
 
 if has("gui_macvim")
    macmenu &File.New\ Tab key=<nop>
