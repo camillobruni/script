@@ -197,6 +197,7 @@ alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
 alias t='trex'
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+alias wpr-replay="~/chromium/src/third_party/webpagereplay/replay.py --no-dns_forwarding --use_closest_match --port=4080 --ssl_port=4443"
 alias tre='tree | less'
 alias tvim='vim -c "NERDTree" -c "wincmd p"'
 alias v.add2virtualenv='add2virtualenv'
@@ -277,8 +278,6 @@ fi
 chpwd() {
   print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
 }
-
-
 
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd

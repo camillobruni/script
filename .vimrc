@@ -19,6 +19,7 @@ runtime bundles.vim
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
 let $JS_CMD = 'nodejs'
 
+let g:ycm_auto_trigger = 0
 " Make sure ultiSnip and YCM Completion get along by using supertab
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
@@ -31,7 +32,7 @@ let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " Use vims omni completion for eclim
-let g:EclimCompletionMethod = 'omnifunc'
+" let g:EclimCompletionMethod = 'omnifunc'
 
 " NERDCommenter settings
 let g:NERDSpaceDelims = 1
@@ -48,8 +49,6 @@ let g:indent_guides_auto_colors = 0
 " <leader> commands
 nnoremap <leader>nt :NERDTreeToggle<cr>
 nnoremap <leader>tb :TagbarToggle<cr>
-nnoremap <leader>t  :CtrlP<cr>
-nnoremap <leader>TF :CommandTFlush<cr>
 
 let g:miniBufExplForceSyntaxEnable = 1
 
@@ -200,8 +199,8 @@ vmap o <ESC>o
 vmap a <ESC>a
 vmap A <ESC>A
 " eclipse style autocompletion
-imap <C-SPACE> <C-p>
-map <C-SPACE> i<C-p>
+" imap <C-SPACE> <C-p>
+" map <C-SPACE> i<C-p>
 
 " enable emacs-style line navigation and editing
 map  <C-e> <ESC>$
@@ -242,15 +241,6 @@ map <bs> X
 " ctr-delete and ctr-backspace delete the current word
 imap <C-BS> <ESC>dWi
 imap <C-Del> <ESC>dwi
-
-" Show highlighting group for current word
-function! <SID>SyntaxStack()
-    if !exists("*synstack")
-        return
-    endif
-    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunction
-nmap <leader>P :call <SID>SyntaxStack()<Enter>
 
 " Create directories when saving
 augroup BWCCreateDir

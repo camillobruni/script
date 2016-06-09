@@ -182,7 +182,7 @@ ninja_d8() {
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
+        find $ROOT/out/$CONFIG -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
         echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
 
     elif [[ "$1" == "shell" ]]; then
@@ -265,10 +265,11 @@ ninja_chromium() {
         if [[ -z "$1" ]] then;
             SUFFIX=""
         fi
+        # Avoid copying the massive obj/ directory
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/../builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
+        find $ROOT/out/$CONFIG -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
         echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
     elif [[ "$1" == "gdb-index" ]]; then
         echo "${GREEN}Creating GDB Indices$NO_COLOR" && \

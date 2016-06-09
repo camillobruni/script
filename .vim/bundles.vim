@@ -15,7 +15,7 @@ Plugin 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 " Plugin 'jszakmeister/vim-togglecursor'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
-" Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'nathanaelkane/vim-indent-guides'
 
 " Plugin 'altercation/vim-colors-solarized'
@@ -34,7 +34,7 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'kien/ctrlp.vim'
 
 " COMPLETION
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 " Use Supertab for ycm and snipmate compatibility
 Plugin 'ervandew/supertab'
 
@@ -47,8 +47,6 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 " symmetric commands that make sense
 Plugin 'tpope/vim-unimpaired'
-" file/project navigation
-Plugin 'tpope/vim-vinegar'
 Plugin 'Gundo'
 Plugin 'Align'
 Plugin 'SirVer/ultisnips'
