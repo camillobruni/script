@@ -8,7 +8,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(fabric django git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle virtualenvwrapper autojump)
+plugins=(fabric django git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle autojump)
 
 source $ZSH/oh-my-zsh.sh
 
