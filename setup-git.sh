@@ -26,5 +26,7 @@ echo "Installing git helper scripts:"
 
 for SCRIPT in "$SOURCE_DIR"/git*.sh; do
     SCRIPT_NAME=`basename -s .sh "$SCRIPT"`
-    ln -sv $SCRIPT /usr/local/bin/"$SCRIPT_NAME"
+    SCRIPT_BIN=/usr/local/bin/"$SCRIPT_NAME"
+    ln -sv $SCRIPT $SCRIPT_BIN
+    chmod +x $SCRIPT_BIN
 done

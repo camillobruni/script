@@ -3,19 +3,21 @@
     big-files = large-files
     br = branch
     bra = branch --all
-	ci = commit -a
-    cim = commit -am
-    co = checkout
+    ci = commit -a
+    clup = cl upload 
+    club = cl upload 
+    co = !git-checkout-custom
     d = diff --color-words
     di = diff --color-words
     diff = diff --color-words
     dt = difftool
-	f = fetch
-	fa = fetch --all
+    f = fetch
+    fa = fetch --all
     find = !git-find-blob
-	filelog = log -u
-	fl = log -u
+    filelog = log -u
+    fl = log -u
     forest = !git-forest
+    graph = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
     history = whatchanged -p --follow
     history-rm = !git-history-rm
     i = info
@@ -23,12 +25,13 @@
     incoming = !git-incoming
     info = !git-info
     large-files = !git-large-files
-    ls = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%ar%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --color
-    ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%ar\\ %Cblue[%cn]\\ %Cred%d%Creset%n%s" --decorate --color --numstat
+    ls = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%ar%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --all --color
+    ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%ar\\ %Cblue[%cn]\\ %Cred%d%Creset%n%ae%n%s" --decorate --all --color --numstat
     m = merge
     mt = mergetool
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
     open = browse
-    ours = checkout --ours 
+    ours = checkout --ours
     out = outgoing
     outgoing = !git-outgoing
     pci = !git ci && git push
@@ -47,6 +50,8 @@
     svnci = !git-ext-commit -a
     svnco = !git-ext-checkout
     svnsta = !git-ext-stash
-    theirs = checkout --theirs 
+    tags = tag -l
+    theirs = checkout --theirs
     up = pull
     wtf = !git-wtf
+    #lost-and-found = !git fsck --full --no-reflogs --unreachable --lost-found | grep commit | cut -d\  -f3 | xargs -n 1 git log -n1

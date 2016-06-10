@@ -1,117 +1,93 @@
 set nocompatible " be iMproved
 set encoding=utf-8
+" force 256 colors (for instance for powerline)
+"set term=xterm-256color
 
-" Prefix/namespace for user commands
+" buffer redraws for big files
+set lazyredraw
+
+" secure non-default vimrc files
+set exrc
+set secure
+
+" Prefix/namespace for user commands, set <leader> to ;
 let mapleader=";"
 
 " Configure & load bundles
-let g:easytags_cmd = '/usr/local/bin/ctags'
-let g:tagbar_ctags_bin = g:easytags_cmd
-" jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
-let $JS_CMD = 'node'
-
 runtime bundles.vim
+
+" jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
+let $JS_CMD = 'nodejs'
+
+let g:ycm_auto_trigger = 0
+" Make sure ultiSnip and YCM Completion get along by using supertab
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+let g:SuperTabDefaultCompletionType = 'context'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" Use vims omni completion for eclim
+" let g:EclimCompletionMethod = 'omnifunc'
+
+" NERDCommenter settings
+let g:NERDSpaceDelims = 1
 
 " Setup bundles
 let g:acp_behaviorKeywordLength = 3
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabContextDefaultCompletionType = "<c-n>"
 let g:cssColorVimDoNotMessMyUpdatetime = 'kthxbye'
 " indent guides
 let g:indent_guides_indent_levels = 12
 let g:indent_guides_start_level = 3
 " let g:indent_guides_guide_size = 0
 let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :highlight link IndentGuidesOdd CursorLine
-autocmd VimEnter,Colorscheme * :highlight clear IndentGuidesEven
-let g:CommandTMaxHeight=7
-let g:CommandTMatchWindowReverse=1
+
+" <leader> commands
 nnoremap <leader>nt :NERDTreeToggle<cr>
 nnoremap <leader>tb :TagbarToggle<cr>
-nnoremap <leader>e  :CommandT<cr>
-nnoremap <leader>TF :CommandTFlush<cr>
 
-" 
-function! TexSpell()
-    cexp system('trex check ')
-    copen
-endfunction
-command! TexSpell call TexSpell()
-
-" Load project-local settings if any
-set exrc secure
-
-" Anticipating some common typos
-function! CommandAlias(abbreviation, expansion)
-    execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
-endfunction
-command! -nargs=+ CommandAlias call CommandAlias(<f-args>)
-" Use it on itself to define a simpler abbreviation for itself.
-CommandAlias alias CommandAlias
-
-" Quick (re)sourcing to .vimrc & testing vimscript code
-nmap <leader>src :source $MYVIMRC<cr>
-function! DoIt() range
-    let lines = join(getline(a:firstline, a:lastline), "\n")
-    execute lines
-endfunction
-command! DoIt call DoIt()
-map <leader>d :DoIt<cr>
-
-" Quick modeline insertion
-function! AppendModeline()
-    let l:modeline = printf(" vim: set ts=%d sw=%d ts=%d :", &tabstop, &shiftwidth, &softtabstop)
-    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
-    call append(line("$"), l:modeline)
-endfunction
-nnoremap <silent> <Leader>ml :call AppendModeline()<cr>
-
-" Remap 'quit' keys
-if ! exists('vimpager')
-    nnoremap q :q
-endif
-CommandAlias qw wq
-CommandAlias W w
-" macros can still be nice sometimes, so put them on € (option-@)
-nnoremap € q
+let g:miniBufExplForceSyntaxEnable = 1
 
 syntax on
 " Syntax coloring lines that are too long just slows down the world
 set synmaxcol=2048
+
 filetype plugin indent on
-let g:tex_flavor='latex'
 set omnifunc=syntaxcomplete#Complete
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '^\.svn', '\.o$', '\.aux$', '\.out$', '\..*\.orig$', '\.synctex.gz$', '\.toc$', '\.blg$', '\.bbl', '\.lof', '\.lot']
 
+" enable status line always
 set laststatus=2
-" let &statusline=' %f%( %y%m%r%)%=L%l C%v '
-" set statusline+=%(%{fugitive#statusline()}\ %)
-let Powerline_symbols='unicode'
 
-if version >= 700
-    " set the status line to flashy colors in insert mode
-    autocmd InsertEnter * highlight ModeMsg    term=reverse ctermfg=15 ctermbg=9
-    autocmd InsertLeave * highlight ModeMsg    term=NONE    ctermfg=4  ctermbg=NONE
-    " autocmd InsertEnter * highlight StatusLine term=reverse ctermfg=15 ctermbg=9
-    " autocmd InsertLeave * highlight StatusLine term=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
-    " unfortunately impossible to reuse the variables from solarized.vim
-    "autocmd InsertEnter * exe "highlight! StatusLine" . s:fmt_none . s:fg_base3 . :bg_orange . s:fmt_revbb
-    "autocmd InsertLeave * exe "highlight! StatusLine" . s:fmt_none . s:fg_base1 . s:bg_base01 . s:fmt_revbb
-	" FileTypes ==================================================================
-	" autowrap for .txt and .tex files
-	autocmd FileType tex setlocal wrap spell
-	autocmd BufRead,BufNewFile *.txt setlocal wrap spell
-	autocmd BufRead,BufNewFile *.md setlocal wrap spell
-	
-endif
+" Session Handling https://github.com/xolox/vim-session
+let g:session_autosave = 'yes'
+let g:session_autoload = 'yes'
+
+" autoread files that changed outside vim
+set autoread
+
+" make sure vim finds the tags file (not sure why and how...)
+set tags=./tags;
+"
+" FileTypes ==================================================================
+" autowrap for .txt, .tex  and .md files
+" autocmd FileType tex setlocal wrap spell
+" autocmd BufRead,BufNewFile *.txt setlocal wrap spell
+" autocmd BufRead,BufNewFile *.md setlocal wrap spell
+" do not auto-hardwrap text
+set formatoptions-=t
 
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
 set showmatch
-set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git
+set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git,*.o,*.obj
 set ruler
 set showcmd
 set showmode
@@ -119,26 +95,28 @@ set number
 set hidden
 set wrap
 set scrolloff=2
-nmap <leader>w :set wrap!<cr>
 set visualbell
 set fillchars=""
 set cursorline
 set nofoldenable
 set history=1000
 
-" Integrate copy/paste with Mac OS
-set clipboard=unnamed
-"set mouse=a
+" more convenient splitting behavior for me
+set splitbelow
+set splitright
 
 " Sane indentation defaults
 set expandtab
 set smartindent
 set autoindent
 
-" undoing even after closing the file
+" enable global undoing even after closing the file
 set undofile
 set undodir=~/.vim-undo
 set undoreload=10000 "maximum number lines to save for undo on a buffer reload
+
+" mark character exceeding the 80 limit as errors
+match Error /\%>80v/
 
 function! SetIndent(...)
     let size = (a:0 == 0) ? 4 : a:1
@@ -157,11 +135,10 @@ set fileformats=unix,dos,mac
 set backspace=indent,eol,start
 "set cpoptions+=$ " mark changed area
 set whichwrap=b,s,h,l,<,>,[,]
-" <Del> works, I don't see why <BS> shouldn't
-map <bs> X
 
 nmap <leader>qf :botright copen<cr>
 nmap <leader>spell :setlocal spell!<cr>
+nmap <leader>w :set wrap!<cr>
 
 " Sudo write that file!
 command! SudoWrite write !sudo tee % > /dev/null
@@ -177,25 +154,14 @@ nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>
 " Opening files relative to current one, e.g. :e %/bar.txt
 cnoremap %% <C-r>=expand('%:p:.:h') . '/' <Enter>
 
-" mark character exceeding the 80 limit as errors
-" match Error /\%>80v/
+" search for the currently selected text
+vnoremap * y/<C-R>"<CR>
 
-" latex suite settings =======================================================
-let g:Tex_DefaultTargetFormat = 'pdf'
- 
-let g:Tex_CompileRule_dvi         = 'latex --interaction=nonstopmode $*'
-let g:Tex_CompileRule_ps          = 'dvips -Pwww -o $*.ps $*.dvi'
-let g:Tex_CompileRule_pspdf       = 'ps2pdf $*.ps'
-let g:Tex_CompileRule_dvipdf      = 'dvipdfm $*.dvi'
-let g:Tex_CompileRule_pdf         = 'trex $* || pdflatex -synctex=1 -interaction=nonstopmode $*'
- 
-let g:Tex_ViewRule_dvi            = 'texniscope'
-let g:Tex_ViewRule_ps             = 'Preview'
-let g:Tex_ViewRule_pdf            = 'Skim'
- 
-let g:Tex_FormatDependency_ps     = 'dvi,ps'
-let g:Tex_FormatDependency_pspdf  = 'dvi,ps,pspdf'
-let g:Tex_FormatDependency_dvipdf = 'dvi,dvipdf'
+" Use Ctrl-[ and Ctrl-] to navigate tags
+"inoremap <C-]> <ESC><C-]>i
+"inoremap <C-[> <ESC><C-t>i
+"noremap  <M-[> <ESC><C-t>
+"inoremap <D-.> <ESC>:
 
 " arrow mapping ===============================================================
 " arrows shouldn't jump over wrapped lines
@@ -214,36 +180,29 @@ inoremap <Up> <C-o>gk
 inoremap <buffer> <silent> <Home> <C-o>g<Home>
 inoremap <buffer> <silent> <End> <C-o>g<End>
 
+" Shift+Arrow srcoll and center
+inoremap <S-Down> <ESC>gjzzi
+inoremap <S-Up> <ESC>gkzzi
+nnoremap <S-Down> gjzz
+nnoremap <S-Up> gkzz
+
 "" key mappings ===============================================================
-command Q q " Bind :Q to :q
+"command Q q " Bind :Q to :qt
+" stamp over yanked text over current word
+nnoremap S diw"0P
+" stamp over visual selected text
+vnoremap S "_d"0P
 
 " directly jump to edit mode from visual mode
 vmap i <ESC>i
 vmap o <ESC>o
 vmap a <ESC>a
 vmap A <ESC>A
-" eclipse whuwhu style autocompletion
-imap <C-SPACE> <C-p>
-map <C-SPACE> i<C-p>
-"imap <C-]> <ESC><C-]>i
-"map  <C-[> <C-t>
-"imap <C-[> <ESC><C-t>i
-imap <D-.> <ESC>:
+" eclipse style autocompletion
+" imap <C-SPACE> <C-p>
+" map <C-SPACE> i<C-p>
 
-
-"" Code folding
-"set foldmethod=syntax
-"set nofoldenable
-"let g:Tex_FoldedSections=""
-"let g:Tex_FoldedEnvironments=""
-"let g:Tex_FoldedMisc=""
-"map  <C-LEFT>  <ESC>zc
-"imap <C-LEFT>  <ESC>zci
-"map  <C-RIGHT> <ESC>zo
-"imap <C-RIGHT> <ESC>zoi
-
-
-" enable terminal like per line jumping
+" enable emacs-style line navigation and editing
 map  <C-e> <ESC>$
 imap <C-e> <ESC>A
 map  <C-a> <ESC>^
@@ -266,38 +225,22 @@ vmap <C-down> ]egv
 vnoremap < <gv
 vnoremap > >gv
 
-" Emacs-style jump to end of line
-imap <C-e> <C-o>A
-imap <C-a> <C-o>I
-" move around according to visual lines
-if exists('vimpager')
-    nnoremap <silent> <home>      gg
-    nnoremap <silent> <end>       G
-else
-    nnoremap <silent> <up>        gk
-    nnoremap <silent> <down>      gj
-    nnoremap <silent> <home>      g<home>
-    nnoremap <silent> <end>       g<end>
-    inoremap <silent> <up>   <C-o>gk
-    inoremap <silent> <down> <C-o>gj
-    inoremap <silent> <home> <C-o>g<home>
-    inoremap <silent> <end>  <C-o>g<end>
-endif
-
 " Open line above (ctrl-shift-o much easier than ctrl-o shift-O)
 "imap <C-Enter> <C-o>o
 "nmap <C-Enter> o
 "imap <C-S-Enter> <C-o>O
 "nmap <C-S-Enter> O
 
-" Show highlighting group for current word
-function! <SID>SyntaxStack()
-    if !exists("*synstack")
-        return
-    endif
-    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunction
-nmap <leader>P :call <SID>SyntaxStack()<Enter>
+" Mac-like tab navigation
+map <D-S-]> gt
+map <D-S-[> gT
+
+" <Del> works, I don't see why <BS> shouldn't
+map <bs> X
+
+" ctr-delete and ctr-backspace delete the current word
+imap <C-BS> <ESC>dWi
+imap <C-Del> <ESC>dwi
 
 " Create directories when saving
 augroup BWCCreateDir
@@ -305,36 +248,33 @@ augroup BWCCreateDir
     autocmd BufWritePre * if expand("<afile>")!~#'^\w\+:/' && !isdirectory(expand("%:h")) | execute "silent! !mkdir -p %:h" | redraw! | endif
 augroup END
 
+" UI / FONT ===============================================================
+" change line the number backgrounds in insert mode
+autocmd InsertEnter * highlight LineNr ctermbg=DarkBlue ctermfg=white
+autocmd InsertLeave * highlight LineNr ctermbg=NONE ctermfg=None
+
 " Remove GUI menu and toolbar
 set guioptions-=T
+set guioptions-=m
+" share the system clipboard
+set clipboard=unnamed
 "set guioptions-=m
-set guifont=Consolas:h11,Menlo:h11
-" Mac-like tab navigation
-map <D-S-]> gt
-map <D-S-[> gT
-
-if has('mouse')
-    set mouse=a
-endif
-
-" switch cursors on insert mode
-let &t_SI = "\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_EI = "\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-"inoremap <special> <Esc> <Esc>hl
+set anti guifont=Ubuntu\ Mono\ for\ Powerline\ 10   
+set mouse=a
 
 " Color scheme and tweaks
-set background=dark
+set background=light
 "let g:solarized_menu=0
 colorscheme solarized
-highlight Cursor guibg=#ecff55 
-                       " was #eabf50
+highlight Cursor guibg=#ecff55 " was #eabf50
 highlight NonText term=NONE ctermfg=2 ctermbg=NONE guifg=#4a4a59
 highlight SpecialKey guifg=#4a4a59
 highlight clear Conceal
 highlight default link Conceal Statement
 highlight default link qfSeparator Conceal
 
-
+" =======================================================================
+"
 " Close all open buffers on entering a window if the only
 " buffer that's left is the NERDTree buffer
 function! s:CloseIfOnlyNerdTreeLeft()
@@ -348,7 +288,32 @@ function! s:CloseIfOnlyNerdTreeLeft()
 endfunction
 autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
- if has("gui_macvim")
+
+" Highlight all instances of word under cursor, when idle.
+" Useful when studying strange source code.
+" Type z/ to toggle highlighting on/off.
+nnoremap z/ :if AutoHighlightToggle()<Bar>set hls<Bar>endif<CR>
+function! AutoHighlightToggle()
+    let @/ = ''
+    if exists('#auto_highlight')
+        au! auto_highlight
+        augroup! auto_highlight
+        setl updatetime=4000
+        echo 'Highlight current word: off'
+        return 0
+    else
+        augroup auto_highlight
+            au!
+            au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+        augroup end
+        setl updatetime=500
+        echo 'Highlight current word: ON'
+        return 1
+    endif
+endfunction
+
+
+if has("gui_macvim")
    macmenu &File.New\ Tab key=<nop>
    map <D-t> <Plug>PeepOpen
 end

@@ -2,13 +2,28 @@
 #if [ -z "$PS1" ]; then
 #   return
 #fi
+TMP_OS=`uname | tr "[:upper:]" "[:lower:]"`
+if [[ "{$TMP_OS}" = *darwin* ]]; then
+    OS="mac";
+elif [[ "{$TMP_OS}" = *linux* ]]; then
+    OS="linux";
+elif [[ "{$TMP_OS}" = *win* ]]; then
+    OS="win";
+elif [[ "{$TMP_OS}" = *mingw* ]]; then
+    OS="win";
+fi
+
 
 skip_global_compinit=1
 
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
+<<<<<<< HEAD
 plugins=(fabric django git git-hubflow web-search brew textmate osx rsync zsh-syntax-highlighting oi gem dircycle autojump)
+=======
+plugins=(git git-hubflow rsync zsh-syntax-highlighting oi gem dircycle autojump)
+>>>>>>> 9f3907cf1c30172ae445b99a4aadec5c251b2a39
 
 source $ZSH/oh-my-zsh.sh
 
@@ -22,11 +37,12 @@ ZSH_THEME_LAST_PRINT_DATE=0
 
 # enable comments on the REPL
 setopt interactivecomments
-
+# don't directly jump to dirs in order to prevent completion of all usernames
+unsetopt cdablevars
 # ============================================================================
 # display system information on startup
 
-(archey -c &) 2> /dev/null 
+(archey -c &) 2> /dev/null
 
 # ============================================================================
 
@@ -77,7 +93,7 @@ export HISTCONTROL=ignorespace
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
-# swiss format 
+# swiss format
 export LC_MONETARY="de_CH.UTF-8"
 export LC_NUMERIC="de_CH.UTF-8"
 export LC_TIME="de_CH.UTF-8"
@@ -99,42 +115,29 @@ export LC_IDENTIFICATION="en_US.UTF-8"
 export PYTHONIOENCODING=UTF-8
 
 # ============================================================================
-
-export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
-export PATH=$PATH:/usr/local/mysql/bin
-export PATH=$PATH:/opt/git-svn-clone-externals
-# homebrew ruby gem path, cannot use fixed path as it would include a changing
-# version number
-
-if hash brew 2>/dev/null; then
-    export PATH=$PATH:$(cd $(which gem)/..; pwd)
+if [[ "$OS" == "mac" ]]; then
+    export EDITOR=mvim
+    export MANPATH=/opt/local/share/man:$MANPATH
+    export OPEN_CMD=open
+    export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
+    export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
+    # homebrew ruby gem path, cannot use fixed path as it would include a changing
+    # version number
+    if hash brew 2>/dev/null; then
+        export PATH=$PATH:$(cd $(which gem)/..; pwd)
+    fi
+else
+    export EDITOR=vim
+    export OPEN_CMD=gnome-open
 fi
 
-# ============================================================================
-export M2_HOME=/opt/mvn/
-export M2=$M2_HOME/bin
-export PATH=$M2:$PATH
-
-# ============================================================================
-
-#export RUBYLIB=$RUBYLIB:/Library/Ruby/Gems/1.8/:/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8/
-#export RSENSE_HOME=/opt/rsense-0.3/
-
-#export PYTHONSTARTUP=/usr/local/bin/ipythonShell
-
-export BROWSER=open
-export EDITOR=mvim
+export BROWSER=$OPEN_CMD
 export GIT_EDITOR="vim -c 'startinsert'"
-export VISUAL=mvim
-export SVN_EDITOR=mvim
-export H2_EDITOR=mvim
-
-export FOO=$FOO:'1'
-
-export MANPATH=/opt/local/share/man:$MANPATH
+export VISUAL=$EDITOR
+export SVN_EDITOR=$EDITOR
+export H2_EDITOR=$EDITOR
 
 export PYTHON_VERSION=3.4
-export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
 
 export IRBRC='~/.irbrc'
 
@@ -159,8 +162,7 @@ alias 3='tree | less'
 alias calendar='icalBuddy'
 alias cdp='cd "`path`"'
 alias cdup='cd ..'
-alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
-alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
+# alias chrome='/Applications/Chrome.app/Contents/MacOS/Google\ Chrome'
 alias contact='contacts'
 alias contacts="contacts -lHf '%n %p %mp %e %a'"
 alias du='du -h'
@@ -168,6 +170,7 @@ alias f='fab'
 alias find-name="find . -name "
 alias fname="find-name"
 alias g='git'
+alias gitk='gitk --all &'
 alias htop='sudo htop'
 alias imdb='web_search duckduckgo \!imdb'
 alias irb='irb -rubygems'
@@ -176,17 +179,20 @@ alias ll='ls -Aflhp'
 alias log='/Users/Shared/log/log.rb'
 alias m='v.project && ./manage.py '
 alias mvim='mvim  -c "NERDTree" -c "wincmd p"'
+alias make_targets="make -qp | awk -F':' '/^[a-zA-Z0-9][^\$#\/\t=]*:([^=]|$)/ {split(\$1,A,/ /); for(i in A) print A[i]}'"
 alias o='_open'
 alias oi='_open' #placeholder to trigger bash-completion
-alias oo='open "`path`"'
+alias oo='$OPEN_CMD "`path`"'
 alias p='pip'
 alias p1='_ping1'
 alias password='apg -a1 -m80 -n10'
 alias path='/Applications/path.app/Contents/MacOS/path'
 alias ping1='ping -c 1'
 alias rgrep='grep -r -n --color=auto'
-alias rm='trash'
-alias rrm='rm'
+if [[ "$OS" == 'mac' ]]; then
+    alias rrm='rm'
+    alias rm='trash'
+fi
 alias scn='svn'
 alias sp='v.project && ./manage.py shell_plus'
 alias ssh='ssh -C'
@@ -195,6 +201,7 @@ alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
 alias t='trex'
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+alias wpr-replay="~/chromium/src/third_party/webpagereplay/replay.py --no-dns_forwarding --use_closest_match --port=4080 --ssl_port=4443"
 alias tre='tree | less'
 alias tvim='vim -c "NERDTree" -c "wincmd p"'
 alias v.add2virtualenv='add2virtualenv'
@@ -207,6 +214,8 @@ alias v.project='cdproject'
 alias v.rm='rmvirtualenv'
 alias v.switch='workon'
 alias v='workon'
+alias vless='vim -u /usr/share/vim/vim71/macros/less.vim'
+alias webserver="python -m SimpleHTTPServer"
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
 function git(){ hub $@ }
@@ -221,10 +230,10 @@ pman() {
 _open()
 {
     if [[ $# -eq 0 ]]; then
-        open .;
+         $OPEN_CMD .;
         return $?;
-    fi    
-    open "$*";
+    fi
+    $OPEN_CMD "$*";
 }
 
 # ping google or the provided argument once =================================
@@ -233,7 +242,7 @@ _ping1()
     if [[ $# -eq 0 ]]; then
         ping -c 1 www.google.com
         return $?;
-    fi    
+    fi
     ping -c 1 "$*";
 }
 
@@ -244,6 +253,12 @@ rruby()
 }
 alias c=rruby
 
+# print the average of a file containing a number per line ==================
+
+file_avg() {
+    ruby -e "arr=File.readlines('$1').map{|l|l.chomp.to_f};puts(arr.inject(0.0) { |sum, el| sum + el } / arr.size)"
+}
+
 # open google search results from the command line ==========================
 ggl()
 {
@@ -251,6 +266,10 @@ ggl()
     open "https://encrypted.google.com/search?q=$QUERY"
 }
 
+# only open a single instance of gvim by default
+gvim () {
+    command gvim --remote-silent "$@" || command gvim "$@";
+}
 # ============================================================================
 # Directory stack extensions
 setopt autopushd pushdminus pushdsilent pushdtohome
@@ -264,23 +283,29 @@ chpwd() {
   print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
 }
 
-
-
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd
 export _Z_DATA="$HOME/.z/"
 
 source `jump-bin --zsh-integration`
 if hash brew 2>/dev/null; then
-    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && \
+        . $(brew --prefix)/etc/profile.d/autojump.sh
 fi
 
 function _autojump_jump {
 	# first try `jump` with all the options then autojump
-	jump $* 2&>> /dev/null || cd "`autojump $*`" || ( echo "'$*' not found" && exit 1)
+	jump $* 2&>> /dev/null || \
+        cd "`autojump $*`" || \
+        (echo "'$*' not found" && exit 1)
 }
 alias j=_autojump_jump
 
 # =============================================================================
+# helper
+function rel_path() {
+    python -c "import os.path; print os.path.relpath('${1}', '${2}')"
+}
+
 # wait for any background processes launched in the setup file
 wait
