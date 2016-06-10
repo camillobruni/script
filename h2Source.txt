@@ -1121,7 +1121,6 @@
     find ./ -type l 
 
 - How do I raise an Exception/Error in ruby?
-
     # reraise the current exception or a RuntimeError if there is no current exception
     raise 
     
@@ -1175,26 +1174,72 @@
     pip freeze | grep -v "-e"
 
 - How to parse arguments in bash
-for i in "$@"
-do
-    case $i in
-        -h|--help)
-            echo 'Help text'
-            exit 0
-        ;;
-        --n=*|--name=*)
-            NAME="${i#*=}"
-            ...
-            shift
-        ;;
-        *)
-            # ignoring unknown options here
-        ;;
-    esac
-done
+    for i in "$@"
+    do
+        case $i in
+            -h|--help)
+                echo 'Help text'
+                exit 0
+            ;;
+            --n=*|--name=*)
+                NAME="${i#*=}"
+                ...
+                shift
+            ;;
+            *)
+                # ignoring unknown options here
+            ;;
+        esac
+    done
 
 - How to embed all fonts in PDF document?
+<<<<<<< HEAD
 gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf
 
 - How to remove all restrictions on a encrypted PDF? (decrypt)
 qpdf --decrypt --password=$PASS in.pdf out.pdf
+=======
+    gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf
+
+- How to checkout a different chromium branch? [chrome]
+    git fetch --tags
+    git checkout -b $BRANCH_NAME tags/$VERSION
+    gclient sync --with_branch_heads --reset --upstream --force
+
+- How to display memory in gdb?
+    x/20w
+
+- How to replace spaces with tabs?
+    sed -e 's/[[:blank:]]\+/\t/g'
+
+- How to create and apply a patch in git?
+    # Create a formatted single-file with separate patches for each file
+    git format-patch $COMMIT --stdout > out.patch
+    # Create a single patch for all commits
+    g diff $COMMIT > out.patch
+    git apply --stat $PATCH 
+    git apply --check $PATCH 
+    # Apply hunks and put rejected ones in *.rej
+    git apply --reject $PATCH
+
+- How to record / replay an action in vim?
+    qx     # start recording to register x
+           # Do Stuff 
+    q      # stop recording
+    @x     # playback to see if it works correctly
+    999@x  # repeat 999 times to complete the job
+
+- How to record a debug session for replay in gdb?
+    record
+    continue
+    reverse-step
+    reverse-stepi
+
+- How to profile vim plugins
+    profile start profile.log
+    profile func *
+    profile file *
+    " At this point do slow actions
+    profile pause
+    noautocmd qall!
+>>>>>>> 9f3907cf1c30172ae445b99a4aadec5c251b2a39
