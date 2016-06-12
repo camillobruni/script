@@ -49,32 +49,41 @@ def shut_down
     maxRounded = ($results.max / roundTo).round * roundTo
     stdevPercentage = (100.0 * stdev / mean).round(2)
     puts("=" * 50)
-    puts("avg = #{$results.mean}")
+    puts("avg     = #{$results.mean}")
     puts("geomean = #{$results.geomean}")
-    puts("result = #{meanRounded} +/- #{stdevRounded}(#{stdevPercentage}%)")
-    printHistogram($results, minRounded, maxRounded)
+    puts("min     = #{minRounded}    max = #{maxRounded}")
+    puts("result  = #{meanRounded} +/- #{stdevRounded}(#{stdevPercentage}%)")
+    printHistogram($results)
 end
 
-def printHistogram(list, minRounded, maxRounded)
+def printHistogram(list)
     min,max = list.minmax
+    return if min == max
     # find the constant factor for a logarithmic distribution of 80 buckets
-    minLog = Math.log(min)
-    maxLog = Math.log(max)
-    logStep = 79 / (maxLog - minLog)
-    buckets = [0] * 80
+    minLog = Math.log10(min).floor()
+    maxLog = Math.log10(max).ceil()
+    logStep = 70 / (maxLog - minLog)
+    buckets = [0] * 71
     list.each{ |i|
-        bucket = ((Math.log(i) - minLog) * logStep).round()
+        bucket = ((Math.log10(i) - minLog) * logStep).round()
         buckets[bucket] += 1
     }
     min,max = buckets.minmax
-    scale = ($ticks.size() - 1).to_f / (max-min)
+    scale = (2*$ticks.size() - 1).to_f / (max-min)
+    buckets = buckets.map{|each| (each * scale).ceil() }
+    print(max.to_s.rjust(4)+" ")
     buckets.each{ |value|
-        print($ticks[(value * scale).ceil()])
+        print($ticks[[0, value - $ticks.size()].max])
     }
     puts("")
-    str = minRounded.to_s
+    print(min.to_s.rjust(4)+" ")
+    buckets.each{ |value|
+        print($ticks[[$ticks.size()-1, value].min])
+    }
+    puts("")
+    str = "    "+(10 ** minLog).to_s
     middleStr = Math.exp((minLog + maxLog) / 2).to_s
-    maxStr = maxRounded.to_s
+    maxStr = (10 ** maxLog).to_s
     str += middleStr.center(80-str.size()-maxStr.size(), ' ')
     str += maxStr
     puts(str)
