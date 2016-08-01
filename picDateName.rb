@@ -31,6 +31,7 @@ class App
         @dry_run            = false
         @recursive          = false
         @skip_unknown_files = false
+        @fast_check         = true
     end
 
     # ========================================================================
@@ -76,6 +77,11 @@ COMMENT
             
             opts.on("--skip", "Skip unknown file types") do
                 @skip_unknown_files = true
+            end
+            
+            opts.on("--no-fast-check", 
+                    "Also check files that match the %Y-%m-%d_%H%M%S pattern") do
+                @fast_check = false
             end
             
             opts.on("-R", "--recursive", "Rename image files recursively") do
@@ -160,15 +166,17 @@ COMMENT
     end
 
     def basic_rename_file(file)
+        old_filename = File.basename(file)
+        return if @fast_check and old_filename =~ /[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}/
         date = self.extract_picture_date(file)
         return if date.nil?
         
         custom_filename = self.extract_custom_filename(file)
         filename = "#{date}#{custom_filename}#{File.extname(file)}"
+        # Ignore already renamed files
+        return if old_filename == filename
         new_file = File.join(File.dirname(file), filename) 
-        
-        destination_exists = File.exists?(new_file) && File.basename(file) != filename            
-
+        destination_exists = File.exists?(new_file)
         if self.dry_run?
             puts "#{file} => #{filename}"
             puts "    Destination file exists #{new_file}".red if destination_exists

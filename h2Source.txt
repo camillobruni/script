@@ -1193,7 +1193,10 @@
     done
 
 - How to embed all fonts in PDF document?
-    gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf
+gs -sFONTPATH=/Library/Fonts -o $OUT.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $IN.pdf
+
+- How to remove all restrictions on a encrypted PDF? (decrypt)
+qpdf --decrypt --password=$PASS in.pdf out.pdf
 
 - How to checkout a different chromium branch? [chrome]
     git fetch --tags
