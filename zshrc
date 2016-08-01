@@ -214,7 +214,9 @@ alias vless='vim -u /usr/share/vim/vim71/macros/less.vim'
 alias webserver="python -m SimpleHTTPServer"
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
-function git(){ hub $@ }
+if hash hub 2>/dev/null; then
+    function git(){ hub $@ }
+fi
 
 
 # pman opens man pages in preview / skim ====================================

@@ -6,6 +6,9 @@ set encoding=utf-8
 " buffer redraws for big files
 set lazyredraw
 
+" Set the limit of large files to 5MB
+let g:LargeFile = 5
+
 " secure non-default vimrc files
 set exrc
 set secure
@@ -30,6 +33,13 @@ let g:SuperTabDefaultCompletionType = 'context'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" ctrlp settings
+" use lazy updating after 150ms of inactivity
+let g:ctrlp_lazy_update = 150
+" Always reopen files in new buffers, only reuse when <c-v> is pressed
+let g:ctrlp_switch_buffer = "V"
+
 
 " Use vims omni completion for eclim
 " let g:EclimCompletionMethod = 'omnifunc'
