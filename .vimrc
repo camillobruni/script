@@ -26,6 +26,7 @@ let g:ycm_auto_trigger = 0
 " Make sure ultiSnip and YCM Completion get along by using supertab
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:ycm_disable_for_files_larger_than_kb = 800
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabDefaultCompletionType = 'context'
 

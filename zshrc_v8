@@ -2,7 +2,7 @@ export CODE=/work
 export V8_BASE=$CODE/v8
 export V8_CODE=$V8_BASE/src
 export V8_TEST_FLAGS=''
-export CHROMIUM_BASE=$CODE/chromium
+export CHROMIUM_BASE=$CODE/chrome
 export CHROMIUM_CODE=$CHROMIUM_BASE/src
 export PATH=$CHROMIUM_BASE/depot_tools:$PATH
 export PYTHONPATH=
@@ -304,12 +304,11 @@ ninja_chromium() {
         show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
         show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
         echo "PINNING SUBPROCESS TO CORES 1 & 2"
-        show_cmd setarch x86_64 -R \
-            taskset 0x3 \
-            perf4 record -k mono --call-graph fp  \
-            $BUILD/$BINARY --js-flags="--perf-prof\ --perf-prof-debug-info" $@ 
+        show_cmd \
+            perf4 record -k mono --call-graph fp \
+            $BUILD/$BINARY --js-flags=--perf-prof\ --perf-prof-debug-info $@ 
         show_cmd "mv perf.data perf.data.tmp && perf4 inject -j -i perf.data.tmp -o perf.data"
-        show_cmd "rm jitted-*.so"
+        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
         echo "use 'perf report' to analyse your results"
     else
         # default action is compile
