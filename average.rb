@@ -42,6 +42,9 @@ def shut_down
     puts("result = #{meanRounded} +/- #{stdevRounded}(#{stdevPercentage}%)")
 end
 
+
+puts ARGV.join(" || ")
+puts "=" * 80
 begin
     for i in 0..$max do
         result = `#{ARGV.join(" ")}`
