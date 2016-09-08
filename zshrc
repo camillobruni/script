@@ -112,7 +112,7 @@ export PYTHONIOENCODING=UTF-8
 
 # ============================================================================
 if [[ "$OS" == "mac" ]]; then
-    export EDITOR=mvim
+    export EDITOR=vim
     export MANPATH=/opt/local/share/man:$MANPATH
     export OPEN_CMD=open
     export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
@@ -197,6 +197,7 @@ alias svndiff='svn diff "${@}" | colordiff | lv -c'
 alias svnlog='svn log --verbose | less'
 alias t='trex'
 alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+alias wpr-replay="~/chromium/src/third_party/webpagereplay/replay.py --no-dns_forwarding --use_closest_match --port=4080 --ssl_port=4443"
 alias tre='tree | less'
 alias tvim='vim -c "NERDTree" -c "wincmd p"'
 alias v.add2virtualenv='add2virtualenv'
@@ -213,7 +214,9 @@ alias vless='vim -u /usr/share/vim/vim71/macros/less.vim'
 alias webserver="python -m SimpleHTTPServer"
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
-function git(){ hub $@ }
+if hash hub 2>/dev/null; then
+    function git(){ hub $@ }
+fi
 
 
 # pman opens man pages in preview / skim ====================================
@@ -277,8 +280,6 @@ fi
 chpwd() {
   print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
 }
-
-
 
 # ============================================================================
 # load https://github.com/rupa/z after redefinition of cd

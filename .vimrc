@@ -6,6 +6,9 @@ set encoding=utf-8
 " buffer redraws for big files
 set lazyredraw
 
+" Set the limit of large files to 5MB
+let g:LargeFile = 5
+
 " secure non-default vimrc files
 set exrc
 set secure
@@ -19,9 +22,11 @@ runtime bundles.vim
 " jslint: force node instead of javascriptcore: https://github.com/hallettj/jslint.vim/issues/31
 let $JS_CMD = 'nodejs'
 
+let g:ycm_auto_trigger = 0
 " Make sure ultiSnip and YCM Completion get along by using supertab
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:ycm_disable_for_files_larger_than_kb = 800
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabDefaultCompletionType = 'context'
 
@@ -30,8 +35,15 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+" ctrlp settings
+" use lazy updating after 150ms of inactivity
+let g:ctrlp_lazy_update = 150
+" Always reopen files in new buffers, only reuse when <c-v> is pressed
+let g:ctrlp_switch_buffer = "V"
+
+
 " Use vims omni completion for eclim
-let g:EclimCompletionMethod = 'omnifunc'
+" let g:EclimCompletionMethod = 'omnifunc'
 
 " NERDCommenter settings
 let g:NERDSpaceDelims = 1
@@ -48,8 +60,6 @@ let g:indent_guides_auto_colors = 0
 " <leader> commands
 nnoremap <leader>nt :NERDTreeToggle<cr>
 nnoremap <leader>tb :TagbarToggle<cr>
-nnoremap <leader>t  :CtrlP<cr>
-nnoremap <leader>TF :CommandTFlush<cr>
 
 let g:miniBufExplForceSyntaxEnable = 1
 
@@ -200,8 +210,8 @@ vmap o <ESC>o
 vmap a <ESC>a
 vmap A <ESC>A
 " eclipse style autocompletion
-imap <C-SPACE> <C-p>
-map <C-SPACE> i<C-p>
+" imap <C-SPACE> <C-p>
+" map <C-SPACE> i<C-p>
 
 " enable emacs-style line navigation and editing
 map  <C-e> <ESC>$

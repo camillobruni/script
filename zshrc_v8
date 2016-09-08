@@ -2,10 +2,9 @@ export CODE=/work
 export V8_BASE=$CODE/v8
 export V8_CODE=$V8_BASE/src
 export V8_TEST_FLAGS=''
-export CHROMIUM_BASE=$CODE/chromium
+export CHROMIUM_BASE=$CODE/chrome
 export CHROMIUM_CODE=$CHROMIUM_BASE/src
 export PATH=$CHROMIUM_BASE/depot_tools:$PATH
-# google3 PYTHONPATH kills Python performance.
 export PYTHONPATH=
 export CHROME_DEVEL_SANDBOX="/usr/local/sbin/chrome-devel-sandbox"
 export GOLDPATH="$CHROMIUM_CODE/third_party/binutils/Linux_x64/Release/bin/"
@@ -42,6 +41,12 @@ gyp_gen() {
     fi
 }
 
+if [[ "$OS" == "mac" ]]; then
+    export MAX_OPEN_FILES=500
+else
+    export MAX_OPEN_FILES=2000
+fi
+
 alias debug='ninja_d8_or_chromium Debug'
 alias release='ninja_d8_or_chromium Release'
 alias optdebug='ninja_d8_or_chromium Optdebug'
@@ -59,6 +64,7 @@ ninja_d8_or_chromium() {
 }
 
 NINJA_SUBTOOLS=(browse clean commands deps graph query targets comdb recompact)
+GN_SUBTOOLS=(args check clean desc format gen help ls path refs)
 ninja_d8() {
     local ROOT=`git rev-parse --show-toplevel`
     local VERSION=`git rev-parse HEAD | cut -c1-7`
@@ -66,7 +72,12 @@ ninja_d8() {
     local CONFIG_LOWERCASE=$CONFIG:l
     shift
     # check if first arg is in subtool
-    if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
+    if [[ "$1" == "help" ]]; then
+        echo "Subcomands are: tests | ts | cctest | ct | test | t | debug-test | "
+        echo "    dt | bench | b | llprof | bsuite | ticks | archive | shell | "
+        echo "    flags compile | c | clean | "
+        echo "    $NINJA_SUBTOOLS"
+    elif [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
         show_cmd ninja -j 10000 -C $ROOT/out/$CONFIG -t $@
     
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
@@ -121,6 +132,7 @@ ninja_d8() {
             cd $ROOT && \
             show_cmd out/$CONFIG/d8 _bench/$@
         fi
+
     elif [[ "$1" == "llprof" ]]; then
         shift
         show_cmd "$ROOT/tools/run-llprof.sh $ROOT/out/$CONFIG/d8 $@; $ROOT/tools/ll_prof.py | less"
@@ -182,7 +194,7 @@ ninja_d8() {
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
+        find $ROOT/out/$CONFIG -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
         echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
 
     elif [[ "$1" == "shell" ]]; then
@@ -202,7 +214,7 @@ ninja_d8() {
         if [[ -z "$ARGS" ]]; then
             ARGS="d8 unittests cctest"
         fi
-        show_cmd ninja -l 42 -j 10000 -C $ROOT/out/$CONFIG $ARGS && \
+        show_cmd ninja -l 42 -j $MAX_OPEN_FILES -C $ROOT/out/$CONFIG $ARGS && \
         notify-send "Compilation Result                            " "Finished V8 $CONFIG $ARGS" || \
         notify-send "Compilation Result                            " "FAILED V8 $CONFIG $ARGS"
     fi
@@ -223,12 +235,23 @@ ninja_chromium() {
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
+    local BUILD=$ROOT/out/gn/$CONFIG_LOWERCASE
     shift
     # check if first arg is in subtool
-    if [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
-        show_cmd ninja -j 10000 -C $ROOT/out/$CONFIG -t $@
-    elif [[ "$1" == "help" ]]; then
-        echo "Subcomands are: blink | archive | gdb-index | compile | c"
+    if [[ "$1" == "help" ]]; then
+        echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf "
+        echo "    gn | $GN_SUBTOOLS"
+    elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
+        SUBCOMMAND=$1
+        shift
+        show_cmd gn $SUBCOMMAND $BUILD $@
+
+    elif [[ "$1" == "gn" ]]; then
+        shift
+        SUBCOMMAND=$1
+        shift
+        show_cmd gn $1 $BUILD $@
+
     elif [[ "$1" == "blink" ]]; then
         shift
         if [[ -z "$@" ]]; then
@@ -255,6 +278,7 @@ ninja_chromium() {
             cd $ROOT && \
             show_cmd $WEBKIT_SCRIPTS/webkit-patch layout-test-server $@
         fi
+
     elif [[ "$1" == "archive" ]]; then
         shift
         ARCHIVE_NAME="_$CONFIG"
@@ -265,24 +289,43 @@ ninja_chromium() {
         if [[ -z "$1" ]] then;
             SUFFIX=""
         fi
+        # Avoid copying the massive obj/ directory
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/../builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        cp -R $ROOT/out/$CONFIG/* $VERSION_DIR;
-        echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
+        find $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
+        echo "Archived ${YELLOW}$BUILD${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
+
     elif [[ "$1" == "gdb-index" ]]; then
         echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
-        build/gdb-add-index out/$CONFIG/chrome out/$CONFIG/content_shell > /dev/null
+        build/gdb-add-index $BUILD/chrome $BUILD/content_shell > /dev/null
+    
+    elif [[ "$1" == "sync" ]]; then
+        show_cmd gclient sync --with_branch_heads --reset --upstream --force
+        
+    elif [[ "$1" == "perf" ]]; then
+        shift;
+        BINARY=$1
+        shift
+        show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
+        show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
+        echo "PINNING SUBPROCESS TO CORES 1 & 2"
+        show_cmd \
+            perf4 record -k mono --call-graph fp \
+            $BUILD/$BINARY --js-flags=--perf-prof\ --perf-prof-debug-info $@ 
+        show_cmd "mv perf.data perf.data.tmp && perf4 inject -j -i perf.data.tmp -o perf.data"
+        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
+        echo "use 'perf report' to analyse your results"
     else
         # default action is compile
         if [[ "$1" == 'compile' || "$1" == "c" ]]; then
             shift
         fi
-        local ARGS=$@
+        local ARGS="$@"
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"
         fi
-        show_cmd ninja -l 40 -j 10000 -C $ROOT/out/$CONFIG $ARGS && \
+        show_cmd ninja -l 40 -j $MAX_OPEN_FILES -C $BUILD $ARGS && \
         notify-send "Finished Chromium $CONFIG $ARGS" || \
         notify-send "FAILED Chromium $CONFIG $ARGS"
     fi
@@ -306,7 +349,7 @@ V8_GYP_DEFINES_mips="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=mipsel";
 V8_GYP_DEFINES_mips64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=mips64el";
 V8_GYP_DEFINES_ppc="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=ppc";
 
-alias v8_prep="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES\"; sync"
+alias v8_prep="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES\"; sync; unset GYP_CHROMIUM_NO_ACTION"
 alias v8_prep_no_snapshot="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES v8_use_snapshot='false'\"; sync"
 alias v8_prep_ia32="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_ia32\"; sync"
 alias v8_prep_x64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_x64\"; sync"
@@ -333,7 +376,7 @@ gomadir=$CODE/goma"
 chrome_prep() {
     goma_prep;
     show_cmd export GYP_DEFINES=\"$CHROME_GYP_DEFINES\"
-    show_cmd gclient sync
+    show_cmd gclient sync --with_branch_heads --reset --upstream --force
 }
 alias chrome_gdb="gdb --args out/Debug/chrome --no-sandbox --disable-hang-monitor --renderer-cmd-prefix=\"konsole -e gdb -ex run -ex quit -args\""
 chrome_debug() {
