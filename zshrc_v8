@@ -233,7 +233,7 @@ ninja_chromium() {
     shift
     # check if first arg is in subtool
     if [[ "$1" == "help" ]]; then
-        echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf "
+        echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf | gdb"
         echo "    gn | $GN_SUBTOOLS"
     elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
         SUBCOMMAND=$1
@@ -245,6 +245,13 @@ ninja_chromium() {
         SUBCOMMAND=$1
         shift
         show_cmd gn $1 $BUILD $@
+
+    elif [[ "$1" == "gdb" ]]; then
+        shift
+        show_cmd gdb -ex run --args \
+            $BUILD/chrome --no-sandbox --disable-hang-monitor \
+                --renderer-cmd-prefix=\"konsole --new-tab -e gdb -ex run -ex quit -args\" \
+                $@
 
     elif [[ "$1" == "blink" ]]; then
         shift
@@ -265,7 +272,7 @@ ninja_chromium() {
             # layout tests only work in debug configuration
             cd $ROOT && \
             show_cmd gdb --args out/Debug/content_shell --run-layout-test --single-process --no-timeout $ROOT/third_party/WebKit/LayoutTests/$@
-        elif [[ "$SUB_CMD" == "perf-tests" || "$SUB_CMD" == "perf" ]]; then
+        elif [[ "$SUB_CMD" == "perf-tests" ]]; then
             cd $ROOT && \
             show_cmd $WEBKIT_SCRIPTS/run-perf-tests --$CONFIG_LOWERCASE $@
         elif [[ "$SUB_CMD" == "layout-test-server" || "$SUB_CMD" == "test-server" ]]; then
@@ -303,11 +310,11 @@ ninja_chromium() {
         shift
         show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
         show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
-        echo "PINNING SUBPROCESS TO CORES 1 & 2"
+        # echo "PINNING SUBPROCESS TO CORES 1 & 2"
         show_cmd \
-            perf4 record -k mono --call-graph fp \
-            $BUILD/$BINARY --js-flags=--perf-prof\ --perf-prof-debug-info $@ 
-        show_cmd "mv perf.data perf.data.tmp && perf4 inject -j -i perf.data.tmp -o perf.data"
+            perf record -a -k mono --call-graph fp \
+            $BUILD/$BINARY --js-flags=\"--perf-prof --perf-prof-debug-info\" $@ 
+        show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data"
         show_cmd "rm jit*.so jit*.dump perf.data.tmp"
         echo "use 'perf report' to analyse your results"
     else
@@ -371,16 +378,6 @@ chrome_prep() {
     goma_prep;
     show_cmd export GYP_DEFINES=\"$CHROME_GYP_DEFINES\"
     show_cmd gclient sync --with_branch_heads --reset --upstream --force
-}
-alias chrome_gdb="gdb --args out/Debug/chrome --no-sandbox --disable-hang-monitor --renderer-cmd-prefix=\"konsole -e gdb -ex run -ex quit -args\""
-chrome_debug() {
-    ninja -j1000 -l44 -C out/Debug chrome content_shell $@ && \
-    build/gdb-add-index out/Debug/chrome && \
-    notify-send "Finished Chromium Debug Build"
-}
-chrome_release() {
-  ninja -j1000 -l44 -C out/Release chrome content_shell $@ && \
-notify-send "Finished Chromium Release Build"
 }
 
 run_10_times() {
