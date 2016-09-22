@@ -70,6 +70,7 @@ ninja_d8() {
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
+    local BUILD=$ROOT/out/gn/$CONFIG_LOWERCASE
     shift
     # check if first arg is in subtool
     if [[ "$1" == "help" ]]; then
@@ -77,9 +78,22 @@ ninja_d8() {
         echo "    dt | bench | b | llprof | bsuite | ticks | archive | shell | "
         echo "    flags compile | c | clean | "
         echo "    $NINJA_SUBTOOLS"
-    elif [[ -n "$1" ]] && [[ ${NINJA_SUBTOOLS[(r)$1]} == $1 ]]; then
-        show_cmd ninja -j 10000 -C $ROOT/out/$CONFIG -t $@
-    
+
+    elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
+        SUBCOMMAND=$1
+        shift
+        show_cmd gn $SUBCOMMAND $BUILD $@
+
+    elif [[ "$1" == "gn" ]]; then
+        shift
+        SUBCOMMAND=$1
+        shift
+        show_cmd gn $1 $BUILD $@
+
+    elif [[ "$1" == "flags" ]]; then
+        shift
+        show_cmd grep gn args $BUILD --list
+
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
         shift
         cd $ROOT && \
@@ -91,11 +105,11 @@ ninja_d8() {
         if [[ -z "$@" ]]; then
             echo "Please provide a grep pattern for the cctests"
         else
-            for TEST in `$ROOT/out/$CONFIG/cctest --list | grep $@`; do
+            for TEST in `$BUILD/cctest --list | grep $@`; do
                 #clean the < from --list output
                 TEST=${TEST%"<"}
                 cd $ROOT && \
-                show_cmd out/$CONFIG/cctest $TEST
+                show_cmd $BUILD/cctest $TEST
             done
         fi
 
@@ -107,15 +121,15 @@ ninja_d8() {
                 -j 40 $V8_TEST_FLAGS
         else
             cd $ROOT && \
-            show_cmd out/$CONFIG/d8 --predictable --allow-natives-syntax --test \
+            show_cmd $BUILD/d8 --predictable --allow-natives-syntax --test --expose-gc\
                 test/mjsunit/mjsunit.js $V8_TEST_FLAGS $@
         fi
     
     elif [[ "$1" == "debug-test" || "$1" == "dt" ]]; then
         shift
         cd $ROOT && \
-        show_cmd gdb --args out/$CONFIG/d8 --code-comments --predictable \
-            --allow-natives-syntax --test \
+        show_cmd gdb --args $BUILD/d8 --code-comments --predictable \
+            --allow-natives-syntax --expose-gc --test \
             test/mjsunit/mjsunit.js $V8_TEST_FLAGS $@
     
     elif [[ "$1" == "bench" || "$1" == "b" ]]; then
@@ -127,15 +141,15 @@ ninja_d8() {
             show_cmd ls ~/v8-perf/benchmarks
             return 1
         elif [[ "$@" == *"v8-perf/benchmarks"* ]]; then
-            show_cmd run_v8_perf out/$CONFIG/d8 $@
+            show_cmd run_v8_perf $BUILD/d8 $@
         else
             cd $ROOT && \
-            show_cmd out/$CONFIG/d8 _bench/$@
+            show_cmd $BUILD/d8 _bench/$@
         fi
 
     elif [[ "$1" == "llprof" ]]; then
         shift
-        show_cmd "$ROOT/tools/run-llprof.sh $ROOT/out/$CONFIG/d8 $@; $ROOT/tools/ll_prof.py | less"
+        show_cmd "$ROOT/tools/run-llprof.sh $BUILD/d8 $@; $ROOT/tools/ll_prof.py | less"
    
     elif [[ "$1" == "bsuite" ]]; then
         shift
@@ -153,20 +167,20 @@ ninja_d8() {
                 fi
             fi
             cd $ROOT && \
-            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh out/$CONFIG/d8\" -fv -r20 > $BASELINE"
+            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh $BUILD/d8\" -fv -r20 > $BASELINE"
         elif [[ "$1" == "compare" || "$1" == "cmp" ]]; then
             shift
             CMP_VERSION=`echo $1 | cut -c1-7`
             BASELINE="$BASELINE_DIR/$CMP_VERSION"
             cd $ROOT && \
-            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh out/$CONFIG/d8\" -fv -r5 | bsuite/compare-baseline.py -b $BASELINE_DIR"
+            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh $BUILD/d8\" -fv -r5 | bsuite/compare-baseline.py -b $BASELINE_DIR"
         else
             ARGS="$@"
             if [[ -z "$@" ]]; then
                 ARGS="-fv -r5"
             fi
             cd "$ROOT" && \
-            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh out/$CONFIG/d8\" $ARGS"
+            show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh $BUILD/d8\" $ARGS"
         fi
        
     elif [[ "$1" == "ticks" ]]; then
@@ -194,16 +208,12 @@ ninja_d8() {
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        find $ROOT/out/$CONFIG -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
-        echo "Archived ${YELLOW}out/$CONFIG${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
+        find $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
+        echo "Archived ${YELLOW}$BUILD${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
 
     elif [[ "$1" == "shell" ]]; then
         shift
-        show_cmd rlwrap out/$CONFIG/d8 --allow-natives-syntax $@
-
-    elif [[ "$1" == "flags" ]]; then
-        shift
-        show_cmd grep "'GYPFLAGS += -D'" $ROOT/Makefile
+        show_cmd rlwrap $BUILD/d8 --allow-natives-syntax $@
 
     else
         # default action is compile
@@ -214,9 +224,11 @@ ninja_d8() {
         if [[ -z "$ARGS" ]]; then
             ARGS="d8 unittests cctest"
         fi
-        show_cmd ninja -l 42 -j $MAX_OPEN_FILES -C $ROOT/out/$CONFIG $ARGS && \
-        notify-send "Compilation Result                            " "Finished V8 $CONFIG $ARGS" || \
-        notify-send "Compilation Result                            " "FAILED V8 $CONFIG $ARGS"
+        show_cmd ninja -l 42 -j $MAX_OPEN_FILES -C $BUILD $ARGS && \
+        notify-send "Compilation Result                            " \
+                    "Finished V8 $CONFIG $ARGS" || \
+        notify-send "Compilation Result                            " \
+                    "FAILED V8 $CONFIG $ARGS"
     fi
 }
 
