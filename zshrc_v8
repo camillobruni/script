@@ -236,10 +236,14 @@ ninja_chromium() {
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
     local BUILD=$ROOT/out/gn/$CONFIG_LOWERCASE
+    local CHROME_BINARY=$BUILD/chrome
+    if [[ "$OS" == "mac" ]]; then
+      CHROME_BINARY=$BUILD/Chromium.app/Contents/MacOS/Chromium
+    fi
     shift
     # check if first arg is in subtool
     if [[ "$1" == "help" ]]; then
-        echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf | gdb"
+        echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf | gdb | flags"
         echo "    gn | $GN_SUBTOOLS"
     elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
         SUBCOMMAND=$1
@@ -250,12 +254,16 @@ ninja_chromium() {
         shift
         SUBCOMMAND=$1
         shift
-        show_cmd gn $1 $BUILD $@
+        show_cmd gn $SUBCOMMAND $BUILD $@
+
+    elif [[ "$1" == "flags" ]]; then
+        shift
+        show_cmd gn args $BUILD --list $@
 
     elif [[ "$1" == "gdb" ]]; then
         shift
         show_cmd gdb -ex run --args \
-            $BUILD/chrome --no-sandbox --disable-hang-monitor \
+            $CHROME_BINARY --no-sandbox --disable-hang-monitor \
                 --renderer-cmd-prefix=\"konsole --new-tab -e gdb -ex run -ex quit -args\" \
                 $@
 
