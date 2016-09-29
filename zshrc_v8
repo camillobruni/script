@@ -97,8 +97,9 @@ ninja_d8() {
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
         shift
         cd $ROOT && \
-        show_cmd tools/run-tests.py --mode $CONFIG --arch x64 --buildbot \
-            --no-sorting -j 40 $V8_TEST_FLAGS $@
+        show_cmd tools/run-tests.py --mode=$CONFIG_LOWERCASE --arch=x64 \
+            --buildbot --outdir=$ROOT/out/gn --no-sorting -j 40 \
+            $V8_TEST_FLAGS $@
 
     elif [[ "$1" == "cctest" || "$1" == "ct" ]]; then
         shift
