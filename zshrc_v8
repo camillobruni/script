@@ -70,13 +70,13 @@ ninja_d8() {
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
-    local BUILD=$ROOT/out/gn/$CONFIG_LOWERCASE
+    local BUILD=$ROOT/out.gn/$CONFIG_LOWERCASE
     shift
     # check if first arg is in subtool
     if [[ "$1" == "help" ]]; then
         echo "Subcomands are: tests | ts | cctest | ct | test | t | debug-test | "
         echo "    dt | bench | b | llprof | bsuite | ticks | archive | shell | "
-        echo "    flags compile | c | clean | "
+        echo "    flags compile | c | clean | gdb"
         echo "    $NINJA_SUBTOOLS"
 
     elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
@@ -90,6 +90,10 @@ ninja_d8() {
         shift
         show_cmd gn $1 $BUILD $@
 
+    elif [[ "$1" == "gdb" ]]; then
+        shift
+        show_cmd gdb --args $BUILD/d8 --allow-natives-syntax --code-comments $@
+
     elif [[ "$1" == "flags" ]]; then
         shift
         show_cmd grep gn args $BUILD --list
@@ -98,7 +102,7 @@ ninja_d8() {
         shift
         cd $ROOT && \
         show_cmd tools/run-tests.py --mode=$CONFIG_LOWERCASE --arch=x64 \
-            --buildbot --outdir=$ROOT/out/gn --no-sorting -j 40 \
+            --buildbot --outdir=$ROOT/out.gn --no-sorting -j 40 \
             $V8_TEST_FLAGS $@
 
     elif [[ "$1" == "cctest" || "$1" == "ct" ]]; then
@@ -152,6 +156,18 @@ ninja_d8() {
         shift
         show_cmd "$ROOT/tools/run-llprof.sh $BUILD/d8 $@; $ROOT/tools/ll_prof.py | less"
    
+    elif [[ "$1" == "perf" ]]; then
+        shift;
+        show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
+        show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
+        # echo "PINNING SUBPROCESS TO CORES 1 & 2"
+        show_cmd \
+            perf record -a -k mono --call-graph fp \
+            $BUILD/d8 --perf-prof --perf-prof-debug-info $@ 
+        show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data"
+        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
+        echo "use 'perf report' to analyse your results"
+
     elif [[ "$1" == "bsuite" ]]; then
         shift
         BASELINE_DIR="_baselines"
@@ -248,7 +264,7 @@ ninja_chromium() {
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
-    local BUILD=$ROOT/out/gn/$CONFIG_LOWERCASE
+    local BUILD=$ROOT/out.gn/$CONFIG_LOWERCASE
     local CHROME_BINARY=$BUILD/chrome
     if [[ "$OS" == "mac" ]]; then
       CHROME_BINARY=$BUILD/Chromium.app/Contents/MacOS/Chromium

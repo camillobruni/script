@@ -1243,3 +1243,7 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
 - How to debug the chrome rendering process?
     chrome --no-sandbox --disable-hang-monitor --js-flags="" \
     --renderer-cmd-prefix='xterm -sl 50000 -title renderer -e gdb -ex run --args'
+
+- How use gdb with ASAN builds?
+    b __asan::ReportGenericError to stop before an ASAN error is reported
+    b __sanitizer::Die or ASAN_OPTIONS=abort_on_error=1 to break after errors

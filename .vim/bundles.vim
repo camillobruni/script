@@ -29,7 +29,7 @@ Plugin 'cdlm/vim-colors-solarized'
 " Plugin 'tpope/vim-haml'
 " Plugin 'vim-ruby/vim-ruby'
 " Plugin 'postmodern/vim-yard'
-" Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 " fast file opening
 Plugin 'kien/ctrlp.vim'
 
@@ -40,7 +40,7 @@ Plugin 'ervandew/supertab'
 
 " Editing
 Plugin 'sickill/vim-pasta'
-Plugin 'godlygeek/tabular'
+" Plugin 'godlygeek/tabular'
 " Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
@@ -48,7 +48,7 @@ Plugin 'tpope/vim-surround'
 " symmetric commands that make sense
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Gundo'
-Plugin 'Align'
+" Plugin 'Align'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 
