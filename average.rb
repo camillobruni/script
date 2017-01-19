@@ -98,9 +98,16 @@ begin
         puts("run #{i}: #{result}")
         #  extract float
         begin
-            result = result.match(/\d+\.\d+/)[0].to_f
+            # Try matching 4'793 ops/sec
+            result = result.match(/([0-9'\.]+) ops\/sec/)[0].gsub("'","").to_f
         rescue
-            result = result.match(/\d+/)[0].to_f
+            begin
+                # Try matching: 12.235
+                result = result.match(/\d+\.\d+/)[0].to_f
+            rescue
+                # Last resort simple number matching
+                result = result.match(/\d+/)[0].to_f
+            end
         end
         $results.push(result)
     end

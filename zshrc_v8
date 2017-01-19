@@ -48,10 +48,18 @@ else
 fi
 
 alias debug='ninja_d8_or_chromium Debug'
+alias debug64='ninja_d8_or_chromium x64.Debug'
+alias debug32='ninja_d8_or_chromium ia32.Debug'
 alias release='ninja_d8_or_chromium Release'
+alias release64='ninja_d8_or_chromium x64.Release'
+alias release32='ninja_d8_or_chromium ia32.Release'
 alias optdebug='ninja_d8_or_chromium Optdebug'
 alias deb='debug'
+alias deb32='debug32'
+alias deb64='debug64'
 alias rel='release'
+alias rel32='release32'
+alias rel64='release64'
 alias opt='optdebug'
 
 ninja_d8_or_chromium() {
@@ -158,6 +166,10 @@ ninja_d8() {
    
     elif [[ "$1" == "perf" ]]; then
         shift;
+        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
+        if [[ "$1" == "clean" ]]; then
+            exit;
+        fi
         show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
         show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
         # echo "PINNING SUBPROCESS TO CORES 1 & 2"
@@ -165,7 +177,6 @@ ninja_d8() {
             perf record -a -k mono --call-graph fp \
             $BUILD/d8 --perf-prof --perf-prof-debug-info $@ 
         show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data"
-        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
         echo "use 'perf report' to analyse your results"
 
     elif [[ "$1" == "bsuite" ]]; then
