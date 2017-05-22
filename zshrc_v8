@@ -100,7 +100,16 @@ ninja_d8() {
 
     elif [[ "$1" == "gdb" ]]; then
         shift
-        show_cmd gdb --args $BUILD/d8 --allow-natives-syntax --code-comments $@
+        show_cmd gdb -ex run --args \
+            $BUILD/d8 --allow-natives-syntax --code-comments $@
+
+    elif [[ "$1" == "gdb-mksnapshot" ]]; then
+        shift
+        show_cmd gdb -ex run \
+            --args $BUILD/mksnapshot \
+            --startup_src $BUILD/gen/snapshot.cc \
+            --startup_blob $BUILD/snapshot_blob.bin \
+            --debug-code --code-comments $@
 
     elif [[ "$1" == "flags" ]]; then
         shift
@@ -175,7 +184,7 @@ ninja_d8() {
         # echo "PINNING SUBPROCESS TO CORES 1 & 2"
         show_cmd \
             perf record -a -k mono --call-graph fp \
-            $BUILD/d8 --perf-prof --perf-prof-debug-info $@ 
+            $BUILD/d8 --perf-prof $@
         show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data"
         echo "use 'perf report' to analyse your results"
 
@@ -203,8 +212,8 @@ ninja_d8() {
             cd $ROOT && \
             show_cmd "bsuite/benchmark.py -c \"bsuite/runner.sh $BUILD/d8\" -fv -r5 | bsuite/compare-baseline.py -b $BASELINE_DIR"
         else
-            ARGS="$@"
-            if [[ -z "$@" ]]; then
+            ARGS="$*"
+            if [[ -z "$*" ]]; then
                 ARGS="-fv -r5"
             fi
             cd "$ROOT" && \
@@ -245,10 +254,10 @@ ninja_d8() {
 
     else
         # default action is compile
-        if [[ "$1" == 'compile' || "$1" == "c" ]]; then
+        if [[ "$1" == "compile" || "$1" == "c" ]]; then
             shift
         fi
-        local ARGS=$@
+        local ARGS="$*"
         if [[ -z "$ARGS" ]]; then
             ARGS="d8 unittests cctest"
         fi
@@ -302,11 +311,12 @@ ninja_chromium() {
 
     elif [[ "$1" == "gdb" ]]; then
         shift
+        CHROME_GDB_CMD="xterm -title renderer -e gdb -ex run -ex quit -args"
         show_cmd gdb -ex run --args \
-            $CHROME_BINARY --no-sandbox --disable-hang-monitor \
-                --renderer-cmd-prefix=\"konsole --new-tab -e gdb -ex run -ex quit -args\" \
+            $CHROME_BINARY --no-sandbox --disable-hang-monitor --disable-gpu \
+                --renderer-cmd-prefix=\"$CHROME_GDB_CMD\" \
                 $@
-
+        # --plugin-launcher=\"$CHROME_GDB_CMD\" \
     elif [[ "$1" == "blink" ]]; then
         shift
         if [[ -z "$@" ]]; then
@@ -321,11 +331,14 @@ ninja_chromium() {
         elif [[ "$SUB_CMD" == "webkit-tests" || "$SUB_CMD" == "test" ]]; then
             # layout tests only work in debug configuration
             cd $ROOT && \
-            show_cmd $WEBKIT_SCRIPTS/run-webkit-tests --no-build --$CONFIG_LOWERCASE $@
+            show_cmd $WEBKIT_SCRIPTS/run-webkit-tests \
+                --no-build --$CONFIG_LOWERCASE $@
         elif [[ "$SUB_CMD" == "debug-test" ]]; then
             # layout tests only work in debug configuration
             cd $ROOT && \
-            show_cmd gdb --args out/Debug/content_shell --run-layout-test --single-process --no-timeout $ROOT/third_party/WebKit/LayoutTests/$@
+            show_cmd gdb --args $BUILD/content_shell \
+                --run-layout-test --single-process --no-timeout \
+                $ROOT/third_party/WebKit/LayoutTests/$@
         elif [[ "$SUB_CMD" == "perf-tests" ]]; then
             cd $ROOT && \
             show_cmd $WEBKIT_SCRIPTS/run-perf-tests --$CONFIG_LOWERCASE $@
@@ -376,7 +389,7 @@ ninja_chromium() {
         if [[ "$1" == 'compile' || "$1" == "c" ]]; then
             shift
         fi
-        local ARGS="$@"
+        local ARGS="$*"
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"
         fi

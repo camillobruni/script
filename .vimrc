@@ -35,11 +35,18 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+" Enable auto highlighting of current word
+let g:matchmaker_enable_startup = 1
+" do not overwrite existing highlighting
+let g:matchmaker_matchpriority = -1
+
 " ctrlp settings
-" use lazy updating after 150ms of inactivity
-let g:ctrlp_lazy_update = 150
+" use lazy updating after XXms of inactivity
+let g:ctrlp_lazy_update = 50
 " Always reopen files in new buffers, only reuse when <c-v> is pressed
 let g:ctrlp_switch_buffer = "V"
+" Ignore everything in .gitignore for CTRL-P
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 
 " Use vims omni completion for eclim
@@ -98,7 +105,7 @@ set smartcase
 set incsearch
 set hlsearch
 set showmatch
-set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git,*.o,*.obj
+set wildmenu wildmode=list:longest,full wildignore+=*.swp,*.bak,*.pyc,*.elc,*.zwc,*.class,*.git,*.o,*.obj,out.gn,_builds
 set ruler
 set showcmd
 set showmode
@@ -158,6 +165,10 @@ cmap w!! :SudoWrite
 " Invisible characters: shortcut to rapidly toggle
 nmap <leader>i :set list!<cr>
 set listchars=tab:▸\ ,eol:\ ,trail:·,nbsp:_,extends:→,precedes:→
+
+" Grep/Ag for the currently selected word:
+nmap <leader>gr :Gr <cword><CR>
+command -nargs=+ Gr execute 'silent Ggrep!' <q-args> | cw | redraw!
 
 " Unhighlight search results in normal mode (and still redraw screen)
 nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>

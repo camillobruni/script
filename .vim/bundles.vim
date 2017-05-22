@@ -51,11 +51,12 @@ Plugin 'Gundo'
 " Plugin 'Align'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+" Support auto highlighting of current word
+" Plugin 'vim-scripts/SearchHighlighting'
+" Dependency for above script. Plugin 'vim-scripts/ingo-library'
+Plugin 'qstrahl/vim-matchmaker'
 
 " External tools
-Plugin 'mileszs/ack.vim'
-" same but for ag instead ack
-Plugin 'rking/ag.vim'
 Plugin 'tpope/vim-fugitive'
 
 call vundle#end()

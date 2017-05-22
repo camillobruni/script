@@ -10,6 +10,7 @@
     d = diff --color-words
     di = diff --color-words
     diff = diff --color-words
+    diff-upstream = upstream-diff
     dt = difftool
     f = fetch
     fa = fetch --all

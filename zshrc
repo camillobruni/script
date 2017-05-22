@@ -154,6 +154,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=true
 #alias irb='irb1.9 -r "irb/completion"'
 #alias prox='export http_proxy=http://proxy:80/'
 #alias unprox='unset http_proxy'
+alias gr="git grep"
 alias 3='tree | less'
 alias calendar='icalBuddy'
 alias cdp='cd "`path`"'
