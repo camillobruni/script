@@ -13,6 +13,8 @@ elif [[ "{$TMP_OS}" = *mingw* ]]; then
     OS="win";
 fi
 
+export TERM='xterm-256color' 
+
 
 skip_global_compinit=1
 
@@ -304,6 +306,13 @@ alias j=_autojump_jump
 # helper
 function rel_path() {
     python -c "import os.path; print os.path.relpath('${1}', '${2}')"
+}
+
+function format-js() {
+    TMP=`mktemp`
+    IN=$1
+    cp $IN $TMP
+    js-beautify --indent-size=2 --end-with-newline $TMP > $IN
 }
 
 # wait for any background processes launched in the setup file

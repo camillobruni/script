@@ -1247,3 +1247,14 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
 - How use gdb with ASAN builds?
     b __asan::ReportGenericError to stop before an ASAN error is reported
     b __sanitizer::Die or ASAN_OPTIONS=abort_on_error=1 to break after errors
+
+- How to partially revert a git commit:
+    # Revert but do not create a commit.
+    git revert <sha-of-bad-commit> --no-commit
+    # Unstage commit.
+    git reset
+    # edit bad file to look like it should, if necessary.
+    git add <bad-file>
+    # Wipe all the undesired reverts.
+    git checkout . 
+    git commit

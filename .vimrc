@@ -1,7 +1,12 @@
 set nocompatible " be iMproved
 set encoding=utf-8
-" force 256 colors (for instance for powerline)
-"set term=xterm-256color
+
+" http://snk.tuxfamily.org/log/vim-256color-bce.html
+" Disable Background Color Erase (BCE) so that color schemes
+" work properly when Vim is used inside tmux and GNU screen.
+if &term =~ '256color'
+  set t_ut=
+endif
 
 " buffer redraws for big files
 set lazyredraw
@@ -168,7 +173,7 @@ set listchars=tab:▸\ ,eol:\ ,trail:·,nbsp:_,extends:→,precedes:→
 
 " Grep/Ag for the currently selected word:
 nmap <leader>gr :Gr <cword><CR>
-command -nargs=+ Gr execute 'silent Ggrep!' <q-args> | cw | redraw!
+command -nargs=+ Gr execute 'silent Ggrep!' <q-args> | cw | set nowrap | redraw!
 
 " Unhighlight search results in normal mode (and still redraw screen)
 nnoremap <silent> <C-l> :silent nohlsearch<cr><C-l>

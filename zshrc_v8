@@ -54,6 +54,8 @@ alias release='ninja_d8_or_chromium Release'
 alias release64='ninja_d8_or_chromium x64.Release'
 alias release32='ninja_d8_or_chromium ia32.Release'
 alias optdebug='ninja_d8_or_chromium Optdebug'
+alias optdebug64='ninja_d8_or_chromium x64.Optdebug'
+alias optdebug32='ninja_d8_or_chromium ia32.Optdebug'
 alias deb='debug'
 alias deb32='debug32'
 alias deb64='debug64'
@@ -61,6 +63,8 @@ alias rel='release'
 alias rel32='release32'
 alias rel64='release64'
 alias opt='optdebug'
+alias opt64='optdebug64'
+alias opt32='optdebug32'
 
 ninja_d8_or_chromium() {
     ROOT=`git rev-parse --show-toplevel`
@@ -78,7 +82,7 @@ ninja_d8() {
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
-    local BUILD=$ROOT/out.gn/$CONFIG_LOWERCASE
+    local BUILD=$ROOT/out/$CONFIG_LOWERCASE
     shift
     # check if first arg is in subtool
     if [[ "$1" == "help" ]]; then
@@ -118,8 +122,7 @@ ninja_d8() {
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
         shift
         cd $ROOT && \
-        show_cmd tools/run-tests.py --mode=$CONFIG_LOWERCASE --arch=x64 \
-            --buildbot --outdir=$ROOT/out.gn --no-sorting -j 40 \
+        show_cmd tools/run-tests.py --outdir=$BUILD --no-sorting -j 40 \
             $V8_TEST_FLAGS $@
 
     elif [[ "$1" == "cctest" || "$1" == "ct" ]]; then
@@ -139,7 +142,7 @@ ninja_d8() {
         shift
         if [[ -z "$@" ]]; then
             cd $ROOT && \
-            show_cmd tools/run-tests.py --mode $CONFIG --arch x64 --buildbot i
+            show_cmd tools/run-tests.py --mode $CONFIG --arch $ARCH --buildbot i
                 -j 40 $V8_TEST_FLAGS
         else
             cd $ROOT && \
@@ -175,7 +178,7 @@ ninja_d8() {
    
     elif [[ "$1" == "perf" ]]; then
         shift;
-        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
+        show_cmd "sudo rm jit*.so jit*.dump perf.data.tmp"
         if [[ "$1" == "clean" ]]; then
             exit;
         fi
@@ -183,9 +186,9 @@ ninja_d8() {
         show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
         # echo "PINNING SUBPROCESS TO CORES 1 & 2"
         show_cmd \
-            perf record -a -k mono --call-graph fp \
+            sudo perf record --freq=100000 -k mono --call-graph fp \
             $BUILD/d8 --perf-prof $@
-        show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data"
+        show_cmd "sudo chmod a+rw perf.data && mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data "
         echo "use 'perf report' to analyse your results"
 
     elif [[ "$1" == "bsuite" ]]; then
@@ -257,6 +260,10 @@ ninja_d8() {
         if [[ "$1" == "compile" || "$1" == "c" ]]; then
             shift
         fi
+        # create the ninja config if it doesn't exist.
+        if [[ ! -e "$BUILD/args.gn" ]]; then
+            show_cmd $ROOT/tools/dev/v8gen.py $CONFIG_LOWERCASE
+        fi
         local ARGS="$*"
         if [[ -z "$ARGS" ]]; then
             ARGS="d8 unittests cctest"
@@ -284,7 +291,7 @@ ninja_chromium() {
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
     local CONFIG_LOWERCASE=$CONFIG:l
-    local BUILD=$ROOT/out.gn/$CONFIG_LOWERCASE
+    local BUILD=$ROOT/out/$CONFIG_LOWERCASE
     local CHROME_BINARY=$BUILD/chrome
     if [[ "$OS" == "mac" ]]; then
       CHROME_BINARY=$BUILD/Chromium.app/Contents/MacOS/Chromium
@@ -293,6 +300,7 @@ ninja_chromium() {
     # check if first arg is in subtool
     if [[ "$1" == "help" ]]; then
         echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf | gdb | flags"
+        go/g3doc-ssi-migration is on. Contact oncall/engdoc if your page has problems.
         echo "    gn | $GN_SUBTOOLS"
     elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
         SUBCOMMAND=$1
