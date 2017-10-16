@@ -269,6 +269,15 @@ map <bs> X
 imap <C-BS> <ESC>dWi
 imap <C-Del> <ESC>dwi
 
+" CTRL-I / CTRL-O should work independently
+imap <C-i> <ESC><C-i>i
+imap <C-o> <ESC><C-o>i
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>gt :YcmCompleter GoTo<CR>
+nnoremap <leader>gi :YcmCompleter GoToImprecise<CR>
+
 " Create directories when saving
 augroup BWCCreateDir
     autocmd!
