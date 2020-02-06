@@ -1,10 +1,9 @@
-export CODE=/work
 export V8_BASE=$CODE/v8
 export V8_CODE=$V8_BASE/src
 export V8_TEST_FLAGS=''
 export CHROMIUM_BASE=$CODE/chrome
 export CHROMIUM_CODE=$CHROMIUM_BASE/src
-export PATH=$CHROMIUM_BASE/depot_tools:$PATH
+export PATH=$CODE/depot_tools:$PATH
 export PYTHONPATH=
 export CHROME_DEVEL_SANDBOX="/usr/local/sbin/chrome-devel-sandbox"
 export GOLDPATH="$CHROMIUM_CODE/third_party/binutils/Linux_x64/Release/bin/"
@@ -21,7 +20,7 @@ fi
 [[ -r "$CODE/v8/v8/tools/bash-completion.sh" ]] && \
   source "$CODE/v8/v8/tools/bash-completion.sh"
 
-export GOMA_DIR=~/goma
+export GOMA_DIR=$CODE/goma
 export GYP_GENERATORS=ninja
 
 alias f='ag'

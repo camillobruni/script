@@ -25,6 +25,10 @@ plugins=(git git-hubflow rsync zsh-syntax-highlighting oi gem dircycle autojump)
 
 source $ZSH/oh-my-zsh.sh
 
+# Support bash completion files directly
+autoload bashcompinit
+bashcompinit
+
 if hash brew 2>/dev/null; then
 	fpath=(`brew --prefix`/share/zsh-completions $fpath);
 fi
