@@ -57,10 +57,12 @@ alias opt32='optdebug32'
 
 ninja_d8_or_chromium() {
     ROOT=`git rev-parse --show-toplevel`
-    if [[ $ROOT == *"chromium"* ]]; then
+    if [[ $ROOT == *"chrom"* ]]; then
         ninja_chromium $@
-    else
+    elif [[ "$ROOT" == *"v8"* ]]; then
         ninja_d8 $@
+    else
+        echo "Not in a chromium or V8 checkout";
     fi
 }
 
@@ -227,9 +229,6 @@ ninja_d8() {
     elif [[ "$1" == "archive" ]]; then
         shift
         ARCHIVE_NAME="_$CONFIG"
-        if [[ "$CONFIG" == "Release" ]]; then
-            ARCHIVE_NAME="";
-        fi
         SUFFIX="_$1"
         if [[ -z "$1" ]] then;
             SUFFIX=""
@@ -237,7 +236,7 @@ ninja_d8() {
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/_builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        find $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
+        find -L $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
         echo "Archived ${YELLOW}$BUILD${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
 
     elif [[ "$1" == "shell" ]]; then
