@@ -195,6 +195,12 @@ alias rgrep='grep -r -n --color=auto'
 if [[ "$OS" == 'mac' ]]; then
     alias rrm='rm'
     alias rm='trash'
+    desktop-notification() {
+        TITLE=$1; BODY=$2;
+        osascript -e "display notification \"$BODY\" with title \"$TITLE\""
+    }
+elif [[ "$OS" == 'linux' ]]; then
+    alias desktop-notification='notify-send'
 fi
 alias scn='svn'
 alias sp='v.project && ./manage.py shell_plus'

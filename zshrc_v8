@@ -268,9 +268,9 @@ ninja_d8() {
             ARGS="d8 unittests cctest"
         fi
         show_cmd ninja -l 42 -j $MAX_OPEN_FILES -C $BUILD $ARGS && \
-        notify-send "Compilation Result                            " \
+        desktop-notification "Compilation Result                            " \
                     "Finished V8 $CONFIG $ARGS" || \
-        notify-send "Compilation Result                            " \
+        desktop-notification "Compilation Result                            " \
                     "FAILED V8 $CONFIG $ARGS"
     fi
 }
@@ -401,8 +401,8 @@ ninja_chromium() {
             ARGS="chrome content_shell blink_tests"
         fi
         show_cmd ninja -l 40 -j $MAX_OPEN_FILES -C $BUILD $ARGS && \
-        notify-send "Finished Chromium $CONFIG $ARGS" || \
-        notify-send "FAILED Chromium $CONFIG $ARGS"
+        desktop-notification "Finished Chromium $CONFIG $ARGS" || \
+        desktop-notification "FAILED Chromium $CONFIG $ARGS"
     fi
 }
 
