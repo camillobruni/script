@@ -21,24 +21,14 @@ fi
   source "$CODE/v8/v8/tools/bash-completion.sh"
 
 export GOMA_DIR=$CODE/goma
-export GYP_GENERATORS=ninja
 
 alias f='ag'
 alias format="git cl format; g ci -m 'formatting'"
 alias goma_prep="unset CC; unset CXX; $CODE/goma/goma_ctl.py update; $CODE/goma/goma_ctl.py ensure_start"
 sync() {
-    show_cmd echo \$GYP_DEFINES
     show_cmd gclient sync $@
 }
 
-gyp_gen() {
-    ROOT=`git rev-parse --show-toplevel`
-    if [[ $ROOT == *"chrom"* ]]; then
-        $ROOT/build/gyp_chromium
-    else
-        $ROOT/build/gyp_v8
-    fi
-}
 
 if [[ "$OS" == "mac" ]]; then
     export MAX_OPEN_FILES=500
@@ -413,44 +403,8 @@ show_cmd() {
 }
 
 
-V8_GYP_DEFINES="use_goma=1 v8_enable_disassembler=1 v8_use_snapshot='true' v8_enable_slow_dchecks=0";
-export GYP_DEFINES="$V8_GYP_DEFINES"
-
-V8_GYP_DEFINES_ia32="$GYP_DEFINES target_arch=ia32 v8_target_arch=ia32";
-V8_GYP_DEFINES_x64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=x64";
-V8_GYP_DEFINES_arm="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=arm";
-V8_GYP_DEFINES_arm64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=arm64";
-V8_GYP_DEFINES_mips="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=mipsel";
-V8_GYP_DEFINES_mips64="$V8_GYP_DEFINES target_arch=x64 v8_target_arch=mips64el";
-V8_GYP_DEFINES_ppc="$V8_GYP_DEFINES target_arch=ia32 v8_target_arch=ppc";
-
-alias v8_prep="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES\"; sync; unset GYP_CHROMIUM_NO_ACTION"
-alias v8_prep_no_snapshot="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES v8_use_snapshot='false'\"; sync"
-alias v8_prep_ia32="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_ia32\"; sync"
-alias v8_prep_x64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_x64\"; sync"
-alias v8_prep_arm="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_arm\"; sync"
-alias v8_prep_arm64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_arm64\"; sync"
-alias v8_prep_mips="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_mips\"; sync"
-alias v8_prep_mips64="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_mips64\"; sync"
-alias v8_prep_ppc="goma_prep; export GYP_DEFINES=\"$V8_GYP_DEFINES_ppc\"; sync"
-
-CHROME_GYP_DEFINES="\
-profiling=0 \
-component=shared_library \
-v8_optimized_debug=0 \
-v8_enable_disassembler=1 \
-v8_object_print=1 \
-target_arch=x64 v8_target_arch=x64 \
-debug_extra_cflags=\\\"-fno-omit-frame-pointer -fno-builtin -g\\\" \
-release_extra_cflags=\\\"-g\\\" \
-use_goma=1 \
-gomadir=$CODE/goma"
-# linux_use_debug_fission=0"
-# linux_use_debug_fission + clang + gdb-add-index is currently broken (2014-07).
-
 chrome_prep() {
     goma_prep;
-    show_cmd export GYP_DEFINES=\"$CHROME_GYP_DEFINES\"
     show_cmd gclient sync --with_branch_heads --reset --upstream --force
 }
 
@@ -460,8 +414,6 @@ run_10_times() {
 }
 
 coverage() {
-    export GYP_DEFINES="v8_target_arch=x64 target_arch=x64 coverage=1 use_goma=1 clang=0"
-    tools/gyp_v8
     ninja -C out/Release -j1000
     tools/run-tests.py --mode Release --arch x64 --buildbot
     lcov --directory out/Release --capture --output-file coverage.info
