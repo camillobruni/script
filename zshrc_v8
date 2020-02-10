@@ -33,7 +33,7 @@ sync() {
 
 gyp_gen() {
     ROOT=`git rev-parse --show-toplevel`
-    if [[ $ROOT == *"chromium"* ]]; then
+    if [[ $ROOT == *"chrom"* ]]; then
         $ROOT/build/gyp_chromium
     else
         $ROOT/build/gyp_v8
