@@ -48,58 +48,72 @@ def shut_down
     minRounded = ($results.min / roundTo).round * roundTo
     maxRounded = ($results.max / roundTo).round * roundTo
     stdevPercentage = (100.0 * stdev / mean).round(2)
-    puts("=" * 50)
+    puts("=" * 79)
     puts("avg     = #{$results.mean}")
     puts("geomean = #{$results.geomean}")
     puts("min     = #{minRounded}    max = #{maxRounded}")
     puts("result  = #{meanRounded} +/- #{stdevRounded}(#{stdevPercentage}%)")
+    puts("." * 80)
     printHistogram($results)
+    puts("." * 80)
 end
 
 def printHistogram(list)
     min,max = list.minmax
     return if min == max
-    # find the constant factor for a logarithmic distribution of 80 buckets
-    minLog = Math.log10(min).floor()
-    maxLog = Math.log10(max).ceil()
-    logStep = 70 / (maxLog - minLog)
+
+    map = -> (x) { x }
+    unmap = map
+
+    # use log scaling if min and max are very far apart:
+    if max/min > 10
+        map = ->(x) { Math.log10(x) }
+        unmap = ->(x) { 10 ** x }
+    end
+
+
+    # find the constant factor for a logarithmic distribution of 71 buckets
+    minMappedValue = map.call(min).floor()
+    maxMappedValue = map.call(max).ceil()
+    logStep = 70.0 / (maxMappedValue - minMappedValue)
     buckets = [0] * 71
     list.each{ |i|
-        bucket = ((Math.log10(i) - minLog) * logStep).round()
+        bucket =  ((map.call(i) - minMappedValue) * logStep).round()
         buckets[bucket] += 1
     }
-    min,max = buckets.minmax
-    scale = (2*$ticks.size() - 1).to_f / (max-min)
+    minCount,maxCount = buckets.minmax
+    scale = (2*$ticks.size() - 1).to_f / (maxCount-minCount)
     buckets = buckets.map{|each| (each * scale).ceil() }
-    print(max.to_s.rjust(4)+" ")
+    # upper row:
+    print(maxCount.to_s.rjust(4)+" ")
     buckets.each{ |value|
         print($ticks[[0, value - $ticks.size()].max])
     }
     puts("")
-    print(min.to_s.rjust(4)+" ")
+    # lower row:
+    print(minCount.to_s.rjust(4)+" ")
     buckets.each{ |value|
         print($ticks[[$ticks.size()-1, value].min])
     }
     puts("")
-    str = "    "+(10 ** minLog).to_s
-    middleStr = Math.exp((minLog + maxLog) / 2).to_s
-    maxStr = (10 ** maxLog).to_s
+    # bottom labels:
+    str = "    "+unmap.call(minMappedValue).to_s
+    middleStr = unmap.call((minMappedValue + maxMappedValue) / 2.0).to_s
+    maxStr = unmap.call(maxMappedValue).to_s
     str += middleStr.center(80-str.size()-maxStr.size(), ' ')
     str += maxStr
     puts(str)
 end
 
-
-puts ARGV.join(" || ")
-puts "=" * 80
-begin
-    for i in 0..$max do
-        result = `#{ARGV.join(" ")}`
-        puts("run #{i}: #{result}")
-        #  extract float
+def extractNumber(result)
+    #  extract float
+    begin
+        # Try matching 4'793 ops/sec
+        result = result.match(/([0-9'\.]+) ops\/sec/)[0].gsub("'","").to_f
+    rescue
         begin
-            # Try matching 4'793 ops/sec
-            result = result.match(/([0-9'\.]+) ops\/sec/)[0].gsub("'","").to_f
+            # Try matching: 12.235ms
+            result = result.match(/(\d+\.\d+)\s*ms/)[0].to_f
         rescue
             begin
                 # Try matching: 12.235
@@ -109,8 +123,21 @@ begin
                 result = result.match(/\d+/)[0].to_f
             end
         end
+    end
+    return result
+end
+
+
+puts ARGV.join(" || ")
+puts "=" * 80
+begin
+    for i in 0..$max do
+        result = `#{ARGV.join(" ")}`
+        puts("# #{(i+1).to_s.rjust(2, '0')}: #{result}")
+        result = extractNumber(result)
         $results.push(result)
     end
+rescue Interrupt, SignalException
 ensure
     shut_down()
 end

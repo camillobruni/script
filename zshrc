@@ -133,6 +133,9 @@ else
     export OPEN_CMD=gnome-open
 fi
 
+# Make sure less dumps short content directly 
+export LESS=eFRX
+
 export BROWSER=$OPEN_CMD
 export GIT_EDITOR="vim -c 'startinsert'"
 export VISUAL=$EDITOR

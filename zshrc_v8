@@ -1,3 +1,4 @@
+export GOMA_DIR=$CODE/goma
 export V8_BASE=$CODE/v8
 export V8_CODE=$V8_BASE/src
 export V8_TEST_FLAGS=''
@@ -113,8 +114,7 @@ ninja_d8() {
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
         shift
         cd $ROOT && \
-        show_cmd tools/run-tests.py --outdir=$BUILD --no-sorting -j 40 \
-            $V8_TEST_FLAGS $@
+        show_cmd tools/run-tests.py --outdir=$BUILD --no-sorting $V8_TEST_FLAGS $@
 
     elif [[ "$1" == "cctest" || "$1" == "ct" ]]; then
         shift
@@ -133,8 +133,8 @@ ninja_d8() {
         shift
         if [[ -z "$@" ]]; then
             cd $ROOT && \
-            show_cmd tools/run-tests.py --mode $CONFIG --arch $ARCH --buildbot i
-                -j 40 $V8_TEST_FLAGS
+            show_cmd tools/run-tests.py --mode $CONFIG --arch $ARCH --buildbot \
+                 $V8_TEST_FLAGS $@
         else
             cd $ROOT && \
             show_cmd $BUILD/d8 --predictable --allow-natives-syntax --test --expose-gc\

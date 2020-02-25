@@ -1258,3 +1258,12 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
     # Wipe all the undesired reverts.
     git checkout . 
     git commit
+
+
+- How to pin a job/task to a specific CPU?
+    taskset $CPU_BITPATTERN $COMMAND
+    taskset 0x1 yes
+
+- How to create massive load a CPU?
+    taskset $CPU_BITPATTERN stress --cpu
+
