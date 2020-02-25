@@ -125,7 +125,8 @@ ninja_d8() {
                 #clean the < from --list output
                 TEST=${TEST%"<"}
                 cd $ROOT && \
-                show_cmd $BUILD/cctest $TEST
+                    ( show_cmd $BUILD/cctest $TEST || echo "${RED}FAILED 💀$NO_COLOR" )
+
             done
         fi
 

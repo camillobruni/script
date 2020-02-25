@@ -150,7 +150,7 @@ endfunction
 command! -nargs=? SetIndent call SetIndent(<f-args>)
 cnoremap seti SetIndent
 " call once to set the default
-SetIndent
+SetIndent 2
 
 " Which EOL conventions to detect
 set fileformats=unix,dos,mac
