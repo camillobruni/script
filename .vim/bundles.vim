@@ -34,7 +34,7 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'kien/ctrlp.vim'
 
 " COMPLETION
-" Plugin 'Valloric/YouCompleteMe'
+Plugin 'ycm-core/youcompleteme'
 " Use Supertab for ycm and snipmate compatibility
 Plugin 'ervandew/supertab'
 

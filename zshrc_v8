@@ -282,70 +282,49 @@ ninja_chromium() {
     local CONFIG_LOWERCASE=$CONFIG:l
     local BUILD=$ROOT/out/$CONFIG_LOWERCASE
     local CHROME_BINARY=$BUILD/chrome
+    local BLINK_TOOLS=third_party/blink/tools
     if [[ "$OS" == "mac" ]]; then
       CHROME_BINARY=$BUILD/Chromium.app/Contents/MacOS/Chromium
     fi
     shift
+    local SUB_CMD=$1; shift;
     # check if first arg is in subtool
-    if [[ "$1" == "help" ]]; then
+    if [[ "$SUB_CMD" == "help" ]]; then
         echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf | gdb | flags"
         go/g3doc-ssi-migration is on. Contact oncall/engdoc if your page has problems.
         echo "    gn | $GN_SUBTOOLS"
-    elif [[ -n "$1" ]] && [[ ${GN_SUBTOOLS[(r)$1]} == $1 ]]; then
-        SUBCOMMAND=$1
-        shift
-        show_cmd gn $SUBCOMMAND $BUILD $@
 
-    elif [[ "$1" == "gn" ]]; then
-        shift
-        SUBCOMMAND=$1
-        shift
-        show_cmd gn $SUBCOMMAND $BUILD $@
+    elif [[ -n "$SUB_CMD" ]] && [[ ${GN_SUBTOOLS[(r)$SUB_CMD]} == $SUB_CMD ]]; then
+        show_cmd gn $SUB_CMD $BUILD $@
 
-    elif [[ "$1" == "flags" ]]; then
-        shift
+    elif [[ "$SUB_CMD" == "gn" ]]; then
+        show_cmd gn $SUB_CMD $BUILD $@
+
+    elif [[ "$SUB_CMD" == "flags" ]]; then
         show_cmd gn args $BUILD --list $@
 
-    elif [[ "$1" == "gdb" ]]; then
-        shift
+    elif [[ "$SUB_CMD" == "gdb" ]]; then
         CHROME_GDB_CMD="xterm -title renderer -e gdb -ex run -ex quit -args"
         show_cmd gdb -ex run --args \
             $CHROME_BINARY --no-sandbox --disable-hang-monitor --disable-gpu \
                 --renderer-cmd-prefix=\"$CHROME_GDB_CMD\" \
                 $@
         # --plugin-launcher=\"$CHROME_GDB_CMD\" \
-    elif [[ "$1" == "blink" ]]; then
-        shift
-        if [[ -z "$@" ]]; then
-            echo "${RED}No blink subcommand given:$NO_COLOR"
-            return 1
-        fi
-        local WEBKIT_SCRIPTS=third_party/WebKit/Tools/Scripts/
-        local SUB_CMD=$1
-        shift
-        if [[ "$SUB_CMD" == "help" ]]; then
-            echo "Subcommands are: webkit-test | test | debug-test | perf-tests | perf | layout-test-server | test-server"
-        elif [[ "$SUB_CMD" == "webkit-tests" || "$SUB_CMD" == "test" ]]; then
-            # layout tests only work in debug configuration
-            cd $ROOT && \
-            show_cmd $WEBKIT_SCRIPTS/run-webkit-tests \
-                --no-build --$CONFIG_LOWERCASE $@
-        elif [[ "$SUB_CMD" == "debug-test" ]]; then
-            # layout tests only work in debug configuration
-            cd $ROOT && \
-            show_cmd gdb --args $BUILD/content_shell \
-                --run-layout-test --single-process --no-timeout \
-                $ROOT/third_party/WebKit/LayoutTests/$@
-        elif [[ "$SUB_CMD" == "perf-tests" ]]; then
-            cd $ROOT && \
-            show_cmd $WEBKIT_SCRIPTS/run-perf-tests --$CONFIG_LOWERCASE $@
-        elif [[ "$SUB_CMD" == "layout-test-server" || "$SUB_CMD" == "test-server" ]]; then
-            cd $ROOT && \
-            show_cmd $WEBKIT_SCRIPTS/webkit-patch layout-test-server $@
-        fi
 
-    elif [[ "$1" == "archive" ]]; then
-        shift
+    elif [[ "$SUB_CMD" == "test" ]]; then
+        cd $ROOT && \
+        show_cmd python $BLINK_TOOLS/run_web_tests.py -t $CONFIG_LOWERCASE $@
+
+    elif [[ "$SUB_CMD" == "tests" ]]; then
+        cd $ROOT && \
+        show_cmd testing/run_with_dummy_home.py testing/xvfb.py \
+          $BLINK_TOOLS/run_web_tests.py -t $CONFIG_LOWERCASE $@
+
+    elif [[ "$SUB_CMD" == "test-server" ]]; then
+        cd $ROOT && \
+        show_cmd python $BLINK_TOOLS/run_blink_httpd.py -t $CONFIG_LOWERCASE $@
+
+    elif [[ "$SUB_CMD" == "archive" ]]; then
         ARCHIVE_NAME="_$CONFIG"
         if [[ "$CONFIG" == "Release" ]]; then
             ARCHIVE_NAME="";
@@ -361,15 +340,18 @@ ninja_chromium() {
         find $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
         echo "Archived ${YELLOW}$BUILD${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
 
-    elif [[ "$1" == "gdb-index" ]]; then
-        echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
-        build/gdb-add-index $BUILD/chrome $BUILD/content_shell > /dev/null
+    elif [[ "$SUB_CMD" == "gdb-index" ]]; then
+      BINARIES="$@"
+      if [[ -z "$@" ]] then;
+          BINARIES="$BUILD/chrome $BUILD/content_shell "
+      fi
+      echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
+      show_cmd "build/gdb-add-index $BINARIES > /dev/null"
     
-    elif [[ "$1" == "sync" ]]; then
+    elif [[ "$SUB_CMD" == "sync" ]]; then
         show_cmd gclient sync --with_branch_heads --reset --upstream --force
         
-    elif [[ "$1" == "perf" ]]; then
-        shift;
+    elif [[ "$SUB_CMD" == "perf" ]]; then
         BINARY=$1
         shift
         show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
@@ -381,12 +363,13 @@ ninja_chromium() {
         show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data"
         show_cmd "rm jit*.so jit*.dump perf.data.tmp"
         echo "use 'perf report' to analyse your results"
+
     else
         # default action is compile
-        if [[ "$1" == 'compile' || "$1" == "c" ]]; then
-            shift
-        fi
         local ARGS="$*"
+        if [[ "$SUB_CMD" != 'compile' && "$SUB_CMD" != "c" ]]; then
+            ARGS="$SUB_CMD $*"
+        fi
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"
         fi

@@ -32,6 +32,10 @@ let g:ycm_auto_trigger = 0
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:ycm_disable_for_files_larger_than_kb = 800
+" Let clangd fully control code completion
+let g:ycm_clangd_uses_ycmd_caching = 0
+" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+let g:ycm_clangd_binary_path = exepath("clangd")
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabDefaultCompletionType = 'context'
 
@@ -157,6 +161,7 @@ set fileformats=unix,dos,mac
 
 set backspace=indent,eol,start
 "set cpoptions+=$ " mark changed area
+" wrap lines for the following movements:
 set whichwrap=b,s,h,l,<,>,[,]
 
 nmap <leader>qf :botright copen<cr>
