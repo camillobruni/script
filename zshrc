@@ -21,7 +21,7 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git git-hubflow rsync zsh-syntax-highlighting oi gem dircycle autojump)
+plugins=(git gem dircycle autojump zsh nvm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -30,7 +30,7 @@ autoload bashcompinit
 bashcompinit
 
 if hash brew 2>/dev/null; then
-	fpath=(`brew --prefix`/share/zsh-completions $fpath);
+	# fpath=(`brew --prefix`/share/zsh-completions $fpath);
 fi
 
 ZSH_COMPLETION_DIR=~/.zsh_completion.d #manually set the local bash_completion dir
@@ -92,6 +92,8 @@ BMAGENTA='\e[45m'
 
 export HISTFILESIZE=10000 # the bash history should save 10000 commands
 export HISTCONTROL=ignorespace
+setopt INC_APPEND_HISTORY_TIME
+setopt HIST_REDUCE_BLANKS
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
@@ -142,6 +144,9 @@ export H2_EDITOR=$EDITOR
 export PYTHON_VERSION=3.4
 
 export IRBRC='~/.irbrc'
+
+export GOPATH=$HOME/.gocode
+export PATH=$PATH:$GOPATH/bin
 
 # Python =====================================================================
 
@@ -201,6 +206,7 @@ if [[ "$OS" == 'mac' ]]; then
     }
 elif [[ "$OS" == 'linux' ]]; then
     alias desktop-notification='notify-send'
+    alias open=xdg-open
 fi
 alias scn='svn'
 alias sp='v.project && ./manage.py shell_plus'

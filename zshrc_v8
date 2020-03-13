@@ -30,6 +30,9 @@ sync() {
     show_cmd gclient sync $@
 }
 
+# Completion settings, using --help
+compdef _gnu_generic d8 cctest blink_unittests unittests
+
 
 if [[ "$OS" == "mac" ]]; then
     export MAX_OPEN_FILES=500
@@ -287,23 +290,28 @@ ninja_chromium() {
       CHROME_BINARY=$BUILD/Chromium.app/Contents/MacOS/Chromium
     fi
     shift
-    local SUB_CMD=$1; shift;
+    local SUB_CMD=$1;
     # check if first arg is in subtool
     if [[ "$SUB_CMD" == "help" ]]; then
+        shift;
         echo "Subcomands are: blink | archive | gdb-index | compile | c | clean | perf | gdb | flags"
         go/g3doc-ssi-migration is on. Contact oncall/engdoc if your page has problems.
         echo "    gn | $GN_SUBTOOLS"
 
     elif [[ -n "$SUB_CMD" ]] && [[ ${GN_SUBTOOLS[(r)$SUB_CMD]} == $SUB_CMD ]]; then
+        shift;
         show_cmd gn $SUB_CMD $BUILD $@
 
     elif [[ "$SUB_CMD" == "gn" ]]; then
+        shift;
         show_cmd gn $SUB_CMD $BUILD $@
 
     elif [[ "$SUB_CMD" == "flags" ]]; then
+        shift;
         show_cmd gn args $BUILD --list $@
 
     elif [[ "$SUB_CMD" == "gdb" ]]; then
+        shift;
         CHROME_GDB_CMD="xterm -title renderer -e gdb -ex run -ex quit -args"
         show_cmd gdb -ex run --args \
             $CHROME_BINARY --no-sandbox --disable-hang-monitor --disable-gpu \
@@ -312,35 +320,42 @@ ninja_chromium() {
         # --plugin-launcher=\"$CHROME_GDB_CMD\" \
 
     elif [[ "$SUB_CMD" == "test" ]]; then
+        shift;
         cd $ROOT && \
         show_cmd python $BLINK_TOOLS/run_web_tests.py -t $CONFIG_LOWERCASE $@
 
     elif [[ "$SUB_CMD" == "tests" ]]; then
+        shift;
         cd $ROOT && \
         show_cmd testing/run_with_dummy_home.py testing/xvfb.py \
           $BLINK_TOOLS/run_web_tests.py -t $CONFIG_LOWERCASE $@
 
     elif [[ "$SUB_CMD" == "test-server" ]]; then
+        shift;
         cd $ROOT && \
         show_cmd python $BLINK_TOOLS/run_blink_httpd.py -t $CONFIG_LOWERCASE $@
 
+    elif [[ "$SUB_CMD" == "devtools-test-server" ]]; then
+        shift;
+        cd $ROOT && \
+        show_cmd python $BLINK_TOOLS/run_blink_httpd.py -t $CONFIG_LOWERCASE && \
+        show_cmd $BUILD/content_shell --debug-devtools --remote-debugging-port=9222 $*
+
     elif [[ "$SUB_CMD" == "archive" ]]; then
+        shift;
         ARCHIVE_NAME="_$CONFIG"
-        if [[ "$CONFIG" == "Release" ]]; then
-            ARCHIVE_NAME="";
-        fi
         SUFFIX="_$1"
         if [[ -z "$1" ]] then;
             SUFFIX=""
         fi
-        # Avoid copying the massive obj/ directory
         VERSION_DATE=`git show -s --format="%ci" $VERSION | cut -c1-10` && \
         VERSION_DIR=$ROOT/../builds/${VERSION}${ARCHIVE_NAME}_${VERSION_DATE}${SUFFIX} && \
         mkdir $VERSION_DIR && \
-        find $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
+        find -L $BUILD -mindepth 1 -maxdepth 1 ! \( -name obj \) -exec cp -R {} $VERSION_DIR \; ;
         echo "Archived ${YELLOW}$BUILD${NO_COLOR} to ${BLUE}$VERSION_DIR${RESET}"
 
     elif [[ "$SUB_CMD" == "gdb-index" ]]; then
+      shift;
       BINARIES="$@"
       if [[ -z "$@" ]] then;
           BINARIES="$BUILD/chrome $BUILD/content_shell "
@@ -349,9 +364,11 @@ ninja_chromium() {
       show_cmd "build/gdb-add-index $BINARIES > /dev/null"
     
     elif [[ "$SUB_CMD" == "sync" ]]; then
+        shift;
         show_cmd gclient sync --with_branch_heads --reset --upstream --force
         
     elif [[ "$SUB_CMD" == "perf" ]]; then
+        shift;
         BINARY=$1
         shift
         show_cmd "echo 1000000 | sudo tee /proc/sys/kernel/perf_event_max_sample_rate"
@@ -367,8 +384,12 @@ ninja_chromium() {
     else
         # default action is compile
         local ARGS="$*"
-        if [[ "$SUB_CMD" != 'compile' && "$SUB_CMD" != "c" ]]; then
-            ARGS="$SUB_CMD $*"
+        if [[ -n "$SUM_CMD" ]]; then
+          if [[ "$SUB_CMD" != 'compile' && "$SUB_CMD" != "c" ]]; then
+              ARGS="$SUB_CMD $*"
+          else
+            shift
+          fi
         fi
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"

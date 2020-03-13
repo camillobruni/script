@@ -139,8 +139,10 @@ set autoindent
 
 " enable global undoing even after closing the file
 set undofile
-set undodir=~/.vim-undo
+set undodir=~/.vim-undo//
 set undoreload=10000 "maximum number lines to save for undo on a buffer reload
+set backupdir=~/.vim-backup//
+set directory=~/.vim-swap//
 
 " mark character exceeding the 80 limit as errors
 match Error /\%>80v/

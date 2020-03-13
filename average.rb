@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
+require 'tmpdir'
+
+
 module Enumerable
     def sum
       self.inject(0){|accum, i| accum + i }
@@ -39,6 +42,18 @@ end
 
 $results = []
 def shut_down
+    puts("=" * 79)
+    begin
+        Dir::Tmpname.create('average_') { |path|
+            path += '.txt'
+            puts "Storing result to: " + path
+            File.open(path, 'w') { |f|
+                f.puts('# ' + ARGV.join(" "))
+                f.puts($results)
+            }
+        }
+    rescue
+    end
     stdev = $results.standard_deviation
     mean = $results.mean
     roundTo =  if stdev == 0.0 then 1 else 10.0**Math::log10(stdev).ceil / 100.0 end
@@ -105,25 +120,26 @@ def printHistogram(list)
     puts(str)
 end
 
+
+MATCHER = [
+    # Try matching 4'793 ops/sec
+    lambda { |result| result.match(/([0-9'\.]+) ops\/sec/m)[0].gsub("'","").to_f },
+    # Try matching: 12.235ms
+    lambda { |result| result.match(/(\d+(\.\d+)?)\s*ms/m)[0].to_f },
+    # Try matching: 12.235
+    lambda { |result| result.match(/\d+\.\d+/m)[0].to_f },
+    # Last resort simple number matching
+    lambda { |result| result.match(/\d+/m)[0].to_f }
+]
 def extractNumber(result)
     #  extract float
-    begin
-        # Try matching 4'793 ops/sec
-        result = result.match(/([0-9'\.]+) ops\/sec/)[0].gsub("'","").to_f
-    rescue
+    MATCHER.each do |matcher|
         begin
-            # Try matching: 12.235ms
-            result = result.match(/(\d+\.\d+)\s*ms/)[0].to_f
+            result = matcher.call(result)
         rescue
-            begin
-                # Try matching: 12.235
-                result = result.match(/\d+\.\d+/)[0].to_f
-            rescue
-                # Last resort simple number matching
-                result = result.match(/\d+/)[0].to_f
-            end
         end
     end
+    print "### USING #{result}\r" 
     return result
 end
 
@@ -133,7 +149,7 @@ puts "=" * 80
 begin
     for i in 0..$max do
         result = `#{ARGV.join(" ")}`
-        puts("# #{(i+1).to_s.rjust(2, '0')}: #{result}")
+        STDERR.puts("# #{(i+1).to_s.rjust(2, '0')}: #{result}")
         result = extractNumber(result)
         $results.push(result)
     end

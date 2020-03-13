@@ -120,6 +120,9 @@ if [ -f `brew --prefix`/etc/bash_completion ]; then
     . $(brew --repository)/Library/Contributions/brew_bash_completion.sh
 fi
 
+export GOPATH=$HOME/.gocode
+export PATH=$PATH:$GOPATH/bin
+
 # Python =====================================================================
 
 # manually add DYLD path for python mysql gagu
