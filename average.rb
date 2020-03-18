@@ -50,7 +50,7 @@ def shut_down
             path += '.txt'
             puts "Storing result to: " + path
             File.open(path, 'w') { |f|
-                f.puts('# ' + ARGV.join(" "))
+                f.puts('# ' + $settings.command)
                 f.puts($results)
             }
         }
@@ -66,7 +66,7 @@ def shut_down
     maxRounded = ($results.max / roundTo).round * roundTo
     stdevPercentage = (100.0 * stdev / mean).round(2)
     puts("=" * 79)
-    puts("command = #{ARGV.join(" ")}")
+    puts("command = #{$settings.command}")
     puts("runs    = #{$results.size}")
     puts("avg     = #{$results.mean}")
     puts("geomean = #{$results.geomean}")
@@ -157,11 +157,11 @@ SPINNER = '◐◓◑◒'
 
 def runCommand()
     if $settings.timeout == 0 and !$settings.stop_after_match
-        return `#{ARGV.join(" ") }` 
+        return `#{$settings.command}` 
     end
 
     result = []
-    Open3.popen2e(ARGV.join(' ')) do |stdin, stdout, status_thread|
+    Open3.popen2e($settings.command) do |stdin, stdout, status_thread|
         i = 0
         Timeout.timeout($settings.timeout) do
             stdout.each_line do |line|
@@ -191,6 +191,7 @@ $settings.verbose = true
 $settings.regexp = nil
 $settings.timeout = 0
 $settings.stop_after_match = false
+$settings.command = nil
 
 $opt_parser = OptionParser.new do |opts|
   opts.banner = "Usage: average [options] COMMAND"
@@ -230,6 +231,15 @@ $opt_parser = OptionParser.new do |opts|
   end
 end
 
+CHROME_CACHE_BENCHMARK_OPTIONS = 
+    "--no-sandbox --no-default-browser-check --disable-translate " +
+    "--no-first-run --enable-logging=stderr --no-experiments " + 
+    "--ignore-certificate-errors --benchmarking " + 
+    "--lang=en-US --disable-default-apps "
+CHROME_NO_CACHE_BENCHMARK_OPTIONS = 
+    CHROME_CACHE_BENCHMARK_OPTIONS + 
+    " --user-data-dir=/tmp/chr/$(date +%Y-%m-%d_%Hh%Mm%S)" +
+    " --data-path=/tmp/chr/$(date +%Y-%m-%d_%Hh%Mm%S)"
 
 def run()
     Signal.trap("INT") { 
@@ -240,8 +250,11 @@ def run()
       shut_down()
       exit
     }
-
-    puts ARGV.join(" || ")
+    $settings.command = ARGV.join(' ')
+        .gsub('$CHR_OPTS', CHROME_NO_CACHE_BENCHMARK_OPTIONS)
+        .gsub('$CHR_OPTS_NOCACHE', CHROME_NO_CACHE_BENCHMARK_OPTIONS)
+        .gsub('$CHR_OPTS_CACHE', CHROME_CACHE_BENCHMARK_OPTIONS)
+    STDERR.puts "# COMMAND: #{$settings.command}"
     puts "=" * 80
     begin
         for i in 1..$settings.runs do
