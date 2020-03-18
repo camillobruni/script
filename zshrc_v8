@@ -403,7 +403,7 @@ ninja_chromium() {
 show_cmd() {
     # printout the arguments in color
     echo ${YELLOW}${@}${NO_COLOR};
-    eval $@;
+    "$@";
 }
 
 
