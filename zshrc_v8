@@ -1,6 +1,7 @@
 export GOMA_DIR=$CODE/goma
-export V8_BASE=$CODE/v8
+export V8_BASE=$CODE/v8/v8
 export V8_CODE=$V8_BASE/src
+export D8_PATH=$V8_BASE/out/x64.release
 export V8_TEST_FLAGS=''
 export CHROMIUM_BASE=$CODE/chrome
 export CHROMIUM_CODE=$CHROMIUM_BASE/src

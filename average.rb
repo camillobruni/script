@@ -78,6 +78,12 @@ def shut_down
 end
 
 def printHistogram(list)
+    # Skip outliers at the extremes of the results list.
+    cropOutliers = 0.05
+    list.sort!
+    STDERR.puts("Skipping #{(list.size * cropOutliers * 2).to_i} outliers")
+    list = list[list.size * cropOutliers ... list.size*(1-cropOutliers)]
+
     min,max = list.minmax
     return if min == max
 
@@ -90,13 +96,16 @@ def printHistogram(list)
         unmap = ->(x) { 10 ** x }
     end
 
-    # find the constant factor for a logarithmic distribution of 71 buckets
-    minMappedValue = map.call(min).floor()
-    maxMappedValue = map.call(max).ceil()
+    # How many digits do we have to round to?
+    roundToDigits = [2 - Math.log10(map.call(min)), 2 - Math.log10(map.call(max))].max.ceil()
+    # Find the constant factor for a distribution of 71 buckets
+    minMappedValue = map.call(min).floor(roundToDigits)
+    maxMappedValue = map.call(max).ceil(roundToDigits)
+
     logStep = 70.0 / (maxMappedValue - minMappedValue)
     buckets = [0] * 71
-    list.each{ |i|
-        bucket =  ((map.call(i) - minMappedValue) * logStep).round()
+    list.each { |each|
+        bucket =  ((map.call(each) - minMappedValue) * logStep).round()
         buckets[bucket] += 1
     }
     minCount,maxCount = buckets.minmax
@@ -161,12 +170,13 @@ def runCommand()
     end
 
     result = []
-    Open3.popen2e($settings.command) do |stdin, stdout, status_thread|
+    Open3.popen2e($settings.command) do |stdin, stdout_and_stderr, status_thread|
         i = 0
         Timeout.timeout($settings.timeout) do
-            stdout.each_line do |line|
+            stdout_and_stderr.each_line do |line|
                 STDERR.print SPINNER[i % SPINNER.size] + "\r"
                 i += 1
+                puts "#", line
                 result.push(line)
                 if $settings.stop_after_match
                     return line if extractNumber(filterResult(line))
