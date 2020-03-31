@@ -147,6 +147,7 @@ export IRBRC='~/.irbrc'
 
 export GOPATH=$HOME/.gocode
 export PATH=$PATH:$GOPATH/bin
+export PATH=~/bin:$PATH
 
 # Python =====================================================================
 
