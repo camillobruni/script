@@ -303,7 +303,7 @@ set guioptions-=m
 set clipboard=unnamed
 "set guioptions-=m
 set anti guifont=Ubuntu\ Mono\ for\ Powerline\ 10   
-set mouse=a
+set mouse=r
 
 " Color scheme and tweaks
 set background=light

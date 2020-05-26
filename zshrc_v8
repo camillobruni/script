@@ -174,7 +174,7 @@ ninja_d8() {
    
     elif [[ "$1" == "perf" ]]; then
         shift;
-        show_cmd "sudo rm jit*.so jit*.dump perf.data.tmp"
+        show_cmd "rm jit*.so jit*.dump perf.data.tmp"
         if [[ "$1" == "clean" ]]; then
             exit;
         fi
@@ -182,9 +182,9 @@ ninja_d8() {
         show_cmd "echo 0 | sudo tee /proc/sys/kernel/kptr_restrict"
         # echo "PINNING SUBPROCESS TO CORES 1 & 2"
         show_cmd \
-            sudo perf record --freq=100000 -k mono --call-graph fp \
-            $BUILD/d8 --perf-prof $@
-        show_cmd "sudo chmod a+rw perf.data && mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data "
+            perf record --freq=100000 -k mono --call-graph fp \
+            $BUILD/d8 --perf-prof --nowrite-protect-code-memory --perf-prof-unwinding-info $@
+        show_cmd "mv perf.data perf.data.tmp && perf inject -j -i perf.data.tmp -o perf.data "
         echo "use 'perf report' to analyse your results"
 
     elif [[ "$1" == "bsuite" ]]; then
@@ -404,7 +404,7 @@ ninja_chromium() {
 show_cmd() {
     # printout the arguments in color
     echo ${YELLOW}${@}${NO_COLOR};
-    "$@";
+    eval "$@";
 }
 
 
