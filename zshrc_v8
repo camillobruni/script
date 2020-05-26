@@ -261,7 +261,7 @@ ninja_d8() {
         if [[ -z "$ARGS" ]]; then
             ARGS="d8 unittests cctest"
         fi
-        show_cmd ninja -l 42 -j $MAX_OPEN_FILES -C $BUILD $ARGS && \
+        show_cmd autoninja -C $BUILD $ARGS && \
         desktop-notification "Compilation Result                            " \
                     "Finished V8 $CONFIG $ARGS" || \
         desktop-notification "Compilation Result                            " \
@@ -395,7 +395,7 @@ ninja_chromium() {
         if [[ -z "$ARGS" ]]; then
             ARGS="chrome content_shell blink_tests"
         fi
-        show_cmd ninja -l 40 -j $MAX_OPEN_FILES -C $BUILD $ARGS && \
+        show_cmd autoninja -C $BUILD $ARGS && \
         desktop-notification "Finished Chromium $CONFIG $ARGS" || \
         desktop-notification "FAILED Chromium $CONFIG $ARGS"
     fi
@@ -419,7 +419,7 @@ run_10_times() {
 }
 
 coverage() {
-    ninja -C out/Release -j1000
+    autoninja -C out/Release -j1000
     tools/run-tests.py --mode Release --arch x64 --buildbot
     lcov --directory out/Release --capture --output-file coverage.info
     genhtml --output-directory _coverage coverage.info
