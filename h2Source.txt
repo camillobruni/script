@@ -1272,3 +1272,12 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
 
 - How to split line in columns/fields in bash?
   awk -F $SEPARATOR {print $COLUMN_N}' logfile
+
+- How to find processes occupying a certain port? [kill http]
+  # List all IPv4 processes
+  lsof -i4
+  # List process on port
+  fuser 8080/tcp
+  # Kill process on port
+  fuser -k 8080/tcp
+

@@ -145,6 +145,7 @@ MATCHER = [
 ]
 
 def extractNumber(result)
+    return result if result.is_a? Float
     #  extract float
     MATCHER.each do |matcher|
         begin
@@ -156,10 +157,26 @@ def extractNumber(result)
 end
 
 def filterResult(result)
-    return result if $settings.regexp.nil?
-    match = $settings.regexp.match(result)
-    return match[0] if match
-    return nil
+    if $settings.regexp
+        match = $settings.regexp.match(result)
+        return match[0] if match
+        return nil
+    else
+        return result
+    end
+end
+
+def measureCommand()
+    start_time = 0
+    if $settings.timeCommand
+        start_time = Process.clock_gettime(Process::CLOCK_REALTIME)
+    end
+    result = runCommand()
+    if $settings.timeCommand
+        end_time = Process.clock_gettime(Process::CLOCK_REALTIME)
+        return "#{(end_time - start_time) * 1000} ms"
+    end
+    return filterResult(result)
 end
 
 SPINNER = '◐◓◑◒'
@@ -199,6 +216,7 @@ $settings = OpenStruct.new
 $settings.runs =  100
 $settings.verbose = true 
 $settings.regexp = nil
+$settings.timeCommand = false
 $settings.timeout = 0
 $settings.stop_after_match = false
 $settings.command = nil
@@ -208,6 +226,11 @@ $opt_parser = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "Example:"
   opts.separator "   average --runs=100 --regexp=user /usr/bin/time sleep 1"
+  opts.separator ""
+  opts.separator "Helper Args:"
+  opts.separator ""
+  opts.separator "$CHR_OPTS_NOCACHE: curome benchmarking options, not reusing profiles"
+  opts.separator "$CHR_OPTS_CACHE:   chrome benchmarking options, reusing profile"
   opts.separator ""
   opts.separator "Options:"
 
@@ -239,6 +262,11 @@ $opt_parser = OptionParser.new do |opts|
           "Kill COMMAND after --regexp=PATTERNS matched") do
       $settings.stop_after_match = true
   end
+
+  opts.on("-T", "--time", Float, 
+          "Time COMMAND directly from this script.") do |timeout|
+      $settings.timeCommand = true
+  end
 end
 
 CHROME_CACHE_BENCHMARK_OPTIONS = 
@@ -269,7 +297,7 @@ def run()
     begin
         for i in 1..$settings.runs do
             label = i.to_s.rjust(2, '0')
-            result = filterResult(runCommand())
+            result = measureCommand()
             if $settings.verbose
                 STDERR.puts("# RUN: #{label} OUTPUT: #{result}")
             end

@@ -122,6 +122,7 @@ fi
 
 export GOPATH=$HOME/.gocode
 export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$HOME/.cargo/bin
 
 # Python =====================================================================
 

@@ -34,13 +34,6 @@ sync() {
 # Completion settings, using --help
 compdef _gnu_generic d8 cctest blink_unittests unittests
 
-
-if [[ "$OS" == "mac" ]]; then
-    export MAX_OPEN_FILES=500
-else
-    export MAX_OPEN_FILES=2000
-fi
-
 alias debug='ninja_d8_or_chromium Debug'
 alias debug64='ninja_d8_or_chromium x64.Debug'
 alias debug32='ninja_d8_or_chromium ia32.Debug'
@@ -118,7 +111,8 @@ ninja_d8() {
     elif [[ "$1" == "tests" || "$1" == "ts" ]]; then
         shift
         cd $ROOT && \
-        show_cmd tools/run-tests.py --outdir=$BUILD --no-sorting $V8_TEST_FLAGS $@
+        show_cmd tools/run-tests.py --outdir=$BUILD --progress=color --no-sorting \
+            $V8_TEST_FLAGS $@
 
     elif [[ "$1" == "cctest" || "$1" == "ct" ]]; then
         shift
@@ -320,12 +314,12 @@ ninja_chromium() {
                 $@
         # --plugin-launcher=\"$CHROME_GDB_CMD\" \
 
-    elif [[ "$SUB_CMD" == "test" ]]; then
+    elif [[ "$SUB_CMD" == "test" || "$SUB_CMD" == "t" ]]; then
         shift;
         cd $ROOT && \
         show_cmd python $BLINK_TOOLS/run_web_tests.py -t $CONFIG_LOWERCASE $@
 
-    elif [[ "$SUB_CMD" == "tests" ]]; then
+    elif [[ "$SUB_CMD" == "tests" || "$SUB_CMD" == "ts" ]]; then
         shift;
         cd $ROOT && \
         show_cmd testing/run_with_dummy_home.py testing/xvfb.py \
@@ -362,7 +356,7 @@ ninja_chromium() {
           BINARIES="$BUILD/chrome $BUILD/content_shell "
       fi
       echo "${GREEN}Creating GDB Indices$NO_COLOR" && \
-      show_cmd "build/gdb-add-index $BINARIES > /dev/null"
+      show_cmd "build/gdb-add-index -f $BINARIES > /dev/null"
     
     elif [[ "$SUB_CMD" == "sync" ]]; then
         shift;
