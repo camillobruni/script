@@ -148,7 +148,7 @@ set directory=~/.vim-swap//
 match Error /\%>80v/
 
 function! SetIndent(...)
-    let size = (a:0 == 0) ? 4 : a:1
+    let size = a:1
     execute 'set tabstop=' . size
     execute 'set shiftwidth=' . size
     execute 'set softtabstop=' . size
@@ -303,7 +303,7 @@ set guioptions-=m
 set clipboard=unnamed
 "set guioptions-=m
 set anti guifont=Ubuntu\ Mono\ for\ Powerline\ 10   
-set mouse=r
+set mouse=a
 
 " Color scheme and tweaks
 set background=light
