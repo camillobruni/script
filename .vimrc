@@ -134,7 +134,7 @@ set splitright
 
 " Sane indentation defaults
 set expandtab
-set smartindent
+" set smartindent
 set autoindent
 
 " enable global undoing even after closing the file
