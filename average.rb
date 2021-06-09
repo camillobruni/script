@@ -8,7 +8,6 @@ require 'timeout'
 require 'pty'
 require 'open3'
 
-
 module Enumerable
     def sum
       self.inject(0){|accum, i| accum + i }
@@ -40,21 +39,23 @@ TICKS = " ▁▂▃▄▅▆▇█"
 
 $results = []
 def shut_down
-    puts("=" * 79)
     if $results.empty?
         STDERR.puts("Empty results")
         exit
     end
-    begin
-        Dir::Tmpname.create('average_') { |path|
-            path += '.txt'
-            puts "Storing result to: " + path
-            File.open(path, 'w') { |f|
-                f.puts('# ' + $settings.command)
-                f.puts($results)
+    if !$settings.resultOnly 
+        puts("=" * 79)
+        begin
+            Dir::Tmpname.create('average_') { |path|
+                path += '.txt'
+                puts "Writing result to: " + path
+                File.open(path, 'w') { |f|
+                    f.puts('# ' + $settings.command)
+                    f.puts($results)
+                }
             }
-        }
-    rescue
+        rescue
+    end
     end
     stdev = $results.standard_deviation
     mean = $results.mean
@@ -65,9 +66,14 @@ def shut_down
     minRounded = ($results.min / roundTo).round * roundTo
     maxRounded = ($results.max / roundTo).round * roundTo
     stdevPercentage = (100.0 * stdev / mean).round(2)
+    if $settings.resultOnly
+        puts("#{meanRounded} ±#{stdevRounded}")
+        return
+    end
     puts("=" * 79)
     puts("command = #{$settings.command}")
     puts("runs    = #{$results.size}")
+    puts("sum     = #{$results.sum}")
     puts("avg     = #{$results.mean}")
     puts("geomean = #{$results.geomean}")
     puts("min     = #{minRounded}        max = #{maxRounded}")
@@ -191,9 +197,13 @@ def runCommand()
         i = 0
         Timeout.timeout($settings.timeout) do
             stdout_and_stderr.each_line do |line|
-                STDERR.print SPINNER[i % SPINNER.size] + "\r"
+                if !$settings.resultOnly
+                    STDERR.print SPINNER[i % SPINNER.size] + "\r"
+                end
                 i += 1
-                puts "#", line
+                if $settings.verbose
+                    puts "#{line}"
+                end
                 result.push(line)
                 if $settings.stop_after_match
                     return line if extractNumber(filterResult(line))
@@ -215,6 +225,7 @@ end
 $settings = OpenStruct.new
 $settings.runs =  100
 $settings.verbose = true 
+$settings.resultOnly = false
 $settings.regexp = nil
 $settings.timeCommand = false
 $settings.timeout = 0
@@ -248,6 +259,11 @@ $opt_parser = OptionParser.new do |opts|
       $settings.verbose = false 
   end
 
+  opts.on("--result-only", "Only print the final average result") do
+      $settings.resultOnly  = true
+      $settings.verbose = false 
+  end
+
   opts.on("-e", "--regexp=PATTERNS", Regexp, 
           "Set a regexp pattern to filter the COMMAND output (stdout/stderr)") do |regexp|
       $settings.regexp = regexp
@@ -258,7 +274,7 @@ $opt_parser = OptionParser.new do |opts|
       $settings.timeout = timeout  
   end
 
-  opts.on("-T", "--stop-after-match", 
+  opts.on("-s", "--stop-after-match", 
           "Kill COMMAND after --regexp=PATTERNS matched") do
       $settings.stop_after_match = true
   end
@@ -292,21 +308,25 @@ def run()
         .gsub('$CHR_OPTS', CHROME_NO_CACHE_BENCHMARK_OPTIONS)
         .gsub('$CHR_OPTS_NOCACHE', CHROME_NO_CACHE_BENCHMARK_OPTIONS)
         .gsub('$CHR_OPTS_CACHE', CHROME_CACHE_BENCHMARK_OPTIONS)
-    STDERR.puts "# COMMAND: #{$settings.command}"
-    puts "=" * 80
+    if !$settings.resultOnly
+        STDERR.puts "# COMMAND: #{$settings.command}"
+        STDERR.puts "=" * 80
+    end
     begin
         for i in 1..$settings.runs do
             label = i.to_s.rjust(2, '0')
             result = measureCommand()
+            number = extractNumber(result)
             if $settings.verbose
                 STDERR.puts("# RUN: #{label} OUTPUT: #{result}")
             end
-            result = extractNumber(result)
-            if result.is_a? Float
-                print "# RUN: #{label} RESULT: #{result}\r" 
-                $results.push(result)
+            if number.is_a? Float
+                if !$settings.resultOnly
+                    print "# RUN: #{label} RESULT: #{number}\r" 
+                end
+                $results.push(number)
             else
-                print "# RUN: #{label} NO result\r" 
+                print "# RUN: #{number} NO result\r" 
             end
         end
     rescue Interrupt, SignalException
@@ -318,6 +338,7 @@ def run()
         shut_down()
     end
 end
+
 
 begin
     $opt_parser.order! ARGV

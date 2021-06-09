@@ -1,4 +1,5 @@
 set pagination off
+set print static-members off
 
 # skip mostly uninteresting files in v8
 skip file slots.h
@@ -32,6 +33,7 @@ skip -rfunction ^v8::base::IsInRange.*
 skip -rfunction ^v8::internal::InstanceTypeChecker.*
 skip -rfunction ^v8::internal::Smi::.*
 skip -rfunction ^v8::base::BitField.*
+skip file */libc++/trunk/include/*
 
 python
  

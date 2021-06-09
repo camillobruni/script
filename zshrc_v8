@@ -25,8 +25,8 @@ fi
 export GOMA_DIR=$CODE/goma
 
 alias f='ag'
-alias format="git cl format; g ci -m 'formatting'"
-alias goma_prep="unset CC; unset CXX; $CODE/goma/goma_ctl.py update; $CODE/goma/goma_ctl.py ensure_start"
+alias format="git ci -m pre-format; git cl format; g ci -m 'formatting'"
+alias goma_prep="unset CC; unset CXX; goma_ctl ensure_start"
 sync() {
     show_cmd gclient sync $@
 }
@@ -34,23 +34,19 @@ sync() {
 # Completion settings, using --help
 compdef _gnu_generic d8 cctest blink_unittests unittests
 
-alias debug='ninja_d8_or_chromium Debug'
-alias debug64='ninja_d8_or_chromium x64.Debug'
+alias debug='ninja_d8_or_chromium x64.Debug'
 alias debug32='ninja_d8_or_chromium ia32.Debug'
-alias release='ninja_d8_or_chromium Release'
-alias release64='ninja_d8_or_chromium x64.Release'
+alias release='ninja_d8_or_chromium x64.Release'
+alias release2='ninja_d8_or_chromium x64.2.Release'
 alias release32='ninja_d8_or_chromium ia32.Release'
-alias optdebug='ninja_d8_or_chromium Optdebug'
-alias optdebug64='ninja_d8_or_chromium x64.Optdebug'
+alias optdebug='ninja_d8_or_chromium x64.Optdebug'
 alias optdebug32='ninja_d8_or_chromium ia32.Optdebug'
 alias deb='debug'
 alias deb32='debug32'
-alias deb64='debug64'
 alias rel='release'
+alias rel2='release2'
 alias rel32='release32'
-alias rel64='release64'
 alias opt='optdebug'
-alias opt64='optdebug64'
 alias opt32='optdebug32'
 
 ninja_d8_or_chromium() {
@@ -307,9 +303,10 @@ ninja_chromium() {
 
     elif [[ "$SUB_CMD" == "gdb" ]]; then
         shift;
-        CHROME_GDB_CMD="xterm -title renderer -e gdb -ex run -ex quit -args"
-        show_cmd gdb -ex run --args \
-            $CHROME_BINARY --no-sandbox --disable-hang-monitor --disable-gpu \
+        CHROME_GDB_CMD="xterm -title renderer -e gdb -quiet -ex run -ex quit -args"
+        show_cmd gdb -quiet -ex run --args \
+            $BUILD/content_shell --no-sandbox \
+                --disable-hang-monitor --disable-gpu \
                 --renderer-cmd-prefix=\"$CHROME_GDB_CMD\" \
                 $@
         # --plugin-launcher=\"$CHROME_GDB_CMD\" \
@@ -327,8 +324,15 @@ ninja_chromium() {
 
     elif [[ "$SUB_CMD" == "test-server" ]]; then
         shift;
-        cd $ROOT && \
-        show_cmd python $BLINK_TOOLS/run_blink_httpd.py -t $CONFIG_LOWERCASE $@
+        echo -n "Blink [1] or Web platform [2] test? "
+        read answer 
+        if [ "$answer" != "${answer#[2]}" ] ;then
+          cd $ROOT && \
+          show_cmd python $BLINK_TOOLS/run_blink_wptserve.py -t $CONFIG_LOWERCASE $@
+        else
+          cd $ROOT && \
+          show_cmd python $BLINK_TOOLS/run_blink_httpd.py -t $CONFIG_LOWERCASE $@
+        fi
 
     elif [[ "$SUB_CMD" == "devtools-test-server" ]]; then
         shift;
@@ -387,7 +391,7 @@ ninja_chromium() {
           fi
         fi
         if [[ -z "$ARGS" ]]; then
-            ARGS="chrome content_shell blink_tests"
+            ARGS="content_shell blink_tests"
         fi
         show_cmd autoninja -C $BUILD $ARGS && \
         desktop-notification "Finished Chromium $CONFIG $ARGS" || \
