@@ -34,15 +34,15 @@ sync() {
 # Completion settings, using --help
 compdef _gnu_generic d8 cctest blink_unittests unittests
 
-alias debug='ninja_d8_or_chromium Debug'
-alias debug64='ninja_d8_or_chromium x64.Debug'
-alias debug32='ninja_d8_or_chromium ia32.Debug'
-alias release='ninja_d8_or_chromium Release'
-alias release64='ninja_d8_or_chromium x64.Release'
-alias release32='ninja_d8_or_chromium ia32.Release'
-alias optdebug='ninja_d8_or_chromium Optdebug'
-alias optdebug64='ninja_d8_or_chromium x64.Optdebug'
-alias optdebug32='ninja_d8_or_chromium ia32.Optdebug'
+alias debug='gn_d8_or_chromium Debug'
+alias debug64='gn_d8_or_chromium x64.Debug'
+alias debug32='gn_d8_or_chromium ia32.Debug'
+alias release='gn_d8_or_chromium Release'
+alias release64='gn_d8_or_chromium x64.Release'
+alias release32='gn_d8_or_chromium ia32.Release'
+alias optdebug='gn_d8_or_chromium Optdebug'
+alias optdebug64='gn_d8_or_chromium x64.Optdebug'
+alias optdebug32='gn_d8_or_chromium ia32.Optdebug'
 alias deb='debug'
 alias deb32='debug32'
 alias deb64='debug64'
@@ -52,21 +52,28 @@ alias rel64='release64'
 alias opt='optdebug'
 alias opt64='optdebug64'
 alias opt32='optdebug32'
+alias gm='gm_d8'
 
-ninja_d8_or_chromium() {
+gn_d8_or_chromium() {
     ROOT=`git rev-parse --show-toplevel`
     if [[ $ROOT == *"chrom"* ]]; then
         ninja_chromium $@
     elif [[ "$ROOT" == *"v8"* ]]; then
-        ninja_d8 $@
+        gn_d8 $@
     else
         echo "Not in a chromium or V8 checkout";
     fi
 }
 
+gm_d8() {
+  local ROOT=`git rev-parse --show-toplevel`
+  shift
+  show_cmd $ROOT/tools/gm.py $@
+}
+
 NINJA_SUBTOOLS=(browse clean commands deps graph query targets comdb recompact)
 GN_SUBTOOLS=(args check clean desc format gen help ls path refs)
-ninja_d8() {
+gn_d8() {
     local ROOT=`git rev-parse --show-toplevel`
     local VERSION=`git rev-parse HEAD | cut -c1-7`
     local CONFIG=$1
