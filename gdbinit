@@ -1,11 +1,17 @@
+set pagination off
+
 # skip mostly uninteresting files in v8
 skip file slots.h
 skip file roots-inl.h
 skip file ptr-compr-inl.h
 skip file vm-state-inl.h
 skip file v8-intrenal.h
+skip file *base/optional.h
+skip file *include/c++/v1/*
 skip -rfunction ^v8::Local.*
 skip -rfunction ^v8::Maybe.*
+skip -rfunction ^v8::Just.*
+skip -rfunction ^v8::Nothing.*
 skip -rfunction ^v8::MaybeLocal.*
 skip -rfunction ^v8::internal::Handle.*
 skip -rfunction ^v8::internal::MaybeHandle.*

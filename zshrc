@@ -41,6 +41,10 @@ ZSH_THEME_LAST_PRINT_DATE=0
 setopt interactivecomments
 # don't directly jump to dirs in order to prevent completion of all usernames
 unsetopt cdablevars
+
+# split words like bash
+setopt SH_WORD_SPLIT
+
 # ============================================================================
 # display system information on startup
 
@@ -156,7 +160,11 @@ export PATH=$PATH:$HOME/.cargo/bin
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 #export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 export WORKON_HOME=~/.virtualenv
-#source /usr/local/bin/virtualenvwrapper.sh
+if [[ "$OS" == "mac" ]]; then 
+  source /usr/local/bin/virtualenvwrapper.sh
+else
+  source /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh
+fi
 #export PIP_REQUIRE_VIRTUALENV=true
 #export PIP_VIRTUALENV_BASE=$WORKON_HOME
 export VIRTUAL_ENV_DISABLE_PROMPT=true
