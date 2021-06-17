@@ -65,8 +65,7 @@ gn_d8_or_chromium() {
 
 gm_d8() {
   local ROOT=`git rev-parse --show-toplevel`
-  shift
-  show_cmd $ROOT/tools/gm.py $@
+  cd "$ROOT" && show_cmd tools/dev/gm.py $@
 }
 
 NINJA_SUBTOOLS=(browse clean commands deps graph query targets comdb recompact)

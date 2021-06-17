@@ -32,6 +32,7 @@
     m = merge
     mt = mergetool
     nb = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git branch --track $NAME $*; git switch $NAME; }; newbranch"
+    nbc = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git new-branch --upstream-current $NAME $*; git switch $NAME; }; newbranch"
     oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
     open = browse
     ours = checkout --ours
