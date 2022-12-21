@@ -322,11 +322,5 @@ function last_return_status() {
     fi
 }
 
-function __git_ps1() {
-    echo "";
-}
-
-export PS1="\$(__git_ps1)\[$YELLOW\]\W\[$NO_COLOR\]: "
-export PROMPT_COMMAND="last_return_status; time_header; T_TIME_HEADER=\`date +%s\`;$PROMPT_COMMAND"
 
 # ============================================================================

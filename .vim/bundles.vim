@@ -34,9 +34,9 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'kien/ctrlp.vim'
 
 " COMPLETION
-Plugin 'ycm-core/youcompleteme'
+" qPlugin 'ycm-core/youcompleteme'
 " Use Supertab for ycm and snipmate compatibility
-Plugin 'ervandew/supertab'
+":Plugin 'ervandew/supertab'
 
 " Editing
 Plugin 'sickill/vim-pasta'
@@ -49,8 +49,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'Gundo'
 " Plugin 'Align'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
+"Plugin 'SirVer/ultisnips'
+"Plugin 'honza/vim-snippets'
 " Support auto highlighting of current word
 " Plugin 'vim-scripts/SearchHighlighting'
 " Dependency for above script. Plugin 'vim-scripts/ingo-library'
