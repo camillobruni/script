@@ -31,9 +31,9 @@
     ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%cr\\ %Cblue[%cn]\\ %Cred%d%Creset%n%ae%n%s" --decorate --all --color --numstat
     m = merge
     mt = mergetool
-    nb = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git branch $@ --track $NAME; git switch $NAME; }; newbranch"
+    nb = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git branch $@ --track $NAME origin/main; git switch $NAME; }; newbranch"
     nbc = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git new-branch $@ --upstream-current $NAME; git switch $NAME; }; newbranch"
-    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-main}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
     open = browse
     ours = checkout --ours
     out = outgoing

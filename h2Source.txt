@@ -1295,3 +1295,6 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
     @abstractmethod
     def my_abstract_property(self):
       ...
+
+- How to disassemble a c-function from a binary
+   lldb -Q -b -o "disas -n Value::IsDataView" out/rel/d8

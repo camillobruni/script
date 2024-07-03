@@ -20,15 +20,21 @@ autoload -Uz compinit
 compinit
 skip_global_compinit=1
 
-ZSH=$HOME/.oh-my-zsh
- 
-ZSH_THEME="cami"
-plugins=(git dircycle)
-source $ZSH/oh-my-zsh.sh
-
 # Support bash completion files directly
 autoload bashcompinit
 bashcompinit
+autoload -U colors && color
+bindkey -e
+bindkey '^R' history-incremental-search-backward
+
+
+autoload -Uz vcs_info
+precmd() { vcs_info }
+
+# Format the vcs_info_msg_0_ variable
+zstyle ':vcs_info:git:*' formats 'on %b'
+
+
 
 if hash brew 2>/dev/null; then
 	# fpath=(`brew --prefix`/share/zsh-completions $fpath);
@@ -93,9 +99,20 @@ BMAGENTA='\e[45m'
    BCYAN='\e[46m'
   BWHITE='\e[47m'
 
+# Prompt =====================================================================
+
+CURRENT_BG='NONE'
+PSEP=''
+
+zstyle ':vcs_info:git*' formats "%s  %r/%S %b (%a) %m%u%c "
+setopt PROMPT_SUBST
+PROMPT='${PWD/#$HOME/~}${PSEP}${vcs_info_msg_0_}${PSEP}
+%# '
+
 # ============================================================================
 
 export HISTFILESIZE=10000 # the bash history should save 10000 commands
+export SAVEHIST=$HISTSIZE
 export HISTCONTROL=ignorespace
 setopt INC_APPEND_HISTORY_TIME
 setopt HIST_REDUCE_BLANKS
@@ -154,6 +171,7 @@ export GOPATH=$HOME/.gocode
 export PATH=$PATH:$GOPATH/bin
 export PATH=~/bin:$PATH
 export PATH=$PATH:$HOME/.cargo/bin
+
 
 # Python =====================================================================
 
