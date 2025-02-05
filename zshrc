@@ -21,9 +21,9 @@ skip_global_compinit=1
 ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="cami"
-plugins=(git gem dircycle autojump nvm)
+plugins=(git dircycle nvm)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 # Support bash completion files directly
 autoload bashcompinit
@@ -160,11 +160,11 @@ export PATH=$PATH:$HOME/.cargo/bin
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 #export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 export WORKON_HOME=~/.virtualenv
-if [[ "$OS" == "mac" ]]; then 
-  source /usr/local/bin/virtualenvwrapper.sh
-else
-  source /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh
-fi
+# if [[ "$OS" == "mac" ]]; then 
+#  source /usr/local/bin/virtualenvwrapper.sh
+# else
+#   source /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh
+# fi
 #export PIP_REQUIRE_VIRTUALENV=true
 #export PIP_VIRTUALENV_BASE=$WORKON_HOME
 export VIRTUAL_ENV_DISABLE_PROMPT=true

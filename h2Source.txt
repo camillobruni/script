@@ -1281,3 +1281,6 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
   # Kill process on port
   fuser -k 8080/tcp
 
+
+- How to disassemble c++ binary with lldb:
+ lldb -o 'disas -n Isolate::OnPromiseBefore' out/rel/d8

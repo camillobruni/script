@@ -56,6 +56,8 @@ gn_d8_or_chromium() {
     ROOT=`git rev-parse --show-toplevel`
     if [[ $ROOT == *"chrom"* ]]; then
         ninja_chromium $@
+    elif [[ $ROOT == *"chr/"* ]]; then
+        ninja_chromium $@
     elif [[ "$ROOT" == *"v8"* ]]; then
         gn_d8 $@
     else

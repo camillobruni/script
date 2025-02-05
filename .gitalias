@@ -4,8 +4,8 @@
     br = branch
     bra = branch --all
     ci = commit -a
-    clup = cl upload 
-    club = cl upload 
+    clup = cl upload
+    club = cl upload
     co = !git-checkout-custom
     d = diff --color-words
     di = diff --color-words
