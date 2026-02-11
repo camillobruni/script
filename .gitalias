@@ -4,8 +4,9 @@
     br = branch
     bra = branch --all
     ci = commit -a
-    clup = cl upload 
-    club = cl upload 
+    clup = !git cl upload --skip-title --topic=$(git branch --show-current)
+    club = !git cl upload --skip-title --topic=$(git branch --show-current)
+    clst = cl --status
     co = !git-checkout-custom
     d = diff --color-words
     di = diff --color-words
@@ -57,5 +58,17 @@
     tags = tag -l
     theirs = checkout --theirs
     up = pull
+    # Note: remoteBranchSuffix should stay the same even if localBranchName changes.
+    upload = "!f() { \
+      localBranchName=$(git rev-parse --abbrev-ref HEAD); \
+      remoteBranchSuffix=$(git config branch.\"$localBranchName\".remoteBranchSuffix); \
+      if [ -z \"$remoteBranchSuffix\" ]; then \
+        remoteBranchSuffix=\"$localBranchName\"; \
+        git config branch.\"$localBranchName\".remoteBranchSuffix \"$remoteBranchSuffix\"; \
+      fi; \
+      git push origin --set-upstream HEAD:dev/$USER/$remoteBranchSuffix; \
+    }; f"
+    udiff = "diff @{u}"
     wtf = !git-wtf
     #lost-and-found = !git fsck --full --no-reflogs --unreachable --lost-found | grep commit | cut -d\  -f3 | xargs -n 1 git log -n1
+    pr = !git for-each-ref --format="%(refname:short)" refs/heads/ | while read branch; do pr_info=$(gh pr list --head "$branch" --json number,title,state,url --template "{{range .}}#{{.number}}: {{.title}} [{{.state}}]  {{.url}}{{end}}"); if [ -n "$pr_info" ]; then printf "%-40s %s\n"  "$branch" "$pr_info"; else printf "%-40s %s\n" "$branch" "(no pull request)"; fi; done

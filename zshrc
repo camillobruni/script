@@ -116,6 +116,8 @@ export SAVEHIST=$HISTSIZE
 export HISTCONTROL=ignorespace
 setopt INC_APPEND_HISTORY_TIME
 setopt HIST_REDUCE_BLANKS
+setopt appendhistory
+setopt share_histor
 
 # ENCODING SHIZZLE --------------------------------------------------------------
 
