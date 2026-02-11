@@ -269,6 +269,9 @@ gn_d8() {
     fi
 }
 
+
+export D8_PATH=~/Documents/v8/v8/out/release
+
 run_v8_perf() {
     local ROOT=`git rev-parse --show-toplevel`
     V8=$ROOT/$1

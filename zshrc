@@ -1,3 +1,4 @@
+
 # System-wide .zshrc file for interactive zsh(1) shells.
 #if [ -z "$PS1" ]; then
 #   return
@@ -15,19 +16,25 @@ fi
 
 export TERM='xterm-256color' 
 
-
+autoload -Uz compinit
+compinit
 skip_global_compinit=1
-
-ZSH=$HOME/.oh-my-zsh
-
-ZSH_THEME="cami"
-plugins=(git dircycle nvm)
-
-# source $ZSH/oh-my-zsh.sh
 
 # Support bash completion files directly
 autoload bashcompinit
 bashcompinit
+autoload -U colors && color
+bindkey -e
+bindkey '^R' history-incremental-search-backward
+
+
+autoload -Uz vcs_info
+precmd() { vcs_info }
+
+# Format the vcs_info_msg_0_ variable
+zstyle ':vcs_info:git:*' formats 'on %b'
+
+
 
 if hash brew 2>/dev/null; then
 	# fpath=(`brew --prefix`/share/zsh-completions $fpath);
@@ -92,9 +99,20 @@ BMAGENTA='\e[45m'
    BCYAN='\e[46m'
   BWHITE='\e[47m'
 
+# Prompt =====================================================================
+
+CURRENT_BG='NONE'
+PSEP=''
+
+zstyle ':vcs_info:git*' formats "%s  %r/%S %b (%a) %m%u%c "
+setopt PROMPT_SUBST
+PROMPT='${PWD/#$HOME/~}${PSEP}${vcs_info_msg_0_}${PSEP}
+%# '
+
 # ============================================================================
 
 export HISTFILESIZE=10000 # the bash history should save 10000 commands
+export SAVEHIST=$HISTSIZE
 export HISTCONTROL=ignorespace
 setopt INC_APPEND_HISTORY_TIME
 setopt HIST_REDUCE_BLANKS
@@ -127,13 +145,13 @@ if [[ "$OS" == "mac" ]]; then
     export EDITOR=vim
     export MANPATH=/opt/local/share/man:$MANPATH
     export OPEN_CMD=open
-    export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.4/bin
+    export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.10/bin
     export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
     # homebrew ruby gem path, cannot use fixed path as it would include a changing
     # version number
-    if hash brew 2>/dev/null; then
-        export PATH=$PATH:$(cd $(which gem)/..; pwd)
-    fi
+    # if hash brew 2>/dev/null; then
+    #     export PATH=$PATH:$(cd $(which gem)/..; pwd)
+    # fi
 else
     export EDITOR=vim
     export OPEN_CMD=gnome-open
@@ -145,25 +163,29 @@ export VISUAL=$EDITOR
 export SVN_EDITOR=$EDITOR
 export H2_EDITOR=$EDITOR
 
-export PYTHON_VERSION=3.4
+export PYTHON_VERSION=3.10
 
-export IRBRC='~/.irbrc'
+# export IRBRC='~/.irbrc'
 
 export GOPATH=$HOME/.gocode
 export PATH=$PATH:$GOPATH/bin
 export PATH=~/bin:$PATH
 export PATH=$PATH:$HOME/.cargo/bin
 
+
 # Python =====================================================================
 
 # manually add DYLD path for python mysql gagu
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 #export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-export WORKON_HOME=~/.virtualenv
+# export WORKON_HOME=~/.virtualenv
 # if [[ "$OS" == "mac" ]]; then 
-#  source /usr/local/bin/virtualenvwrapper.sh
+#   VENV=/usr/local/bin/virtualenvwrapper.sh
 # else
-#   source /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh
+#   VENV=source /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh
+# fi
+# if [[ -e "$VENV" ]]; then
+#   source "$VENV"
 # fi
 #export PIP_REQUIRE_VIRTUALENV=true
 #export PIP_VIRTUALENV_BASE=$WORKON_HOME
@@ -243,14 +265,10 @@ alias vless='vim -u /usr/share/vim/vim71/macros/less.vim'
 alias webserver="python -m SimpleHTTPServer"
 alias x11='DISPLAY = :0.0;export DISPLAY;'
 
-if hash hub 2>/dev/null; then
-    function git(){ hub $@ }
-fi
-
 
 # pman opens man pages in preview / skim ====================================
 pman() {
-    man -t "$@" | open -f -a Skim
+    man -t "$@" | open -f
 }
 
 # open which opens the current dir if no arg is specified ===================
@@ -273,48 +291,27 @@ _ping1()
     ping -c 1 "$*";
 }
 
-# a small single line evaluator for ruby ====================================
-rruby()
-{
-    ruby -e "puts $*"
-}
-alias c=rruby
-
-# print the average of a file containing a number per line ==================
-
-file_avg() {
-    ruby -e "arr=File.readlines('$1').map{|l|l.chomp.to_f};puts(arr.inject(0.0) { |sum, el| sum + el } / arr.size)"
-}
-
-# open google search results from the command line ==========================
-ggl()
-{
-    QUERY=`echo "$*" | perl -MURI::Escape -ne 'print uri_escape($_)'`
-    open "https://encrypted.google.com/search?q=$QUERY"
-}
 
 # only open a single instance of gvim by default
 gvim () {
     command gvim --remote-silent "$@" || command gvim "$@";
 }
 # ============================================================================
-# Directory stack extensions
-setopt autopushd pushdminus pushdsilent pushdtohome
-DIRSTACKSIZE=16
-DIRSTACKFILE=~/.zdirs
-if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
-  dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
-  [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
-fi
-chpwd() {
-  print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
-}
+# # Directory stack extensions
+# setopt autopushd pushdminus pushdsilent pushdtohome
+# DIRSTACKSIZE=16
+# DIRSTACKFILE=~/.zdirs
+# if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
+#   dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
+#   [[ -d $dirstack[1] ]] && cd $dirstack[1] && cd $OLDPWD
+# fi
+# chpwd() {
+#   print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
+# }
 
 # ============================================================================
-# load https://github.com/rupa/z after redefinition of cd
-export _Z_DATA="$HOME/.z/"
 
-source `jump-bin --zsh-integration`
+# source `jump-bin --zsh-integration`
 if hash brew 2>/dev/null; then
     [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && \
         . $(brew --prefix)/etc/profile.d/autojump.sh
@@ -329,17 +326,6 @@ function _autojump_jump {
 alias j=_autojump_jump
 
 # =============================================================================
-# helper
-function rel_path() {
-    python -c "import os.path; print os.path.relpath('${1}', '${2}')"
-}
-
-function format-js() {
-    TMP=`mktemp`
-    IN=$1
-    cp $IN $TMP
-    js-beautify --indent-size=2 --end-with-newline $TMP > $IN
-}
 
 # wait for any background processes launched in the setup file
 wait

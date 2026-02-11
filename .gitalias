@@ -31,9 +31,9 @@
     ll = log --pretty=format:"%C(bold)%C(yellow)%<(8)%h%Creset\\ %C(yellow)%<(14)%C(yellow)%cr\\ %Cblue[%cn]\\ %Cred%d%Creset%n%ae%n%s" --decorate --all --color --numstat
     m = merge
     mt = mergetool
-    nb = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git branch --track $NAME $*; git switch $NAME; }; newbranch"
-    nbc = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git new-branch --upstream-current $NAME $*; git switch $NAME; }; newbranch"
-    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+    nb = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git branch $@ --track $NAME origin/main; git switch $NAME; }; newbranch"
+    nbc = "!newbranch() { NAME=`date +%Y-%m-%d`_$1; shift; git new-branch $@ --upstream-current $NAME; git switch $NAME; }; newbranch"
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-main}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
     open = browse
     ours = checkout --ours
     out = outgoing
@@ -57,5 +57,15 @@
     tags = tag -l
     theirs = checkout --theirs
     up = pull
+    upload = "!f() { \
+      localBranchName=$(git rev-parse --abbrev-ref HEAD); \
+      remoteBranchSuffix=$(git config branch.\"$localBranchName\".remoteBranchSuffix); \
+      if [ -z \"$remoteBranchSuffix\" ]; then \
+        remoteBranchSuffix=\"$localBranchName\"; \
+        git config branch.\"$localBranchName\".remoteBranchSuffix \"$remoteBranchSuffix\"; \
+      fi; \
+      git push origin --set-upstream HEAD:dev/$USER/$remoteBranchSuffix; \
+    }; f"
+    udiff = "diff @{u}"
     wtf = !git-wtf
     #lost-and-found = !git fsck --full --no-reflogs --unreachable --lost-found | grep commit | cut -d\  -f3 | xargs -n 1 git log -n1
