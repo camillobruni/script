@@ -1281,6 +1281,7 @@ qpdf --decrypt --password=$PASS in.pdf out.pdf
   # Kill process on port
   fuser -k 8080/tcp
 
+
 - How to remote debug a python script with debugpy:
     import debugpy
     debugpy.listen(5678)
