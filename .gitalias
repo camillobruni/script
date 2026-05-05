@@ -4,8 +4,8 @@
     br = branch
     bra = branch --all
     ci = commit -a
-    clup = !git cl upload --skip-title --topic=$(git branch --show-current)
-    club = !git cl upload --skip-title --topic=$(git branch --show-current)
+    clup = !git cl upload --skip-title --topic=$(git branch --show-current) --hashtag="${GERRIT_AUTO_TAG}"
+    club = !git cl upload --skip-title --topic=$(git branch --show-current) --hashtag="${GERRIT_AUTO_TAG}"
     clst = cl --status
     co = !git-checkout-custom
     d = diff --color-words
